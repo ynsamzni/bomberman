@@ -1,0 +1,58 @@
+# depslib dependency file v1.0
+1518036801 source:/home/ronan/Bureau/Projets C/BombermanEnC/affichage.c
+	<stdio.h>
+	<stdlib.h>
+	"include/affichage.h"
+
+1517786456 /home/ronan/Bureau/Projets C/BombermanEnC/include/affichage.h
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	"constantes.h"
+	"jeu.h"
+	"clavier.h"
+
+1518445212 source:/home/ronan/Bureau/Projets C/BombermanEnC/main.c
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<stdio.h>
+	<stdlib.h>
+	"include/constantes.h"
+	"include/affichage.h"
+	"include/jeu.h"
+	"include/clavier.h"
+
+1518441284 source:/home/ronan/Bureau/Projets C/BombermanEnC/jeu.c
+	<stdio.h>
+	<stdlib.h>
+	"include/jeu.h"
+	"include/IA.h"
+
+1518364144 /home/ronan/Bureau/Projets C/BombermanEnC/include/constantes.h
+
+1518385071 /home/ronan/Bureau/Projets C/BombermanEnC/include/jeu.h
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	"constantes.h"
+	"clavier.h"
+
+1517574165 source:/home/ronan/Bureau/Projets C/BombermanEnC/clavier.c
+	<SDL2/SDL.h>
+	<stdio.h>
+	<stdlib.h>
+	"include/clavier.h"
+
+1517429739 /home/ronan/Bureau/Projets C/BombermanEnC/include/clavier.h
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	"constantes.h"
+
+1518384708 source:/home/ronan/Bureau/Projets C/BombermanEnC/IA.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"include/IA.h"
+
+1518272379 /home/ronan/Bureau/Projets C/BombermanEnC/include/IA.h
+	"jeu.h"
+	"constantes.h"
+
