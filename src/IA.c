@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include<time.h> //pour l'aléatoire
 
 #include "../include/IA.h"
 
@@ -255,8 +254,6 @@ void deplacerIA(StructJeu *jeu)  //Permet de déplacer une IA
 
 void randomMove(StructJeu *jeu, int indiceJoueur, Direction direction, int situation, int faceAuMur)
 {
-    srand(time(NULL)); //Initialise le générateur de nmbre aléatoires
-
     debugRandomMove(indiceJoueur, direction, situation, faceAuMur);
 
 
