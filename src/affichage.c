@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-#include "include/affichage.h"
+#include "../include/affichage.h"
 
 
 
@@ -31,21 +31,21 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
 
     SDL_Surface *surface = NULL;
 
-    surface = IMG_Load("perso2.png");
+    surface = IMG_Load("assets/img/perso2.png");
     // printf(" yoo : %s \n",SDL_GetError());
     (*structTextures).texturePerso = SDL_CreateTextureFromSurface(renderer, surface);
 
 
-    surface = IMG_Load("mur.bmp"); //On charge une image sans la surface
+    surface = IMG_Load("assets/img/mur.bmp"); //On charge une image sans la surface
     (*structTextures).textureMur = SDL_CreateTextureFromSurface(renderer, surface); //On met la surface dans une texture
 
-    surface = IMG_Load("mur2.png");
+    surface = IMG_Load("assets/img/mur2.png");
     (*structTextures).textureMur2 = SDL_CreateTextureFromSurface(renderer, surface);
 
-    surface = IMG_Load("bomb.png");
+    surface = IMG_Load("assets/img/bomb.png");
     (*structTextures).textureBomb = SDL_CreateTextureFromSurface(renderer, surface);
 
-    surface = IMG_Load("explosion.png");
+    surface = IMG_Load("assets/img/explosion.png");
     (*structTextures).textureExplosion = SDL_CreateTextureFromSurface(renderer, surface);
 
     SDL_FreeSurface(surface); //On peut donc "détruire" la surface

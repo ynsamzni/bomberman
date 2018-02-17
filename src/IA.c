@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include<time.h> //pour l'aléatoire
 
-#include "include/IA.h"
+#include "../include/IA.h"
 
 void initIA(StructJeu *jeu)  //Gère l'apparition des IA
 {

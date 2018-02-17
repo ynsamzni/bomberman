@@ -40,29 +40,30 @@
 			<Add option="`sdl2-config --libs`" />
 			<Add library="SDL2_image" />
 		</Linker>
-		<Unit filename="IA.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="affichage.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="clavier.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="include/IA.h" />
 		<Unit filename="include/affichage.h" />
 		<Unit filename="include/clavier.h" />
 		<Unit filename="include/constantes.h" />
 		<Unit filename="include/jeu.h" />
-		<Unit filename="jeu.c">
+		<Unit filename="src/IA.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="main.c">
+		<Unit filename="src/affichage.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/clavier.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/jeu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

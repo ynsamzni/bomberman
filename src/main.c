@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/constantes.h"
-#include "include/affichage.h"
-#include "include/jeu.h"
-#include "include/clavier.h"
+#include "../include/constantes.h"
+#include "../include/affichage.h"
+#include "../include/jeu.h"
+#include "../include/clavier.h"
 
 /****************Structure du jeu**********************
 

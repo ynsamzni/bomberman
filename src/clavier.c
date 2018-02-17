@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/clavier.h"
+#include "../include/clavier.h"
 
 
 void initClavier(StructTouchesClavier *clavier)

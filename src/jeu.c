@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 
-#include "include/jeu.h"
-#include "include/IA.h"
+#include "../include/jeu.h"
+#include "../include/IA.h"
 
 void initJeu(StructJeu *jeu, int nbrPlayers)
 {
