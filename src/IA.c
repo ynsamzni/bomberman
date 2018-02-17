@@ -37,7 +37,6 @@ void deplacerIA(StructJeu *jeu)  //Permet de déplacer une IA
 {
     int x, y;
     int faceAuMur;
-    int check = 0;
 
     /* POINT INITIALE :
             - vérification case à droite x + 31
@@ -52,17 +51,13 @@ void deplacerIA(StructJeu *jeu)  //Permet de déplacer une IA
         x = jeu->listeDesJoueurs[i].coordonnes.x;
         y = jeu->listeDesJoueurs[i].coordonnes.y;
         faceAuMur = 0;
-        check = 0;
-
 
 
 
 
         /*******************HAUT************************************/
-        if(jeu->listeDesJoueurs[i].deplacement == 1 && jeu->listeDesJoueurs[i].direction == HAUT && check == 0)
+        if(jeu->listeDesJoueurs[i].direction == HAUT)
         {
-
-            check = 1;
             if(y%30 != 0 ) //Si le perso n'est pas juste une case
             {
                 jeu->listeDesJoueurs[i].coordonnes.y = y - VITESSE_DES_JOUEURS;
@@ -105,9 +100,8 @@ void deplacerIA(StructJeu *jeu)  //Permet de déplacer une IA
         }
 
         /****************************BAS************************************/
-        else if(jeu->listeDesJoueurs[i].deplacement == 1 && jeu->listeDesJoueurs[i].direction == BAS && check == 0)
+        else if(jeu->listeDesJoueurs[i].direction == BAS)
         {
-            check = 1;
             if(y%30 != 0) //Si le perso n'est pas juste sur une case
             {
                 jeu->listeDesJoueurs[i].coordonnes.y = y + VITESSE_DES_JOUEURS;
@@ -151,9 +145,8 @@ void deplacerIA(StructJeu *jeu)  //Permet de déplacer une IA
         }
 
         /*******************************DROITE***************************/
-        else if(jeu->listeDesJoueurs[i].deplacement == 1 && jeu->listeDesJoueurs[i].direction == DROITE && check == 0)
+        else if(jeu->listeDesJoueurs[i].direction == DROITE)
         {
-            check = 1;
             if(x%30 != 0) //Si le perso n'est pas juste sur une case
             {
                 jeu->listeDesJoueurs[i].coordonnes.x = x + VITESSE_DES_JOUEURS;
@@ -197,9 +190,8 @@ void deplacerIA(StructJeu *jeu)  //Permet de déplacer une IA
         }
 
         /*******************************GAUCHE***************************/
-        else if(jeu->listeDesJoueurs[i].deplacement == 1 && jeu->listeDesJoueurs[i].direction == GAUCHE && check == 0)
+        else if(jeu->listeDesJoueurs[i].direction == GAUCHE)
         {
-            check = 1;
             if( x%30 != 0) //Si le perso n'est pas juste sur une case
             {
                 jeu->listeDesJoueurs[i].coordonnes.x = x - VITESSE_DES_JOUEURS;
