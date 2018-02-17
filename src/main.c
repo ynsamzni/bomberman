@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "../include/constantes.h"
 #include "../include/affichage.h"
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
     StructTouchesClavier clavier;
 
     //Initialisation du jeu
+    srand(time(NULL));
     initJeu(&jeu, 2);
     initAffichage(&affichage, "SDL2");
     initClavier(&clavier);

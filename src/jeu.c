@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 #include "../include/jeu.h"
 #include "../include/IA.h"
 
@@ -16,6 +15,17 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
     if(fic == NULL)
     {
         printf("Echec ouverture fichier !\n");
+
+        // Générer une nouvelle map de manière aléatoire
+        for(int i=0; i<NBR_DE_CASES_HORIZONTALES; i++)
+        {
+            for(int j=0; j<NBR_DE_CASES_VERTICALES; j++)
+                jeu->mapJeu[i][j]=randProbaParmi4Nb(0, 40,
+                                                    1, 26,
+                                                    2, 30,
+                                                    3, 4);
+        }
+
     }
     else
     {
@@ -53,7 +63,6 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
     initIA(jeu);
 
 }
-
 
 
 
@@ -392,4 +401,24 @@ int contenuCaseMatrice(StructJeu *jeu, int x, int y)
 int renvoitCaseMatrice(int coordonne)
 {
     return (coordonne/30);
+}
+
+int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3, int probaVal3, int val4, int probaVal4)
+{
+    // Générer un nombre aléatoire compris entre 0 et 100
+    int val = rand() % 101;
+
+    // Si la probabilité de val1 est atteinte
+    if (val <= probaVal1)
+        return val1;
+    // Si la probabilité de val2 est atteinte
+    else if (val <= probaVal1 + probaVal2)
+        return val2;
+    // Si la probabilité de val3 est atteinte
+    else if (val <= probaVal1 + probaVal2 + probaVal3)
+        return val3;
+    // Si la probabilité de val4 est atteinte
+    else
+        return val4;
+
 }

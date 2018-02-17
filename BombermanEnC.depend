@@ -70,7 +70,7 @@
 
 1518825680 /home/yanis/Bureau/bomberman/include/constantes.h
 
-1518825680 /home/yanis/Bureau/bomberman/include/jeu.h
+1518893492 /home/yanis/Bureau/bomberman/include/jeu.h
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	"constantes.h"
@@ -97,17 +97,18 @@
 	"jeu.h"
 	"constantes.h"
 
-1518826195 source:/home/yanis/Bureau/bomberman/src/jeu.c
+1518892788 source:/home/yanis/Bureau/bomberman/src/jeu.c
 	<stdio.h>
 	<stdlib.h>
 	"../include/jeu.h"
 	"../include/IA.h"
 
-1518826195 source:/home/yanis/Bureau/bomberman/src/main.c
+1518893446 source:/home/yanis/Bureau/bomberman/src/main.c
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<stdio.h>
 	<stdlib.h>
+	<time.h>
 	"../include/constantes.h"
 	"../include/affichage.h"
 	"../include/jeu.h"
