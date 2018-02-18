@@ -43,10 +43,10 @@ typedef struct{
 void initJeu(StructJeu *jeu, int nbrPlayers);
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier);
 
-void deplacerJoueur(StructJeu *jeu, StructTouchesClavier *clavier);
-void poserBombe(StructJeu *jeu);
-void exploserBombe(StructJeu *jeu);
-void animerDeplacement(StructJeu *jeu, int Indicejoueur);
+void deplacerJoueur(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur);
+void poserBombe(StructJeu *jeu, int indiceJoueur);
+void exploserBombe(StructJeu *jeu, int indiceJoueur);
+void animerDeplacement(StructJeu *jeu, int indiceJoueur);
 
 void afficherStructureJeu(StructJeu jeu);
 

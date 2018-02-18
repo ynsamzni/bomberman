@@ -71,17 +71,17 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 {
     // Action joueur
     if(clavier->toucheBombe == 1)
-        poserBombe(jeu);
+        poserBombe(jeu, 0);
     else
-        deplacerJoueur(jeu, clavier);
+        deplacerJoueur(clavier, jeu, 0);
 
     // Action IA
     deplacerIA(jeu);
 
     // Actions joueur + IA
-    exploserBombe(jeu);
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
+        exploserBombe(jeu, i);
         animerDeplacement(jeu, i);
     }
 
@@ -91,18 +91,18 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 /*******************POSE DES BOMBES************************************/
 /**********************************************************************/
 
-void poserBombe(StructJeu *jeu)
+void poserBombe(StructJeu *jeu, int indiceJoueur)
 {
 
-    if(jeu->listeDesJoueurs[0].bombe.tickDePose == 0)
+    if(jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose == 0)
     {
 
-        jeu->listeDesJoueurs[0].bombe.tickDePose = SDL_GetTicks();
-        jeu->mapJeu[renvoitCaseMatrice(jeu->listeDesJoueurs[0].coordonnes.y)][renvoitCaseMatrice(jeu->listeDesJoueurs[0].coordonnes.x)] = 3;
-        jeu->listeDesJoueurs[0].bombe.coordonnesBombe.x = renvoitCaseMatrice(jeu->listeDesJoueurs[0].coordonnes.x);
-        jeu->listeDesJoueurs[0].bombe.coordonnesBombe.y = renvoitCaseMatrice(jeu->listeDesJoueurs[0].coordonnes.y);
+        jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = SDL_GetTicks();
+        jeu->mapJeu[renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)][renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x)] = 3;
+        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
+        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
 
-        jeu->listeDesJoueurs[0].bombe.etatBombe = 1;
+        jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 1;
 
     }
 
@@ -112,109 +112,106 @@ void poserBombe(StructJeu *jeu)
 /*******************GESTION DE L'EXPLOSION DES BOMBES***********************************/
 /***************************************************************************************/
 
-void exploserBombe(StructJeu *jeu)
+void exploserBombe(StructJeu *jeu, int indiceJoueur)
 {
-    for(int i = 0; i<jeu->nbrDeJoueurs; i++)
+    if( (SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1000) &&  (jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 1) )
     {
-        if( (SDL_GetTicks() - jeu->listeDesJoueurs[i].bombe.tickDePose > 1000) &&  (jeu->listeDesJoueurs[i].bombe.etatBombe == 1) )
+
+
+        jeu->mapJeu[jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y][jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x] = 4;
+
+        int X,Y;
+
+        int stop = 0;
+        int cmpt = 1;
+        int longueurExplosion = 10;
+
+        X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
+        Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
+
+        while(cmpt < longueurExplosion && stop != 1)
         {
-
-
-            jeu->mapJeu[jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y][jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x] = 4;
-
-            int X,Y;
-
-            int stop = 0;
-            int cmpt = 1;
-            int longueurExplosion = 10;
-
-            X = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x;
-            Y = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y;
-
-            while(cmpt < longueurExplosion && stop != 1)
+            X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
+            Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y + cmpt;
+            if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
             {
-                X = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x;
-                Y = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y + cmpt;
-                if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
-                {
-                    jeu->mapJeu[Y][X] = 4;
-                    cmpt++;
-                }
-                else
-                {
-                    stop = 1;
-                }
+                jeu->mapJeu[Y][X] = 4;
+                cmpt++;
             }
-
-
-            stop = 0;
-            cmpt = 1;
-            while(cmpt < longueurExplosion && stop != 1)
+            else
             {
-                X = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x;
-                Y = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y - cmpt;
-                if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
-                {
-                    jeu->mapJeu[Y][X] = 4;
-                    cmpt++;
-                }
-                else
-                {
-                    stop = 1;
-                }
+                stop = 1;
             }
-
-            stop = 0;
-            cmpt = 1;
-            while(cmpt < longueurExplosion && stop != 1)
-            {
-                X = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x + cmpt;
-                Y = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y;
-                if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
-                {
-                    jeu->mapJeu[Y][X] = 4;
-                    cmpt++;
-                }
-                else
-                {
-                    stop = 1;
-                }
-            }
-
-            stop = 0;
-            cmpt = 1;
-            while(cmpt < longueurExplosion && stop != 1)
-            {
-                X = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x - cmpt;
-                Y = jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y;
-                if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
-                {
-                    jeu->mapJeu[Y][X] = 4;
-                    cmpt++;
-                }
-                else
-                {
-                    stop = 1;
-                }
-            }
-            jeu->listeDesJoueurs[i].bombe.etatBombe = 2;
         }
 
-        else if((SDL_GetTicks() - jeu->listeDesJoueurs[i].bombe.tickDePose > 1500 ) &&  (jeu->listeDesJoueurs[i].bombe.etatBombe == 2) )
+
+        stop = 0;
+        cmpt = 1;
+        while(cmpt < longueurExplosion && stop != 1)
         {
-            for(int i = 0; i < 20; i++)
+            X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
+            Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y - cmpt;
+            if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
             {
-                for(int j = 0; j<20; j++)
+                jeu->mapJeu[Y][X] = 4;
+                cmpt++;
+            }
+            else
+            {
+                stop = 1;
+            }
+        }
+
+        stop = 0;
+        cmpt = 1;
+        while(cmpt < longueurExplosion && stop != 1)
+        {
+            X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x + cmpt;
+            Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
+            if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
+            {
+                jeu->mapJeu[Y][X] = 4;
+                cmpt++;
+            }
+            else
+            {
+                stop = 1;
+            }
+        }
+
+        stop = 0;
+        cmpt = 1;
+        while(cmpt < longueurExplosion && stop != 1)
+        {
+            X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x - cmpt;
+            Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
+            if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
+            {
+                jeu->mapJeu[Y][X] = 4;
+                cmpt++;
+            }
+            else
+            {
+                stop = 1;
+            }
+        }
+        jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
+    }
+
+    else if((SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1500 ) &&  (jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 2) )
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            for(int j = 0; j<20; j++)
+            {
+                if(jeu->mapJeu[j][i] == 4)  //inversion de j et i pour faciliter la lecture la matrice map
                 {
-                    if(jeu->mapJeu[j][i] == 4)  //inversion de j et i pour faciliter la lecture la matrice map
-                    {
-                        jeu->mapJeu[j][i] = 0;
-                    }
+                    jeu->mapJeu[j][i] = 0;
                 }
             }
-            jeu->listeDesJoueurs[i].bombe.etatBombe = 0;
-            jeu->listeDesJoueurs[i].bombe.tickDePose = 0;
         }
+        jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 0;
+        jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = 0;
     }
 }
 
@@ -222,17 +219,17 @@ void exploserBombe(StructJeu *jeu)
 /*******************DEPLACEMENTS ET COLLISIONS************************************/
 /*********************************************************************************/
 
-void deplacerJoueur(StructJeu *jeu, StructTouchesClavier *clavier) //GÃ¨re le dÃ©placement des joueurs et les collisions
+void deplacerJoueur(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur) //GÃ¨re le dÃ©placement des joueurs et les collisions
 {
 
 
-    int x = jeu->listeDesJoueurs[0].coordonnes.x;
-    int y = jeu->listeDesJoueurs[0].coordonnes.y;
+    int x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
+    int y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
 
 
     if(clavier->toucheHaut == 1)
     {
-        jeu->listeDesJoueurs[0].direction = HAUT;
+        jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
         printf("Appui Haut\n");
         if(contenuCaseMatrice(jeu, x, y - 1) == 0 && contenuCaseMatrice(jeu, x + 29, y - 1) == 0)
         {
@@ -243,7 +240,7 @@ void deplacerJoueur(StructJeu *jeu, StructTouchesClavier *clavier) //GÃ¨re le dÃ
 
     if(clavier->toucheBas == 1)
     {
-        jeu->listeDesJoueurs[0].direction = BAS;
+        jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
         printf("Appui Bas\n");
         if(contenuCaseMatrice(jeu, x, y + 31) == 0 && contenuCaseMatrice(jeu, x + 29, y + 31)== 0 )
         {
@@ -253,7 +250,7 @@ void deplacerJoueur(StructJeu *jeu, StructTouchesClavier *clavier) //GÃ¨re le dÃ
 
     if(clavier->toucheDroite == 1)
     {
-        jeu->listeDesJoueurs[0].direction = DROITE;
+        jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
         printf("Appui Droite\n");
         if(contenuCaseMatrice(jeu, x + 31, y) == 0 && contenuCaseMatrice(jeu, x + 31, y + 29) == 0 )
         {
@@ -263,7 +260,7 @@ void deplacerJoueur(StructJeu *jeu, StructTouchesClavier *clavier) //GÃ¨re le dÃ
 
     if(clavier->toucheGauche == 1)
     {
-        jeu->listeDesJoueurs[0].direction = GAUCHE;
+        jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
         printf("Appui Gauche\n");
         if(contenuCaseMatrice(jeu, x - 1, y) == 0 && contenuCaseMatrice(jeu, x - 1, y + 29) == 0 )
         {
@@ -273,15 +270,15 @@ void deplacerJoueur(StructJeu *jeu, StructTouchesClavier *clavier) //GÃ¨re le dÃ
 
     if(clavier->toucheHaut == 0 && clavier->toucheBas == 0 && clavier->toucheGauche == 0 && clavier->toucheDroite == 0)
     {
-        jeu->listeDesJoueurs[0].deplacement = 0;
+        jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
     }
     else
     {
-        jeu->listeDesJoueurs[0].deplacement = 1;
+        jeu->listeDesJoueurs[indiceJoueur].deplacement = 1;
     }
 
-    jeu->listeDesJoueurs[0].coordonnes.x =  x ;
-    jeu->listeDesJoueurs[0].coordonnes.y = y;
+    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x =  x ;
+    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
 
 }
 
@@ -292,43 +289,43 @@ void deplacerJoueur(StructJeu *jeu, StructTouchesClavier *clavier) //GÃ¨re le dÃ
 /*********************************************************************************/
 
 
-void animerDeplacement(StructJeu *jeu, int Indicejoueur)
+void animerDeplacement(StructJeu *jeu, int indiceJoueur)
 {
 
     int check = 0;
 
-    if(jeu->listeDesJoueurs[Indicejoueur].deplacement == 1)
+    if(jeu->listeDesJoueurs[indiceJoueur].deplacement == 1)
     {
 
-        if(jeu->listeDesJoueurs[Indicejoueur].direction == HAUT)
+        if(jeu->listeDesJoueurs[indiceJoueur].direction == HAUT)
         {
             check = 1;
-            jeu->listeDesJoueurs[Indicejoueur].coordonnesSprite.y = 13;
+            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.y = 13;
         }
 
-        if(jeu->listeDesJoueurs[Indicejoueur].direction == BAS)
+        if(jeu->listeDesJoueurs[indiceJoueur].direction == BAS)
         {
             check = 1;
-            jeu->listeDesJoueurs[Indicejoueur].coordonnesSprite.y = 13 + 2*64;
+            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.y = 13 + 2*64;
         }
 
-        if(jeu->listeDesJoueurs[Indicejoueur].direction == DROITE)
+        if(jeu->listeDesJoueurs[indiceJoueur].direction == DROITE)
         {
             check = 1;
-            jeu->listeDesJoueurs[Indicejoueur].coordonnesSprite.y = 13 + 3*64;
+            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.y = 13 + 3*64;
         }
 
-        if(jeu->listeDesJoueurs[Indicejoueur].direction == GAUCHE)
+        if(jeu->listeDesJoueurs[indiceJoueur].direction == GAUCHE)
         {
             check = 1;
-            jeu->listeDesJoueurs[Indicejoueur].coordonnesSprite.y = 13 + 64;
+            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.y = 13 + 64;
         }
         if(check == 1)
         {
-            jeu->listeDesJoueurs[Indicejoueur].coordonnesSprite.x = jeu->listeDesJoueurs[Indicejoueur].coordonnesSprite.x + 64;
-            if(jeu->listeDesJoueurs[Indicejoueur].coordonnesSprite.x > 512)
+            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.x = jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.x + 64;
+            if(jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.x > 512)
             {
-                jeu->listeDesJoueurs[Indicejoueur].coordonnesSprite.x = 15;
+                jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.x = 15;
             }
         }
     }
