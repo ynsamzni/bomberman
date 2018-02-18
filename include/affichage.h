@@ -32,7 +32,6 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[]);
 void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer);
 
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu);
-void decoupageTextureSprite(StructJeu *jeu, int Indicejoueur);
 
 
 

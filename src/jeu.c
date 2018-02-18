@@ -70,20 +70,20 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 {
 
-    deplacementJoueurs(jeu, clavier);     //Calculer deplacement joueur Humain UNIQUEMENT
+    deplacerJoueur(jeu, clavier);     //Calculer deplacement joueur Humain UNIQUEMENT
 
     if(clavier->toucheBombe == 1)           //Gérer la pose de bombe Humain UNIQUEMENT
     {
-        poseBombes(jeu);
+        poserBombe(jeu);
     }
 
-    explosionBombes(jeu);         //Gérer l'explosion des bombes Humain + IA
+    exploserBombe(jeu);         //Gérer l'explosion des bombes Humain + IA
 
     deplacerIA(jeu);
 
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
-        decoupageTextureSprite(jeu, i);
+        animerDeplacement(jeu, i);
 
     }
 
@@ -93,7 +93,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 /*******************POSE DES BOMBES************************************/
 /**********************************************************************/
 
-void poseBombes(StructJeu *jeu)
+void poserBombe(StructJeu *jeu)
 {
 
     if(jeu->listeDesJoueurs[0].bombe.tickDePose == 0)
@@ -114,7 +114,7 @@ void poseBombes(StructJeu *jeu)
 /*******************GESTION DE L'EXPLOSION DES BOMBES***********************************/
 /***************************************************************************************/
 
-void explosionBombes(StructJeu *jeu)
+void exploserBombe(StructJeu *jeu)
 {
     for(int i = 0; i<jeu->nbrDeJoueurs; i++)
     {
@@ -224,7 +224,7 @@ void explosionBombes(StructJeu *jeu)
 /*******************DEPLACEMENTS ET COLLISIONS************************************/
 /*********************************************************************************/
 
-void deplacementJoueurs(StructJeu *jeu, StructTouchesClavier *clavier) //Gère le déplacement des joueurs et les collisions
+void deplacerJoueur(StructJeu *jeu, StructTouchesClavier *clavier) //Gère le déplacement des joueurs et les collisions
 {
 
 
@@ -294,7 +294,7 @@ void deplacementJoueurs(StructJeu *jeu, StructTouchesClavier *clavier) //Gère l
 /*********************************************************************************/
 
 
-void decoupageTextureSprite(StructJeu *jeu, int Indicejoueur)
+void animerDeplacement(StructJeu *jeu, int Indicejoueur)
 {
 
     int check = 0;
