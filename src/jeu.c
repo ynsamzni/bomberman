@@ -132,11 +132,11 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur)
         for(int cmpt=0; cmpt<longueurExplosion; cmpt++)
         {
             // Déterminer quelles cases ont le droit d'exploser
-            if(Y+cmpt > 20 || jeu->mapJeu[X][Y+cmpt] == 1)
+            if(Y+cmpt >= 20 || jeu->mapJeu[X][Y+cmpt] == 1)
                 basDestructible=0;
             if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] == 1)
                 hautDestructible=0;
-            if(X+cmpt > 20 || jeu->mapJeu[X+cmpt][Y] == 1)
+            if(X+cmpt >= 20 || jeu->mapJeu[X+cmpt][Y] == 1)
                 droiteDestructible=0;
             if(X-cmpt < 0 || jeu->mapJeu[X-cmpt][Y] == 1)
                 gaucheDestructible=0;
