@@ -69,22 +69,20 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 {
-
-    deplacerJoueur(jeu, clavier);     //Calculer deplacement joueur Humain UNIQUEMENT
-
-    if(clavier->toucheBombe == 1)           //Gérer la pose de bombe Humain UNIQUEMENT
-    {
+    // Action joueur
+    if(clavier->toucheBombe == 1)
         poserBombe(jeu);
-    }
+    else
+        deplacerJoueur(jeu, clavier);
 
-    exploserBombe(jeu);         //Gérer l'explosion des bombes Humain + IA
-
+    // Action IA
     deplacerIA(jeu);
 
+    // Actions joueur + IA
+    exploserBombe(jeu);
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
         animerDeplacement(jeu, i);
-
     }
 
 }
