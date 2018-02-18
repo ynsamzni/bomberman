@@ -8,16 +8,12 @@
 
 void initAffichage(StructAffichage *affichage, char nomFenetre[])
 {
-
-
     SDL_Init(SDL_INIT_VIDEO); //Initialise le système de gestion de rendu
     IMG_Init(IMG_INIT_PNG);
 
     affichage->window = SDL_CreateWindow(nomFenetre, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN); //Création d'une fenêtre
     SDL_SetWindowIcon(affichage->window, IMG_Load("icon.png"));
     SDL_RaiseWindow(affichage->window); //Permet de placer la fenêtre au dessus de toutes les autres
-
-
 
     affichage->renderer = SDL_CreateRenderer(affichage->window, -1, SDL_RENDERER_ACCELERATED); //Renderer, permettant de de "dessiner" dans la fenêtre
 
@@ -28,13 +24,10 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[])
 
 void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
 {
-
     SDL_Surface *surface = NULL;
 
     surface = IMG_Load("assets/img/perso2.png");
-    // printf(" yoo : %s \n",SDL_GetError());
     (*structTextures).texturePerso = SDL_CreateTextureFromSurface(renderer, surface);
-
 
     surface = IMG_Load("assets/img/mur.bmp"); //On charge une image sans la surface
     (*structTextures).textureMur = SDL_CreateTextureFromSurface(renderer, surface); //On met la surface dans une texture
@@ -49,7 +42,6 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     (*structTextures).textureExplosion = SDL_CreateTextureFromSurface(renderer, surface);
 
     SDL_FreeSurface(surface); //On peut donc "détruire" la surface
-
 }
 
 /******************************************************************************/
@@ -58,9 +50,6 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
 
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
 {
-
-
-
     /**
     Dans la SDL, il existe une structure spécialement faite pour stocker un rectangle qui s'appelle SDL_Rect.
     Celle-ci comporte quatre champs, tous des int, que vous connaissez déjà :
@@ -89,52 +78,37 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
     acceuillant l'image.
     **/
 
-
-
-    SDL_Rect rectBriqueJeu = {0, 0, 30, 30}; //Déclaration du rectangle 30*30 qui dessine tout
-
+    SDL_Rect caseMap = {0, 0, 30, 30}; // Case utilisée pour remplir la map
     SDL_Rect rectDecoupeImage;
 
-
-
-    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255); //afffichage fond
+     // Afficher le fond
+    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
     SDL_RenderClear(affichage->renderer);
 
-
-
+    // Afficher les cases
     for(int i = 0; i < 20; i++)
     {
         for(int j = 0; j<20; j++)
         {
+            caseMap.x = i*30;
+            caseMap.y = j*30;
 
-            rectBriqueJeu.x = i*30;
-            rectBriqueJeu.y = j*30;
-
-            if(jeu->mapJeu[j][i] == 1)  //inversion de j et i pour faciliter la lecture la matrice map
-            {
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureMur, NULL, &rectBriqueJeu);
-            }
-            if(jeu->mapJeu[j][i] == 2)
-            {
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureMur2, NULL, &rectBriqueJeu);
-            }
-            if(jeu->mapJeu[j][i] == 3)
-            {
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureBomb, NULL, &rectBriqueJeu);
-            }
-            if(jeu->mapJeu[j][i] == 4)
-            {
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureExplosion, NULL, &rectBriqueJeu);
-            }
-
-
+            if(jeu->mapJeu[i][j] == 1)
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureMur, NULL, &caseMap);
+            else if(jeu->mapJeu[i][j] == 2)
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureMur2, NULL, &caseMap);
+            else if(jeu->mapJeu[i][j] == 3)
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureBomb, NULL, &caseMap);
+            else if(jeu->mapJeu[i][j] == 4)
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureExplosion, NULL, &caseMap);
         }
     }
 
+    // Afficher les joueurs
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
-        rectBriqueJeu.x = jeu->listeDesJoueurs[i].coordonnes.x;
-        rectBriqueJeu.y = jeu->listeDesJoueurs[i].coordonnes.y;
+        caseMap.x = jeu->listeDesJoueurs[i].coordonnes.x;
+        caseMap.y = jeu->listeDesJoueurs[i].coordonnes.y;
 
         rectDecoupeImage.x = jeu->listeDesJoueurs[i].coordonnesSprite.x; //Coordonnée de la portion à découper dans le sprite
         rectDecoupeImage.y = jeu->listeDesJoueurs[i].coordonnesSprite.y; //Coordonnée de la portion à découper dans le sprite
@@ -142,10 +116,8 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
         rectDecoupeImage.w = 35; //Hauteur de la portion à découper dans le sprite
         rectDecoupeImage.h = 50; //Largeur de la portion à découper dans le sprite
 
-        SDL_RenderCopy(affichage->renderer, affichage->structTextures.texturePerso, &rectDecoupeImage, &rectBriqueJeu);
-
+        SDL_RenderCopy(affichage->renderer, affichage->structTextures.texturePerso, &rectDecoupeImage, &caseMap);
     }
-
 
     SDL_RenderPresent(affichage->renderer); //Affichage du renderer
 }

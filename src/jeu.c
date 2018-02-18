@@ -102,7 +102,7 @@ void poserBombe(StructJeu *jeu, int indiceJoueur)
         jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = SDL_GetTicks();
 
         // Poser la bombe à la position du joueur
-        jeu->mapJeu[coordonneesJoueurY][coordonneesJoueurX] = 3;
+        jeu->mapJeu[coordonneesJoueurX][coordonneesJoueurY] = 3;
 
         // Enregistrer les coordonnées de la bombe posée
         jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x = coordonneesJoueurX;
@@ -132,24 +132,24 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur)
         for(int cmpt=0; cmpt<longueurExplosion; cmpt++)
         {
             // Déterminer quelles cases ont le droit d'exploser
-            if(Y+cmpt > 20 || jeu->mapJeu[Y+cmpt][X] == 1)
+            if(Y+cmpt > 20 || jeu->mapJeu[X][Y+cmpt] == 1)
                 basDestructible=0;
-            if(Y-cmpt < 0 || jeu->mapJeu[Y-cmpt][X] == 1)
+            if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] == 1)
                 hautDestructible=0;
-            if(X+cmpt > 20 || jeu->mapJeu[Y][X+cmpt] == 1)
+            if(X+cmpt > 20 || jeu->mapJeu[X+cmpt][Y] == 1)
                 droiteDestructible=0;
-            if(X-cmpt < 0 || jeu->mapJeu[Y][X-cmpt] == 1)
+            if(X-cmpt < 0 || jeu->mapJeu[X-cmpt][Y] == 1)
                 gaucheDestructible=0;
 
             // Exploser la case
             if(gaucheDestructible == 1)
-                jeu->mapJeu[Y][X-cmpt] = 4;
+                jeu->mapJeu[X-cmpt][Y] = 4;
             if(basDestructible == 1)
-                jeu->mapJeu[Y+cmpt][X] = 4;
+                jeu->mapJeu[X][Y+cmpt] = 4;
             if(droiteDestructible == 1)
-                jeu->mapJeu[Y][X+cmpt] = 4;
+                jeu->mapJeu[X+cmpt][Y] = 4;
             if(hautDestructible == 1)
-                jeu->mapJeu[Y-cmpt][X] = 4;
+                jeu->mapJeu[X][Y-cmpt] = 4;
         }
 
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
@@ -161,8 +161,8 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur)
         {
             for(int j = 0; j<20; j++)
             {
-                if(jeu->mapJeu[j][i] == 4)  //inversion de j et i pour faciliter la lecture la matrice map
-                    jeu->mapJeu[j][i] = 0;
+                if(jeu->mapJeu[i][j] == 4)
+                    jeu->mapJeu[i][j] = 0;
             }
         }
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 0;
@@ -337,14 +337,10 @@ void afficherStructureJeu(StructJeu jeu)
 
 int contenuCaseMatrice(StructJeu *jeu, int x, int y)
 {
-    if( 0 > x || x > WIDTH || 0 > y || y > HEIGHT)
-    {
+    if( x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
         return 1;
-    }
     else
-    {
-        return jeu->mapJeu[renvoitCaseMatrice(y)][renvoitCaseMatrice(x)];
-    }
+        return jeu->mapJeu[renvoitCaseMatrice(x)][renvoitCaseMatrice(y)];
 }
 
 
