@@ -93,15 +93,22 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 
 void poserBombe(StructJeu *jeu, int indiceJoueur)
 {
-
+    // Si le joueur a une bombe d'active
     if(jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose == 0)
     {
+        int coordonneesJoueurX=renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
+        int coordonneesJoueurY=renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
 
         jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = SDL_GetTicks();
-        jeu->mapJeu[renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)][renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x)] = 3;
-        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
-        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
 
+        // Poser la bombe à la position du joueur
+        jeu->mapJeu[coordonneesJoueurY][coordonneesJoueurX] = 3;
+
+        // Enregistrer les coordonnées de la bombe posée
+        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x = coordonneesJoueurX;
+        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y = coordonneesJoueurY;
+
+        // Marquer la bombe comme posée
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 1;
 
     }
@@ -116,85 +123,35 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur)
 {
     if( (SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1000) &&  (jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 1) )
     {
+        int X=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
+        int Y=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
 
-
-        jeu->mapJeu[jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y][jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x] = 4;
-
-        int X,Y;
-
-        int stop = 0;
-        int cmpt = 1;
         int longueurExplosion = 10;
+        int hautDestructible=1, droiteDestructible=1, basDestructible=1, gaucheDestructible=1;
 
-        X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
-        Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
-
-        while(cmpt < longueurExplosion && stop != 1)
+        for(int cmpt=0; cmpt<longueurExplosion; cmpt++)
         {
-            X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
-            Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y + cmpt;
-            if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
-            {
-                jeu->mapJeu[Y][X] = 4;
-                cmpt++;
-            }
-            else
-            {
-                stop = 1;
-            }
+            // Déterminer quelles cases ont le droit d'exploser
+            if(Y+cmpt > 20 || jeu->mapJeu[Y+cmpt][X] == 1)
+                basDestructible=0;
+            if(Y-cmpt < 0 || jeu->mapJeu[Y-cmpt][X] == 1)
+                hautDestructible=0;
+            if(X+cmpt > 20 || jeu->mapJeu[Y][X+cmpt] == 1)
+                droiteDestructible=0;
+            if(X-cmpt < 0 || jeu->mapJeu[Y][X-cmpt] == 1)
+                gaucheDestructible=0;
+
+            // Exploser la case
+            if(gaucheDestructible == 1)
+                jeu->mapJeu[Y][X-cmpt] = 4;
+            if(basDestructible == 1)
+                jeu->mapJeu[Y+cmpt][X] = 4;
+            if(droiteDestructible == 1)
+                jeu->mapJeu[Y][X+cmpt] = 4;
+            if(hautDestructible == 1)
+                jeu->mapJeu[Y-cmpt][X] = 4;
         }
 
-
-        stop = 0;
-        cmpt = 1;
-        while(cmpt < longueurExplosion && stop != 1)
-        {
-            X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
-            Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y - cmpt;
-            if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
-            {
-                jeu->mapJeu[Y][X] = 4;
-                cmpt++;
-            }
-            else
-            {
-                stop = 1;
-            }
-        }
-
-        stop = 0;
-        cmpt = 1;
-        while(cmpt < longueurExplosion && stop != 1)
-        {
-            X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x + cmpt;
-            Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
-            if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
-            {
-                jeu->mapJeu[Y][X] = 4;
-                cmpt++;
-            }
-            else
-            {
-                stop = 1;
-            }
-        }
-
-        stop = 0;
-        cmpt = 1;
-        while(cmpt < longueurExplosion && stop != 1)
-        {
-            X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x - cmpt;
-            Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
-            if(X >= 0 && X <= 20 && Y >= 0 && Y <= 20 && jeu->mapJeu[Y][X] != 1)
-            {
-                jeu->mapJeu[Y][X] = 4;
-                cmpt++;
-            }
-            else
-            {
-                stop = 1;
-            }
-        }
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
     }
 
@@ -205,9 +162,7 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur)
             for(int j = 0; j<20; j++)
             {
                 if(jeu->mapJeu[j][i] == 4)  //inversion de j et i pour faciliter la lecture la matrice map
-                {
                     jeu->mapJeu[j][i] = 0;
-                }
             }
         }
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 0;
