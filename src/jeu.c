@@ -131,25 +131,25 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur)
 
         for(int cmpt=0; cmpt<longueurExplosion; cmpt++)
         {
-            // Déterminer quelles cases ont le droit d'exploser
-            if(Y+cmpt >= 20 || jeu->mapJeu[X][Y+cmpt] == 1)
-                basDestructible=0;
+            // Déterminer les directions dans lesquelles il ne doit plus avoir d'explosion
             if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] == 1)
                 hautDestructible=0;
             if(X+cmpt >= 20 || jeu->mapJeu[X+cmpt][Y] == 1)
                 droiteDestructible=0;
+            if(Y+cmpt >= 20 || jeu->mapJeu[X][Y+cmpt] == 1)
+                basDestructible=0;
             if(X-cmpt < 0 || jeu->mapJeu[X-cmpt][Y] == 1)
                 gaucheDestructible=0;
 
-            // Exploser la case
-            if(gaucheDestructible == 1)
-                jeu->mapJeu[X-cmpt][Y] = 4;
-            if(basDestructible == 1)
-                jeu->mapJeu[X][Y+cmpt] = 4;
-            if(droiteDestructible == 1)
-                jeu->mapJeu[X+cmpt][Y] = 4;
+            // Exploser dans les directions autorisées
             if(hautDestructible == 1)
                 jeu->mapJeu[X][Y-cmpt] = 4;
+            if(droiteDestructible == 1)
+                jeu->mapJeu[X+cmpt][Y] = 4;
+            if(basDestructible == 1)
+                jeu->mapJeu[X][Y+cmpt] = 4;
+            if(gaucheDestructible == 1)
+                jeu->mapJeu[X-cmpt][Y] = 4;
         }
 
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
