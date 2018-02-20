@@ -10,11 +10,11 @@
 
 
 typedef struct{
-    SDL_Texture *texturePerso;
-    SDL_Texture *textureMur;
-    SDL_Texture *textureMur2;
-    SDL_Texture *textureBomb;
-    SDL_Texture *textureExplosion;
+    SDL_Texture *feuilleSprites;
+    SDL_Texture *murIndestructible;
+    SDL_Texture *murDestructible;
+    SDL_Texture *bombe;
+    SDL_Texture *explosion;
 }StructTextures;
 
 

@@ -24,24 +24,24 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[])
 
 void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
 {
-    SDL_Surface *surface = NULL;
+    SDL_Surface *surfaceTmp = NULL;
 
-    surface = IMG_Load("assets/img/perso2.png");
-    (*structTextures).texturePerso = SDL_CreateTextureFromSurface(renderer, surface);
+    surfaceTmp = IMG_Load("assets/img/feuille_sprite.png");
+    (*structTextures).feuilleSprites = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    surface = IMG_Load("assets/img/mur.bmp"); //On charge une image sans la surface
-    (*structTextures).textureMur = SDL_CreateTextureFromSurface(renderer, surface); //On met la surface dans une texture
+    surfaceTmp = IMG_Load("assets/img/mur_indestructible.bmp"); //On charge une image sans la surface
+    (*structTextures).murIndestructible = SDL_CreateTextureFromSurface(renderer, surfaceTmp); //On met la surface dans une texture
 
-    surface = IMG_Load("assets/img/mur2.png");
-    (*structTextures).textureMur2 = SDL_CreateTextureFromSurface(renderer, surface);
+    surfaceTmp = IMG_Load("assets/img/mur_destructible.png");
+    (*structTextures).murDestructible = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    surface = IMG_Load("assets/img/bomb.png");
-    (*structTextures).textureBomb = SDL_CreateTextureFromSurface(renderer, surface);
+    surfaceTmp = IMG_Load("assets/img/bombe.png");
+    (*structTextures).bombe = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    surface = IMG_Load("assets/img/explosion.png");
-    (*structTextures).textureExplosion = SDL_CreateTextureFromSurface(renderer, surface);
+    surfaceTmp = IMG_Load("assets/img/explosion.png");
+    (*structTextures).explosion = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    SDL_FreeSurface(surface); //On peut donc "détruire" la surface
+    SDL_FreeSurface(surfaceTmp); //On peut donc "détruire" la surface
 }
 
 /******************************************************************************/
@@ -79,7 +79,7 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
     **/
 
     SDL_Rect caseMap = {0, 0, 30, 30}; // Case utilisée pour remplir la map
-    SDL_Rect rectDecoupeImage;
+    SDL_Rect spriteDecoupe;
 
      // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
@@ -94,13 +94,13 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
             caseMap.y = j*30;
 
             if(jeu->mapJeu[i][j] == 1)
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureMur, NULL, &caseMap);
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.murIndestructible, NULL, &caseMap);
             else if(jeu->mapJeu[i][j] == 2)
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureMur2, NULL, &caseMap);
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.murDestructible, NULL, &caseMap);
             else if(jeu->mapJeu[i][j] == 3)
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureBomb, NULL, &caseMap);
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.bombe, NULL, &caseMap);
             else if(jeu->mapJeu[i][j] == 4)
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.textureExplosion, NULL, &caseMap);
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.explosion, NULL, &caseMap);
         }
     }
 
@@ -110,13 +110,13 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
         caseMap.x = jeu->listeDesJoueurs[i].coordonnes.x;
         caseMap.y = jeu->listeDesJoueurs[i].coordonnes.y;
 
-        rectDecoupeImage.x = jeu->listeDesJoueurs[i].coordonnesSprite.x; //Coordonnée de la portion à découper dans le sprite
-        rectDecoupeImage.y = jeu->listeDesJoueurs[i].coordonnesSprite.y; //Coordonnée de la portion à découper dans le sprite
+        spriteDecoupe.x = jeu->listeDesJoueurs[i].coordonnesSprite.x; //Coordonnée de la portion à découper dans le sprite
+        spriteDecoupe.y = jeu->listeDesJoueurs[i].coordonnesSprite.y; //Coordonnée de la portion à découper dans le sprite
 
-        rectDecoupeImage.w = 35; //Hauteur de la portion à découper dans le sprite
-        rectDecoupeImage.h = 50; //Largeur de la portion à découper dans le sprite
+        spriteDecoupe.w = 35; //Hauteur de la portion à découper dans le sprite
+        spriteDecoupe.h = 50; //Largeur de la portion à découper dans le sprite
 
-        SDL_RenderCopy(affichage->renderer, affichage->structTextures.texturePerso, &rectDecoupeImage, &caseMap);
+        SDL_RenderCopy(affichage->renderer, affichage->structTextures.feuilleSprites, &spriteDecoupe, &caseMap);
     }
 
     SDL_RenderPresent(affichage->renderer); //Affichage du renderer
