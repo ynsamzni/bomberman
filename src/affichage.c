@@ -80,6 +80,10 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
 
     SDL_Rect caseMap = {0, 0, 30, 30}; // Case utilisée pour remplir la map
     SDL_Rect spriteDecoupe;
+    SDL_Rect spriteInitial = {15, 13, 35, 50};  // Coordonnées du sprite initial dans la feuille de sprites
+    int nbTotalFrames = 9; // Nombre de sprites sur une même ligne de la feuille de sprites
+    int dureeParFrame = 100;
+    int frame;
 
      // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
@@ -107,19 +111,35 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
     // Afficher les joueurs
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
+        spriteDecoupe=spriteInitial;
+
+        // Déterminer les coordonnées X du nouveau sprite
+        if(jeu->listeDesJoueurs[i].deplacement == 1)
+            frame = (SDL_GetTicks() / dureeParFrame) % nbTotalFrames; // Passer à la prochaine frame toutes les 'dureeParFrame' ms
+        else
+            frame = 0;
+        spriteDecoupe.x += frame * 64;
+
+        // Déterminer les coordonnées Y du nouveau sprite
+        if(jeu->listeDesJoueurs[i].direction == HAUT)
+            spriteDecoupe.y += 0;
+        if(jeu->listeDesJoueurs[i].direction == GAUCHE)
+            spriteDecoupe.y += 64;
+        if(jeu->listeDesJoueurs[i].direction == BAS)
+            spriteDecoupe.y += 2*64;
+        if(jeu->listeDesJoueurs[i].direction == DROITE)
+            spriteDecoupe.y += 3*64;
+
+        // Déterminer la case sur laquelle se trouve le joueur
         caseMap.x = jeu->listeDesJoueurs[i].coordonnes.x;
         caseMap.y = jeu->listeDesJoueurs[i].coordonnes.y;
 
-        spriteDecoupe.x = jeu->listeDesJoueurs[i].coordonnesSprite.x; //Coordonnée de la portion à découper dans le sprite
-        spriteDecoupe.y = jeu->listeDesJoueurs[i].coordonnesSprite.y; //Coordonnée de la portion à découper dans le sprite
-
-        spriteDecoupe.w = 35; //Hauteur de la portion à découper dans le sprite
-        spriteDecoupe.h = 50; //Largeur de la portion à découper dans le sprite
-
+        // Afficher le sprite mis à jour
         SDL_RenderCopy(affichage->renderer, affichage->structTextures.feuilleSprites, &spriteDecoupe, &caseMap);
     }
 
-    SDL_RenderPresent(affichage->renderer); //Affichage du renderer
+    // Actualiser l'affichage
+    SDL_RenderPresent(affichage->renderer);
 }
 
 

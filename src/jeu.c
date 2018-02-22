@@ -44,10 +44,8 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
         jeu->listeDesJoueurs[i].enVie = 1;
         jeu->listeDesJoueurs[i].coordonnes.x = 0;
         jeu->listeDesJoueurs[i].coordonnes.y = 0;
-        jeu->listeDesJoueurs[i].direction = GAUCHE; //Etat initial du perso lors de l'apparition
+        jeu->listeDesJoueurs[i].direction = BAS; //Etat initial du perso lors de l'apparition
         jeu->listeDesJoueurs[i].deplacement = 1;
-        jeu->listeDesJoueurs[i].coordonnesSprite.x = 15; //Coordonnée de départ du découpage du sprite
-        jeu->listeDesJoueurs[i].coordonnesSprite.y = 13; //Coordonnée de départ du découpage du sprite
     }
 
 
@@ -80,11 +78,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 
     // Actions joueur + IA
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
-    {
         exploserBombe(jeu, i);
-        animerDeplacement(jeu, i);
-    }
-
 }
 
 /**********************************************************************/
@@ -234,56 +228,6 @@ void deplacerJoueur(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJou
 
     jeu->listeDesJoueurs[indiceJoueur].coordonnes.x =  x ;
     jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
-
-}
-
-
-
-/*********************************************************************************/
-/**********************CALCUL DECOUPAGE DU SPRITE*********************************/
-/*********************************************************************************/
-
-
-void animerDeplacement(StructJeu *jeu, int indiceJoueur)
-{
-
-    int check = 0;
-
-    if(jeu->listeDesJoueurs[indiceJoueur].deplacement == 1)
-    {
-
-        if(jeu->listeDesJoueurs[indiceJoueur].direction == HAUT)
-        {
-            check = 1;
-            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.y = 13;
-        }
-
-        if(jeu->listeDesJoueurs[indiceJoueur].direction == BAS)
-        {
-            check = 1;
-            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.y = 13 + 2*64;
-        }
-
-        if(jeu->listeDesJoueurs[indiceJoueur].direction == DROITE)
-        {
-            check = 1;
-            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.y = 13 + 3*64;
-        }
-
-        if(jeu->listeDesJoueurs[indiceJoueur].direction == GAUCHE)
-        {
-            check = 1;
-            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.y = 13 + 64;
-        }
-        if(check == 1)
-        {
-            jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.x = jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.x + 64;
-            if(jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.x > 512)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].coordonnesSprite.x = 15;
-            }
-        }
-    }
 
 }
 

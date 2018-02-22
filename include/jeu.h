@@ -29,7 +29,6 @@ typedef struct{
     Bombe bombe;
     Direction direction;
     int deplacement;
-    Coordonnes coordonnesSprite;
 }Joueur;
 
 typedef struct{
@@ -46,7 +45,6 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier);
 void deplacerJoueur(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur);
 void poserBombe(StructJeu *jeu, int indiceJoueur);
 void exploserBombe(StructJeu *jeu, int indiceJoueur);
-void animerDeplacement(StructJeu *jeu, int indiceJoueur);
 
 void afficherStructureJeu(StructJeu jeu);
 
