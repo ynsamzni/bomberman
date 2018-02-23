@@ -7,7 +7,7 @@
 #define HEIGHT 600
 #define NBR_DE_CASES_HORIZONTALES 20
 #define NBR_DE_CASES_VERTICALES 20
-#define CHEMIN_D_ACCES_FICHIER_NIVEAU "../LevelEditor/mapTest.dat"
+#define CHEMIN_D_ACCES_FICHIER_NIVEAU "assets/maps/map1.dat"
 #define VITESSE_DES_JOUEURS 10
 
 #endif // CONSTANTES_H_INCLUDED
