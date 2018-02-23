@@ -22,8 +22,7 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
             for(int j=0; j<NBR_DE_CASES_VERTICALES; j++)
                 jeu->mapJeu[i][j]=randProbaParmi4Nb(0, 40,
                                                     1, 26,
-                                                    2, 30,
-                                                    3, 4);
+                                                    2, 34, 3, 0);
         }
 
     }

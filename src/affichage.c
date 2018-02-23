@@ -12,7 +12,7 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[])
     IMG_Init(IMG_INIT_PNG);
 
     affichage->window = SDL_CreateWindow(nomFenetre, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN); //Création d'une fenêtre
-    SDL_SetWindowIcon(affichage->window, IMG_Load("icon.png"));
+    SDL_SetWindowIcon(affichage->window, IMG_Load("assets/img/icon.png"));
     SDL_RaiseWindow(affichage->window); //Permet de placer la fenêtre au dessus de toutes les autres
 
     affichage->renderer = SDL_CreateRenderer(affichage->window, -1, SDL_RENDERER_ACCELERATED); //Renderer, permettant de de "dessiner" dans la fenêtre
