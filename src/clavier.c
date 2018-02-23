@@ -87,6 +87,9 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
             }
 
         }
+
+        if( event.type == SDL_QUIT )
+            clavier->toucheQuitter = 1;
     }
 
 }
