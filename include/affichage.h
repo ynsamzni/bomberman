@@ -15,6 +15,8 @@ typedef struct{
     SDL_Texture *murDestructible;
     SDL_Texture *bombe;
     SDL_Texture *explosion;
+    SDL_Texture *victoire;
+    SDL_Texture *defaite;
 }StructTextures;
 
 
@@ -33,6 +35,8 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer);
 
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu);
 
+void animationVictoire(StructAffichage *affichage);
+void animationDefaite(StructAffichage *affichage);
 
 
 

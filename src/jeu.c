@@ -54,6 +54,9 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
 
     }
 
+    jeu->animations.victoire = 0;
+    jeu->animations.defaite = 0;
+
     initIA(jeu);
 
 }
@@ -79,6 +82,8 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
     // Action IA
     deplacerIA(jeu);
     tuerJoueur(jeu);
+
+    checkVictoire(jeu);
 
 }
 
@@ -320,8 +325,6 @@ int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3
 
 void tuerJoueur(StructJeu *jeu)
 {
-
-
     for(int indiceJoueur = 0; indiceJoueur < jeu->nbrDeJoueurs; indiceJoueur++)
     {
         if(contenuCaseMatrice(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4)
@@ -332,4 +335,26 @@ void tuerJoueur(StructJeu *jeu)
 
 }
 
+void checkVictoire(StructJeu *jeu){
+
+    int resteIA = 0;
+
+
+
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++){
+
+        if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 0){
+            jeu->animations.defaite = 1;
+        }
+
+        if(jeu->listeDesJoueurs[i].humainOuIA == 1 && jeu->listeDesJoueurs[i].enVie == 1)
+            resteIA++;
+
+    }
+
+    if(resteIA == 0){
+        jeu->animations.victoire = 1;
+    }
+
+}
 

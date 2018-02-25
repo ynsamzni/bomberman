@@ -41,6 +41,12 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     surfaceTmp = IMG_Load("assets/img/explosion.png");
     (*structTextures).explosion = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
+    surfaceTmp = IMG_Load("assets/img/victoire.png");
+    (*structTextures).victoire = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+
+    surfaceTmp = IMG_Load("assets/img/defaite.png");
+    (*structTextures).defaite = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+
     SDL_FreeSurface(surfaceTmp); //On peut donc "détruire" la surface
 }
 
@@ -141,15 +147,32 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
         }
     }
 
+
+    //Gestion des animations
+    if(jeu->animations.victoire == 1)
+        animationVictoire(affichage);
+    if(jeu->animations.defaite == 1)
+        animationDefaite(affichage);
+
     // Actualiser l'affichage
     SDL_RenderPresent(affichage->renderer);
 }
 
 
 
+//Permet d'afficher le fillon de la victoire
+void animationVictoire(StructAffichage *affichage){
+    SDL_Rect rectAffichage = {0, 0, 600, 600}; // Case utilisée pour remplir la map
+    SDL_RenderCopy(affichage->renderer, affichage->structTextures.victoire, NULL, &rectAffichage);
+    SDL_RenderPresent(affichage->renderer);
+}
 
 
+//Permet d'afficher le loser de la défaite
+void animationDefaite(StructAffichage *affichage){
+    SDL_Rect rectAffichage = {0, 0, 600, 600}; // Case utilisée pour remplir la map
+    SDL_RenderCopy(affichage->renderer, affichage->structTextures.defaite, NULL, &rectAffichage);
+    SDL_RenderPresent(affichage->renderer);
 
-
-
+}
 
