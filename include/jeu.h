@@ -24,6 +24,7 @@ typedef enum{
 }Direction;
 
 typedef struct{
+    int humainOuIA;
     int enVie;
     Coordonnes coordonnes;
     Bombe bombe;

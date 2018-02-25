@@ -40,16 +40,13 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
 
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)  // Mets toutes les coordonées de tous les joueurs à 0
     {
+        jeu->listeDesJoueurs[i].humainOuIA = 0; //Par défault, tous les joueurs sont des Humains (certains transformés en IA dans initIA()
         jeu->listeDesJoueurs[i].enVie = 1;
         jeu->listeDesJoueurs[i].coordonnes.x = 0;
         jeu->listeDesJoueurs[i].coordonnes.y = 0;
         jeu->listeDesJoueurs[i].direction = BAS; //Etat initial du perso lors de l'apparition
         jeu->listeDesJoueurs[i].deplacement = 1;
-    }
 
-
-    for(int i = 0; i < jeu->nbrDeJoueurs ; i++) // Mets toutes les coordonées de toutes les bombes, ainsi que leur Tick à 0
-    {
         jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x = 0;
         jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y = 0;
         jeu->listeDesJoueurs[i].bombe.tickDePose = 0;
@@ -66,18 +63,23 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 {
-    // Action joueur
-    if(clavier->toucheBombe == 1)
-        poserBombe(jeu, 0);
-    else
-        deplacerJoueur(clavier, jeu, 0);
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+    {
 
+        if(jeu->listeDesJoueurs[i].humainOuIA == 0) //Action humain
+        {
+            if(clavier->toucheBombe == 1)
+                poserBombe(jeu, i);
+            else
+                deplacerJoueur(clavier, jeu, i);
+        }
+
+        exploserBombe(jeu, i); // Actions joueur + IA
+    }
     // Action IA
     deplacerIA(jeu);
 
-    // Actions joueur + IA
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
-        exploserBombe(jeu, i);
+
 }
 
 /**********************************************************************/
@@ -246,6 +248,7 @@ void afficherStructureJeu(StructJeu jeu)
 
 
         printf("   Joueur %d \n", i+1);
+        printf("   Type : %d \n", jeu.listeDesJoueurs[i].humainOuIA);
         printf("   Coordonnée X : %d \n", jeu.listeDesJoueurs[i].coordonnes.x);
         printf("   Coordonnée Y : %d \n", jeu.listeDesJoueurs[i].coordonnes.y);
         if(jeu.listeDesJoueurs[i].direction == HAUT)
@@ -311,3 +314,6 @@ int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3
         return val4;
 
 }
+
+
+

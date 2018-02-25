@@ -9,18 +9,21 @@ void initIA(StructJeu *jeu)  //Gère l'apparition des IA
 
     if(jeu->nbrDeJoueurs >= 2)                                      //En bas à droite
     {
+        jeu->listeDesJoueurs[1].humainOuIA = 1;
         jeu->listeDesJoueurs[1].coordonnes.x = WIDTH - 30;
         jeu->listeDesJoueurs[1].coordonnes.y = HEIGHT - 30;
         jeu->listeDesJoueurs[1].direction = HAUT;
 
         if(jeu->nbrDeJoueurs >= 3)                                  //En haut à droite
         {
+            jeu->listeDesJoueurs[2].humainOuIA = 1;
             jeu->listeDesJoueurs[2].coordonnes.x = WIDTH - 30;
             jeu->listeDesJoueurs[2].coordonnes.y = 0;
             jeu->listeDesJoueurs[2].direction = GAUCHE;
 
             if(jeu->nbrDeJoueurs >= 4)
             {
+                jeu->listeDesJoueurs[3].humainOuIA = 1;
                 jeu->listeDesJoueurs[3].coordonnes.x = 0;    //En bas à gauche
                 jeu->listeDesJoueurs[3].coordonnes.y = HEIGHT - 30;
                 jeu->listeDesJoueurs[3].direction = HAUT;
