@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
     //Initialisation du jeu
     srand(time(NULL));
-    initJeu(&jeu, 2);
+    initJeu(&jeu, 4);
     initAffichage(&affichage, "SDL2");
     initClavier(&clavier);
 

@@ -66,7 +66,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
 
-        if(jeu->listeDesJoueurs[i].humainOuIA == 0) //Action humain
+        if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1) //Action humain
         {
             if(clavier->toucheBombe == 1)
                 poserBombe(jeu, i);
@@ -78,7 +78,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
     }
     // Action IA
     deplacerIA(jeu);
-
+    tuerJoueur(jeu);
 
 }
 
@@ -249,6 +249,7 @@ void afficherStructureJeu(StructJeu jeu)
 
         printf("   Joueur %d \n", i+1);
         printf("   Type : %d \n", jeu.listeDesJoueurs[i].humainOuIA);
+        printf("   En vie : %d \n", jeu.listeDesJoueurs[i].enVie);
         printf("   Coordonnée X : %d \n", jeu.listeDesJoueurs[i].coordonnes.x);
         printf("   Coordonnée Y : %d \n", jeu.listeDesJoueurs[i].coordonnes.y);
         if(jeu.listeDesJoueurs[i].direction == HAUT)
@@ -315,5 +316,20 @@ int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3
 
 }
 
+
+
+void tuerJoueur(StructJeu *jeu)
+{
+
+
+    for(int indiceJoueur = 0; indiceJoueur < jeu->nbrDeJoueurs; indiceJoueur++)
+    {
+        if(contenuCaseMatrice(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4)
+        {
+            jeu->listeDesJoueurs[indiceJoueur].enVie = 0;
+        }
+    }
+
+}
 
 

@@ -85,7 +85,7 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
     int dureeParFrame = 100;
     int frame;
 
-     // Afficher le fond
+    // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
     SDL_RenderClear(affichage->renderer);
 
@@ -111,31 +111,34 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
     // Afficher les joueurs
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
-        spriteDecoupe=spriteInitial;
+        if(jeu->listeDesJoueurs[i].enVie == 1)
+        {
+            spriteDecoupe=spriteInitial;
 
-        // Déterminer les coordonnées X du nouveau sprite
-        if(jeu->listeDesJoueurs[i].deplacement == 1)
-            frame = (SDL_GetTicks() / dureeParFrame) % nbTotalFrames; // Passer à la prochaine frame toutes les 'dureeParFrame' ms
-        else
-            frame = 0;
-        spriteDecoupe.x += frame * 64;
+            // Déterminer les coordonnées X du nouveau sprite
+            if(jeu->listeDesJoueurs[i].deplacement == 1)
+                frame = (SDL_GetTicks() / dureeParFrame) % nbTotalFrames; // Passer à la prochaine frame toutes les 'dureeParFrame' ms
+            else
+                frame = 0;
+            spriteDecoupe.x += frame * 64;
 
-        // Déterminer les coordonnées Y du nouveau sprite
-        if(jeu->listeDesJoueurs[i].direction == HAUT)
-            spriteDecoupe.y += 0;
-        if(jeu->listeDesJoueurs[i].direction == GAUCHE)
-            spriteDecoupe.y += 64;
-        if(jeu->listeDesJoueurs[i].direction == BAS)
-            spriteDecoupe.y += 2*64;
-        if(jeu->listeDesJoueurs[i].direction == DROITE)
-            spriteDecoupe.y += 3*64;
+            // Déterminer les coordonnées Y du nouveau sprite
+            if(jeu->listeDesJoueurs[i].direction == HAUT)
+                spriteDecoupe.y += 0;
+            if(jeu->listeDesJoueurs[i].direction == GAUCHE)
+                spriteDecoupe.y += 64;
+            if(jeu->listeDesJoueurs[i].direction == BAS)
+                spriteDecoupe.y += 2*64;
+            if(jeu->listeDesJoueurs[i].direction == DROITE)
+                spriteDecoupe.y += 3*64;
 
-        // Déterminer la case sur laquelle se trouve le joueur
-        caseMap.x = jeu->listeDesJoueurs[i].coordonnes.x;
-        caseMap.y = jeu->listeDesJoueurs[i].coordonnes.y;
+            // Déterminer la case sur laquelle se trouve le joueur
+            caseMap.x = jeu->listeDesJoueurs[i].coordonnes.x;
+            caseMap.y = jeu->listeDesJoueurs[i].coordonnes.y;
 
-        // Afficher le sprite mis à jour
-        SDL_RenderCopy(affichage->renderer, affichage->structTextures.feuilleSprites, &spriteDecoupe, &caseMap);
+            // Afficher le sprite mis à jour
+            SDL_RenderCopy(affichage->renderer, affichage->structTextures.feuilleSprites, &spriteDecoupe, &caseMap);
+        }
     }
 
     // Actualiser l'affichage
