@@ -16,7 +16,6 @@ typedef struct{
     Coordonnes coordonnesBombe;
     int tickDePose;
     int etatBombe;
-
 }Bombe;
 
 typedef enum{
@@ -24,7 +23,14 @@ typedef enum{
 }Direction;
 
 typedef struct{
+    char nom[20];
+    int nbrVictoires;
+    int nbrDefaites;
+}CompteJoueur;
+
+typedef struct{
     int humainOuIA;
+    CompteJoueur compte;
     int enVie;
     Coordonnes coordonnes;
     Bombe bombe;
@@ -47,12 +53,12 @@ typedef struct{
 }StructJeu;
 
 
-
-void initJeu(StructJeu *jeu, int nbrPlayers);
+void initMap(StructJeu *jeu);
+void initTousLesJoueurs(StructJeu *jeu);
+void initJeu(StructJeu *jeu);
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier);
 
-void deplacerJoueur(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur);
-void poserBombe(StructJeu *jeu, int indiceJoueur);
+
 void exploserBombe(StructJeu *jeu, int indiceJoueur);
 
 void afficherStructureJeu(StructJeu jeu);

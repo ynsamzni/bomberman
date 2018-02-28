@@ -45,6 +45,7 @@
 		<Unit filename="include/clavier.h" />
 		<Unit filename="include/constantes.h" />
 		<Unit filename="include/jeu.h" />
+		<Unit filename="include/joueurHumain.h" />
 		<Unit filename="src/IA.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -55,6 +56,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/jeu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/joueurHumain.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/main.c">

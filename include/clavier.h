@@ -8,11 +8,18 @@
 
 typedef struct{
 
-    int toucheHaut;
-    int toucheBas;
-    int toucheDroite;
-    int toucheGauche;
-    int toucheBombe;
+    int toucheHautJ1;
+    int toucheBasJ1;
+    int toucheDroiteJ1;
+    int toucheGaucheJ1;
+    int toucheBombeJ1;
+
+    int toucheHautJ2;
+    int toucheBasJ2;
+    int toucheDroiteJ2;
+    int toucheGaucheJ2;
+    int toucheBombeJ2;
+
     int toucheQuitter;
 
 }StructTouchesClavier;

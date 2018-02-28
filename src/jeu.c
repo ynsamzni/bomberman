@@ -3,19 +3,19 @@
 
 #include "../include/jeu.h"
 #include "../include/IA.h"
+#include "../include/joueurHumain.h"
 
-void initJeu(StructJeu *jeu, int nbrPlayers)
+
+
+
+void initMap(StructJeu *jeu)
 {
-
-    //Chargement de la map ( à placer dans une focntions externe si possible mais attention, tableau double à passer en paramètre super chiant )
     printf("Chargement de map.dat\n");
     FILE *fic;
     fic = fopen (CHEMIN_D_ACCES_FICHIER_NIVEAU, "r");
-
     if(fic == NULL)
     {
         printf("Echec ouverture fichier !\n");
-
         // Générer une nouvelle map de manière aléatoire
         for(int i=0; i<NBR_DE_CASES_HORIZONTALES; i++)
         {
@@ -34,86 +34,66 @@ void initJeu(StructJeu *jeu, int nbrPlayers)
         printf("Lecture du fichier et chargement de la map réussit\n");
 
     }
+}
 
-
-    jeu->nbrDeJoueurs = nbrPlayers; // Enregistre dans la structure le nbr de joueurs
-
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++)  // Mets toutes les coordonées de tous les joueurs à 0
+void initTousLesJoueurs(StructJeu *jeu) //Initialisation par défault des joueurs qu'ils soient IA ou Humain
+{
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
-        jeu->listeDesJoueurs[i].humainOuIA = 0; //Par défault, tous les joueurs sont des Humains (certains transformés en IA dans initIA()
         jeu->listeDesJoueurs[i].enVie = 1;
         jeu->listeDesJoueurs[i].coordonnes.x = 0;
         jeu->listeDesJoueurs[i].coordonnes.y = 0;
-        jeu->listeDesJoueurs[i].direction = BAS; //Etat initial du perso lors de l'apparition
+        jeu->listeDesJoueurs[i].direction = BAS;
         jeu->listeDesJoueurs[i].deplacement = 1;
 
         jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x = 0;
         jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y = 0;
         jeu->listeDesJoueurs[i].bombe.tickDePose = 0;
         jeu->listeDesJoueurs[i].bombe.etatBombe = 0;
-
     }
+}
+
+void initJeu(StructJeu *jeu)
+{
+
+
+    initMap(jeu);
+    initTousLesJoueurs(jeu);
+    initJoueursHumains(jeu);
+    initIA(jeu);
 
     jeu->animations.victoire = 0;
     jeu->animations.defaite = 0;
 
-    initIA(jeu);
-
 }
-
 
 
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 {
+
+
+    if(clavier->toucheBombeJ1 == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0)
+        poserBombe(jeu, 0);
+
+    if(clavier->toucheBombeJ2 == 1 && jeu->listeDesJoueurs[1].humainOuIA == 0)
+        poserBombe(jeu, 1);
+
+    deplacerJoueurJ1(clavier, jeu, 0);
+    deplacerJoueurJ2(clavier, jeu, 1);
+
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
-
-        if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1) //Action humain
-        {
-            if(clavier->toucheBombe == 1)
-                poserBombe(jeu, i);
-            else
-                deplacerJoueur(clavier, jeu, i);
-        }
-
         exploserBombe(jeu, i); // Actions joueur + IA
     }
     // Action IA
     deplacerIA(jeu);
-    tuerJoueur(jeu);
 
+    tuerJoueur(jeu);
     checkVictoire(jeu);
 
 }
 
-/**********************************************************************/
-/*******************POSE DES BOMBES************************************/
-/**********************************************************************/
-
-void poserBombe(StructJeu *jeu, int indiceJoueur)
-{
-    // Si le joueur a une bombe d'active
-    if(jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose == 0)
-    {
-        int coordonneesJoueurX=renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
-        int coordonneesJoueurY=renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
-
-        jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = SDL_GetTicks();
-
-        // Poser la bombe à la position du joueur
-        jeu->mapJeu[coordonneesJoueurX][coordonneesJoueurY] = 3;
-
-        // Enregistrer les coordonnées de la bombe posée
-        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x = coordonneesJoueurX;
-        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y = coordonneesJoueurY;
-
-        // Marquer la bombe comme posée
-        jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 1;
-
-    }
-
-}
 
 /***************************************************************************************/
 /*******************GESTION DE L'EXPLOSION DES BOMBES***********************************/
@@ -170,72 +150,9 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur)
     }
 }
 
-/*********************************************************************************/
-/*******************DEPLACEMENTS ET COLLISIONS************************************/
-/*********************************************************************************/
-
-void deplacerJoueur(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur) //Gère le déplacement des joueurs et les collisions
-{
 
 
-    int x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
-    int y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
 
-
-    if(clavier->toucheHaut == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-        printf("Appui Haut\n");
-        if(contenuCaseMatrice(jeu, x, y - 1) == 0 && contenuCaseMatrice(jeu, x + 29, y - 1) == 0)
-        {
-            y = y - VITESSE_DES_JOUEURS;
-
-        }
-    }
-
-    if(clavier->toucheBas == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-        printf("Appui Bas\n");
-        if(contenuCaseMatrice(jeu, x, y + 31) == 0 && contenuCaseMatrice(jeu, x + 29, y + 31)== 0 )
-        {
-            y = y + VITESSE_DES_JOUEURS;
-        }
-    }
-
-    if(clavier->toucheDroite == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-        printf("Appui Droite\n");
-        if(contenuCaseMatrice(jeu, x + 31, y) == 0 && contenuCaseMatrice(jeu, x + 31, y + 29) == 0 )
-        {
-            x = x + VITESSE_DES_JOUEURS;
-        }
-    }
-
-    if(clavier->toucheGauche == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-        printf("Appui Gauche\n");
-        if(contenuCaseMatrice(jeu, x - 1, y) == 0 && contenuCaseMatrice(jeu, x - 1, y + 29) == 0 )
-        {
-            x = x - VITESSE_DES_JOUEURS;
-        }
-    }
-
-    if(clavier->toucheHaut == 0 && clavier->toucheBas == 0 && clavier->toucheGauche == 0 && clavier->toucheDroite == 0)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
-    }
-    else
-    {
-        jeu->listeDesJoueurs[indiceJoueur].deplacement = 1;
-    }
-
-    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x =  x ;
-    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
-
-}
 
 
 /*********************************************************************************/
@@ -255,6 +172,14 @@ void afficherStructureJeu(StructJeu jeu)
         printf("   Joueur %d \n", i+1);
         printf("   Type : %d \n", jeu.listeDesJoueurs[i].humainOuIA);
         printf("   En vie : %d \n", jeu.listeDesJoueurs[i].enVie);
+
+        if(jeu.listeDesJoueurs[i].humainOuIA == 0)
+        {
+            printf("      Nom : %s ", jeu.listeDesJoueurs[i].compte.nom);
+            printf("      Victoires : %d \n", jeu.listeDesJoueurs[i].compte.nbrVictoires);
+            printf("      Défaites : %d \n", jeu.listeDesJoueurs[i].compte.nbrDefaites);
+
+        }
         printf("   Coordonnée X : %d \n", jeu.listeDesJoueurs[i].coordonnes.x);
         printf("   Coordonnée Y : %d \n", jeu.listeDesJoueurs[i].coordonnes.y);
         if(jeu.listeDesJoueurs[i].direction == HAUT)
@@ -267,6 +192,7 @@ void afficherStructureJeu(StructJeu jeu)
         }
         if(jeu.listeDesJoueurs[i].direction == DROITE)
         {
+
             printf("   Direction : DROITE \n");
         }
         if(jeu.listeDesJoueurs[i].direction == GAUCHE)
@@ -335,26 +261,36 @@ void tuerJoueur(StructJeu *jeu)
 
 }
 
-void checkVictoire(StructJeu *jeu){
+void checkVictoire(StructJeu *jeu)
+{
+    int nbrIA = 0; //pour une raison qui m'échappe, la syntaxe int nbrIA, nbrHumains = 0; me renvoyait n'importe quoi comme valeur pour les variables
+    int nbrHumains = 0;
 
-    int resteIA = 0;
-
-
-
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++){
-
-        if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 0){
-            jeu->animations.defaite = 1;
-        }
-
+    for(int i = 0; i < jeu->nbrDeJoueurs ; i ++){
+        if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1)
+            nbrHumains++;
         if(jeu->listeDesJoueurs[i].humainOuIA == 1 && jeu->listeDesJoueurs[i].enVie == 1)
-            resteIA++;
-
+            nbrIA++;
     }
 
-    if(resteIA == 0){
+    if(nbrHumains == 0){
+        jeu->animations.defaite = 1;
+        for(int i = 0; i < jeu->nbrDeJoueurs; i++){
+            if(jeu->listeDesJoueurs[i].humainOuIA == 0)
+                jeu->listeDesJoueurs[i].compte.nbrDefaites++;
+        }
+    }
+    else if(nbrHumains == 1 && nbrIA == 0){
         jeu->animations.victoire = 1;
+        for(int i = 0; i < jeu->nbrDeJoueurs; i++){
+            if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1)
+                jeu->listeDesJoueurs[i].compte.nbrVictoires++;
+            if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 0)
+                jeu->listeDesJoueurs[i].compte.nbrDefaites++;
+
+        }
     }
+
 
 }
 
