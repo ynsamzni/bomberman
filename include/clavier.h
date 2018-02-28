@@ -12,7 +12,7 @@ typedef struct{
     int toucheBas;
     int toucheDroite;
     int toucheGauche;
-    int toucheBombe;
+    int toucheAction;
     int toucheQuitter;
 
 }StructTouchesClavier;
@@ -20,5 +20,6 @@ typedef struct{
 void initClavier(StructTouchesClavier *clavier);
 void recupererTouchesClavier(StructTouchesClavier *clavier);
 void afficherLaStructureDeTouches(StructTouchesClavier clavier);
+int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier);
 
 #endif // CLAVIER_H_INCLUDED

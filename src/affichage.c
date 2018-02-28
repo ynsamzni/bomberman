@@ -10,6 +10,7 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[])
 {
     SDL_Init(SDL_INIT_VIDEO); //Initialise le système de gestion de rendu
     IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
 
     affichage->window = SDL_CreateWindow(nomFenetre, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN); //Création d'une fenêtre
     SDL_SetWindowIcon(affichage->window, IMG_Load("assets/img/icon.png"));
@@ -18,8 +19,8 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[])
     affichage->renderer = SDL_CreateRenderer(affichage->window, -1, SDL_RENDERER_ACCELERATED); //Renderer, permettant de de "dessiner" dans la fenêtre
 
     chargementTextures(&affichage->structTextures, affichage->renderer);
+    chargementCouleurs(&affichage->structCouleur);
 }
-
 
 
 void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
@@ -48,6 +49,45 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     (*structTextures).defaite = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
     SDL_FreeSurface(surfaceTmp); //On peut donc "détruire" la surface
+}
+
+void chargementCouleurs(StructCouleur *structCouleur)
+{
+    structCouleur->blanc.r = 255;
+    structCouleur->blanc.g = 255;
+    structCouleur->blanc.b = 255;
+
+    structCouleur->noir.r = 0;
+    structCouleur->noir.g = 0;
+    structCouleur->noir.b = 0;
+}
+
+void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer)
+{
+    int textureW, textureH;
+
+    // Charger le fichier comportant la police d'écriture
+    TTF_Font *policeEcriture = TTF_OpenFont(cheminPoliceEcriture, tailleTexte);
+
+	// Ecrire le texte dans une surface
+	SDL_Surface *surface = TTF_RenderText_Blended(policeEcriture, texte, couleurTexte);
+
+	// Créer une texture à partir de la surface
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+	// Déterminer les dimensions de la texture
+    SDL_QueryTexture(texture, NULL, NULL, &textureW, &textureH);
+
+    // Créer le rectangle qui contiendra les coordonnées et dimensions de la texture
+    SDL_Rect rectTexture = {positionX, positionY, textureW, textureH};
+
+    // Afficher le texte
+	SDL_RenderCopy(renderer, texture, NULL, &rectTexture);
+
+	// Libérer de la RAM
+    SDL_FreeSurface(surface);
+    TTF_CloseFont(policeEcriture);
+	SDL_DestroyTexture(texture);
 }
 
 /******************************************************************************/
@@ -161,7 +201,8 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
 
 
 //Permet d'afficher le fillon de la victoire
-void animationVictoire(StructAffichage *affichage){
+void animationVictoire(StructAffichage *affichage)
+{
     SDL_Rect rectAffichage = {0, 0, 600, 600}; // Case utilisée pour remplir la map
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.victoire, NULL, &rectAffichage);
     SDL_RenderPresent(affichage->renderer);
@@ -169,10 +210,70 @@ void animationVictoire(StructAffichage *affichage){
 
 
 //Permet d'afficher le loser de la défaite
-void animationDefaite(StructAffichage *affichage){
+void animationDefaite(StructAffichage *affichage)
+{
     SDL_Rect rectAffichage = {0, 0, 600, 600}; // Case utilisée pour remplir la map
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.defaite, NULL, &rectAffichage);
     SDL_RenderPresent(affichage->renderer);
-
 }
 
+
+/******************************************************************************/
+/****************************AFFICHAGE DES MENUS*******************************/
+/******************************************************************************/
+
+
+int afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier)
+{
+    int choixMenu = 0;
+    int exitAction;
+
+    /************* Affichage *************/
+
+    do
+    {
+        recupererTouchesClavier(clavier);
+
+        // Si déplacement
+        if(clavier->toucheBas && choixMenu != 1)
+            choixMenu++;
+        if(clavier->toucheHaut && choixMenu != 0)
+            choixMenu--;
+
+        // Afficher le fond
+        SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
+        SDL_RenderClear(affichage->renderer);
+
+        // Copier les éléments du menu dans le renderer
+        afficherTexte("BOMBERMAN", 50, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 140, 50, affichage->renderer);
+
+        if(choixMenu == 0)
+            afficherTexte("Jouer", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 250, 150, affichage->renderer);
+        else
+            afficherTexte("Jouer", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 250, 150, affichage->renderer);
+
+        if(choixMenu == 1)
+            afficherTexte("Quitter", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 240, 200, affichage->renderer);
+        else
+            afficherTexte("Quitter", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 240, 200, affichage->renderer);
+
+        // Afficher le renderer
+        SDL_RenderPresent(affichage->renderer);
+    }
+    while(!cycleToucheClavierRealise(&clavier->toucheAction, clavier) && !clavier->toucheQuitter);
+
+
+    /************* Action *************/
+
+    switch(choixMenu)
+    {
+        case 0:
+            exitAction = 1;
+            break;
+        case 1:
+            exitAction = 0;
+            break;
+    }
+
+    return exitAction;
+}

@@ -56,7 +56,7 @@ CalculerJeu(StructTouchesClavier, StructJeu );  => Calcul les positions des joue
 
 int main(int argc, char *argv[])
 {
-
+    int numeroFenetre = 2; // Numéro de la fenêtre qui doit être affichée
 
     //Déclaration des 3 structures principales du jeu
     StructJeu jeu;
@@ -66,42 +66,34 @@ int main(int argc, char *argv[])
     //Initialisation du jeu
     srand(time(NULL));
     initJeu(&jeu, 4);
-    initAffichage(&affichage, "SDL2");
+    initAffichage(&affichage, "Bomberman");
     initClavier(&clavier);
-
-
 
     do
     {
-
-
-
-            recupererTouchesClavier(&clavier);
-
-
-
-
-
-            calculerJeu(&jeu, &clavier);
-
-            system("clear");
-            afficherStructureJeu(jeu);
-
-            afficherJeu(&affichage, &jeu);
-
-
-
-
-
-
-
+        switch(numeroFenetre)
+        {
+            case 0:
+                clavier.toucheQuitter = 1;
+                break;
+            case 1:
+                recupererTouchesClavier(&clavier);
+                calculerJeu(&jeu, &clavier);
+                system("clear");
+                afficherStructureJeu(jeu);
+                afficherJeu(&affichage, &jeu);
+                break;
+            case 2:
+                numeroFenetre = afficherMenuPrincipal(&affichage, &clavier);
+                break;
+        }
     }
     while(clavier.toucheQuitter != 1);
-
 
     SDL_DestroyRenderer(affichage.renderer);//Permet de détruire le renderer
     SDL_DestroyWindow(affichage.window); //Permet de détruire la fenêtre crée
     IMG_Quit();
+    TTF_Quit();
     SDL_Quit(); //Permet de quitter proprement la SDL
 
 }

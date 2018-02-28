@@ -11,7 +11,7 @@ void initClavier(StructTouchesClavier *clavier)
     clavier->toucheBas = 0;
     clavier->toucheDroite = 0;
     clavier->toucheGauche = 0;
-    clavier->toucheBombe = 0;
+    clavier->toucheAction = 0;
     clavier->toucheQuitter = 0;
 }
 
@@ -45,7 +45,7 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
                 break;
 
             case SDLK_SPACE:
-                clavier->toucheBombe = 1;
+                clavier->toucheAction = 1;
                 break;
 
             case SDLK_p:
@@ -78,7 +78,7 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
 
 
             case SDLK_SPACE:
-                clavier->toucheBombe = 0;
+                clavier->toucheAction = 0;
                 break;
 
             case SDLK_p:
@@ -95,6 +95,22 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
 }
 
 
+int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier)
+{
+    recupererTouchesClavier(clavier);
+
+    // Si l'utilisateur appuie sur la touche
+    if(*etatToucheClavier == 1)
+    {
+        // Attendre que l'utilisateur relâche la touche
+        while(*etatToucheClavier == 1)
+            recupererTouchesClavier(clavier);
+        return 1;
+    }
+    // Si l'utilisateur n'appuie pas sur la touche
+    else
+        return 0;
+}
 
 
 void afficherLaStructureDeTouches(StructTouchesClavier clavier){
@@ -103,7 +119,7 @@ void afficherLaStructureDeTouches(StructTouchesClavier clavier){
     printf("Valeur toucheBas :  %d\n", clavier.toucheBas);
     printf("Valeur toucheDroite :  %d\n", clavier.toucheDroite);
     printf("Valeur toucheGauche :  %d\n", clavier.toucheGauche);
-    printf("Valeur toucheBombe :  %d\n", clavier.toucheBombe);
+    printf("Valeur toucheAction :  %d\n", clavier.toucheAction);
     printf("Valeur toucheQuitter:  %d\n", clavier.toucheQuitter);
 
     system("clear");
