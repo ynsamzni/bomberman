@@ -12,6 +12,7 @@ void initClavier(StructTouchesClavier *clavier)
     clavier->toucheDroite = 0;
     clavier->toucheGauche = 0;
     clavier->toucheAction = 0;
+    clavier->toucheArriere = 0;
     clavier->toucheQuitter = 0;
 }
 
@@ -48,6 +49,10 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
                 clavier->toucheAction = 1;
                 break;
 
+            case SDLK_BACKSPACE:
+                clavier->toucheArriere = 1;
+                break;
+
             case SDLK_p:
                 clavier->toucheQuitter = 1;
 
@@ -79,6 +84,10 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
 
             case SDLK_SPACE:
                 clavier->toucheAction = 0;
+                break;
+
+            case SDLK_BACKSPACE:
+                clavier->toucheArriere = 0;
                 break;
 
             case SDLK_p:

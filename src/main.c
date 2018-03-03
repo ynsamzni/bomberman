@@ -8,6 +8,7 @@
 #include "../include/affichage.h"
 #include "../include/jeu.h"
 #include "../include/clavier.h"
+#include "../include/menu.h"
 
 /****************Structure du jeu**********************
 
@@ -56,35 +57,43 @@ CalculerJeu(StructTouchesClavier, StructJeu );  => Calcul les positions des joue
 
 int main(int argc, char *argv[])
 {
-    int numeroFenetre = 2; // Numéro de la fenêtre qui doit être affichée
-
-    //Déclaration des 3 structures principales du jeu
+    //Déclaration des 4 structures principales du jeu
     StructJeu jeu;
+    StructMenu menu;
     StructAffichage affichage;
     StructTouchesClavier clavier;
 
     //Initialisation du jeu
     srand(time(NULL));
     initJeu(&jeu, 4);
+    initMenu(&menu);
     initAffichage(&affichage, "Bomberman");
     initClavier(&clavier);
 
     do
     {
-        switch(numeroFenetre)
+        recupererTouchesClavier(&clavier);
+
+        switch(affichage.numeroFenetre)
         {
             case 0:
                 clavier.toucheQuitter = 1;
                 break;
             case 1:
-                recupererTouchesClavier(&clavier);
                 calculerJeu(&jeu, &clavier);
+                afficherJeu(&affichage, &jeu);
+                // Afficher les informations de debug
                 system("clear");
                 afficherStructureJeu(jeu);
-                afficherJeu(&affichage, &jeu);
                 break;
             case 2:
-                numeroFenetre = afficherMenuPrincipal(&affichage, &clavier);
+                afficherMenuPrincipal(&affichage, &clavier, &menu);
+                break;
+            case 3:
+                afficherMenuSelectionProfil(&affichage, &clavier, &jeu, &menu);
+                break;
+            case 4:
+                afficherMenuCreationProfil(&affichage, &clavier, &jeu, &menu);
                 break;
         }
     }

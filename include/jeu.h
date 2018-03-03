@@ -30,6 +30,7 @@ typedef struct{
     Bombe bombe;
     Direction direction;
     int deplacement;
+    char nom[];
 }Joueur;
 
 typedef struct{

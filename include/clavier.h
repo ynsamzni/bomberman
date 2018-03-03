@@ -13,6 +13,7 @@ typedef struct{
     int toucheDroite;
     int toucheGauche;
     int toucheAction;
+    int toucheArriere;
     int toucheQuitter;
 
 }StructTouchesClavier;
