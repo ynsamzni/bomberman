@@ -64,7 +64,8 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur);
 void afficherStructureJeu(StructJeu jeu);
 
 
-int contenuCaseMatrice(StructJeu *jeu, int y, int x);
+int deplacementPossible(int x, int y, char direction[], StructJeu *jeu);
+int contenuCoordonnees(StructJeu *jeu, int y, int x);
 int renvoitCaseMatrice(int coordonne);
 int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3, int probaVal3, int val4, int probaVal4);
 void tuerJoueur(StructJeu *jeu);

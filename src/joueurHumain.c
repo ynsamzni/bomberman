@@ -61,7 +61,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
         printf("Appui Haut\n");
-        if(contenuCaseMatrice(jeu, x, y - 1) == 0 && contenuCaseMatrice(jeu, x + 29, y - 1) == 0)
+        if(deplacementPossible(x, y, "HAUT", jeu))
             y = y - VITESSE_DES_JOUEURS;
     }
 
@@ -69,7 +69,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
         printf("Appui Bas\n");
-        if(contenuCaseMatrice(jeu, x, y + 31) == 0 && contenuCaseMatrice(jeu, x + 29, y + 31)== 0 )
+        if(deplacementPossible(x, y, "BAS", jeu))
             y = y + VITESSE_DES_JOUEURS;
     }
 
@@ -77,7 +77,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
         printf("Appui Droite\n");
-        if(contenuCaseMatrice(jeu, x + 31, y) == 0 && contenuCaseMatrice(jeu, x + 31, y + 29) == 0 )
+        if(deplacementPossible(x, y, "DROITE", jeu))
             x = x + VITESSE_DES_JOUEURS;
     }
 
@@ -85,7 +85,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
         printf("Appui Gauche\n");
-        if(contenuCaseMatrice(jeu, x - 1, y) == 0 && contenuCaseMatrice(jeu, x - 1, y + 29) == 0 )
+        if(deplacementPossible(x, y, "GAUCHE", jeu))
             x = x - VITESSE_DES_JOUEURS;
     }
 
@@ -109,7 +109,7 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
         printf("Appui Haut\n");
-        if(contenuCaseMatrice(jeu, x, y - 1) == 0 && contenuCaseMatrice(jeu, x + 29, y - 1) == 0)
+        if(deplacementPossible(x, y, "HAUT", jeu))
             y = y - VITESSE_DES_JOUEURS;
     }
 
@@ -117,7 +117,7 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
         printf("Appui Bas\n");
-        if(contenuCaseMatrice(jeu, x, y + 31) == 0 && contenuCaseMatrice(jeu, x + 29, y + 31)== 0 )
+        if(deplacementPossible(x, y, "BAS", jeu))
             y = y + VITESSE_DES_JOUEURS;
     }
 
@@ -125,7 +125,7 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
         printf("Appui Droite\n");
-        if(contenuCaseMatrice(jeu, x + 31, y) == 0 && contenuCaseMatrice(jeu, x + 31, y + 29) == 0 )
+        if(deplacementPossible(x, y, "DROITE", jeu))
             x = x + VITESSE_DES_JOUEURS;
     }
 
@@ -133,7 +133,7 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
         printf("Appui Gauche\n");
-        if(contenuCaseMatrice(jeu, x - 1, y) == 0 && contenuCaseMatrice(jeu, x - 1, y + 29) == 0 )
+        if(deplacementPossible(x, y, "GAUCHE", jeu))
             x = x - VITESSE_DES_JOUEURS;
     }
 

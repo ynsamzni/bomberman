@@ -213,14 +213,24 @@ void afficherStructureJeu(StructJeu jeu)
 /*********************************************************************************/
 
 
-int contenuCaseMatrice(StructJeu *jeu, int x, int y)
+int deplacementPossible(int x, int y, char direction[], StructJeu *jeu)
+{
+    if(!strcmp(direction, "HAUT") && contenuCoordonnees(jeu, x, y - 1) == 0 && contenuCoordonnees(jeu, x + 29, y - 1) == 0
+       || !strcmp(direction, "DROITE") && contenuCoordonnees(jeu, x + 31, y) == 0 && contenuCoordonnees(jeu, x + 31, y + 29) == 0
+       || !strcmp(direction, "BAS") && contenuCoordonnees(jeu, x, y + 31) == 0 && contenuCoordonnees(jeu, x + 29, y + 31)== 0
+       || !strcmp(direction, "GAUCHE") && contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x - 1, y + 29) == 0)
+        return 1;
+    else
+        return 0;
+}
+
+int contenuCoordonnees(StructJeu *jeu, int x, int y)
 {
     if( x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
         return 1;
     else
         return jeu->mapJeu[renvoitCaseMatrice(x)][renvoitCaseMatrice(y)];
 }
-
 
 int renvoitCaseMatrice(int coordonne)
 {
@@ -253,7 +263,7 @@ void tuerJoueur(StructJeu *jeu)
 {
     for(int indiceJoueur = 0; indiceJoueur < jeu->nbrDeJoueurs; indiceJoueur++)
     {
-        if(contenuCaseMatrice(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4)
+        if(contenuCoordonnees(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4)
         {
             jeu->listeDesJoueurs[indiceJoueur].enVie = 0;
         }
