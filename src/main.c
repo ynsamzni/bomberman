@@ -8,6 +8,7 @@
 #include "../include/affichage.h"
 #include "../include/jeu.h"
 #include "../include/clavier.h"
+#include "../include/menu.h"
 
 /****************Structure du jeu**********************
 
@@ -56,49 +57,78 @@ void fonctionTestMenu(StructJeu *jeu);
 
 int main(int argc, char *argv[])
 {
-
-
-    //Déclaration des 3 structures principales du jeu
+    //Déclaration des 4 structures principales du jeu
     StructJeu jeu;
+    StructMenu menu;
     StructAffichage affichage;
     StructTouchesClavier clavier;
 
-    fonctionTestMenu(&jeu);
+    int demarrerJeu = 0;
+    int check = 0;
+
 
     //Initialisation du jeu
     srand(time(NULL));
 
-    initJeu(&jeu);
 
-    initAffichage(&affichage, "SDL2");
+
+    initMenu(&menu);
+    initAffichage(&affichage, "Bomberman");
+
+
     initClavier(&clavier);
-
 
 
     do
     {
 
-
-
         recupererTouchesClavier(&clavier);
 
+        if(demarrerJeu == 0)
+        {
+            switch(affichage.numeroFenetre)
+            {
+            case 0:
+                clavier.toucheQuitter = 1;
+                break;
+            case 1:
+                demarrerJeu = 1;
+                break;
+            case 2:
+                afficherMenuPrincipal(&affichage, &clavier, &menu);
+                break;
+            case 3:
+                afficherMenuSelectionProfil(&affichage, &clavier, &jeu, &menu);
+                break;
+            case 4:
+                afficherMenuCreationProfil(&affichage, &clavier, &jeu, &menu);
+                break;
+            }
+        }
 
-        calculerJeu(&jeu, &clavier);
+        if(demarrerJeu == 1)
+        {
+            if(check == 0)
+            {
+                fonctionTestMenu(&jeu);
+                initJeu(&jeu);
+                check = 1;
+            }
 
-        system("clear");
-        afficherStructureJeu(jeu);
-
-        afficherJeu(&affichage, &jeu);
-
-
+            calculerJeu(&jeu, &clavier);
+            afficherJeu(&affichage, &jeu);
+            // Afficher les informations de debug
+            system("clear");
+            afficherStructureJeu(jeu);
+        }
 
     }
     while(clavier.toucheQuitter != 1);
 
-
     SDL_DestroyRenderer(affichage.renderer);//Permet de détruire le renderer
     SDL_DestroyWindow(affichage.window); //Permet de détruire la fenêtre crée
     IMG_Quit();
+    TTF_Quit();
     SDL_Quit(); //Permet de quitter proprement la SDL
 
 }
@@ -106,7 +136,8 @@ int main(int argc, char *argv[])
 
 
 void fonctionTestMenu(StructJeu *jeu)  //Fonction permettant de tester les différents paramètres de jeu pouvant être sélectionnés par le joueur dans le menu
-{                                      //!!! Cette fonction décide aussi quels joueurs sont humains et quels joueurs sont des IA
+{
+    //!!! Cette fonction décide aussi quels joueurs sont humains et quels joueurs sont des IA
 
     int nbrJoueursHumains;
     int nbrJoueursIA;
