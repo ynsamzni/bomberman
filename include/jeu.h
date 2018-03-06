@@ -23,7 +23,7 @@ typedef enum{
 }Direction;
 
 typedef struct{
-    char nom[20];
+    char nom[TAILLE_MAX_NOM_COMPTE];
     int nbrVictoires;
     int nbrDefaites;
 }CompteJoueur;

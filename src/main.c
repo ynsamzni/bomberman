@@ -67,16 +67,12 @@ int main(int argc, char *argv[])
     int check = 0;
 
 
-    //Initialisation du jeu
     srand(time(NULL));
 
-
-
-    initMenu(&menu);
+    initMenu(&menu); // NUMERO FENETRE => 1
     initAffichage(&affichage, "Bomberman");
-
-
     initClavier(&clavier);
+
 
 
     do
@@ -86,23 +82,38 @@ int main(int argc, char *argv[])
 
         if(demarrerJeu == 0)
         {
-            switch(affichage.numeroFenetre)
+            switch(menu.numeroFenetre)
             {
             case 0:
-                clavier.toucheQuitter = 1;
+                // Première page du menu, page d'acceuil
                 break;
             case 1:
-                demarrerJeu = 1;
-                break;
-            case 2:
-                afficherMenuPrincipal(&affichage, &clavier, &menu);
-                break;
-            case 3:
+                 // Menu demandant de sélectionner un profil et/ou d'en créer un
                 afficherMenuSelectionProfil(&affichage, &clavier, &jeu, &menu);
                 break;
-            case 4:
+            case 2:
+                // Menu de création de profil
                 afficherMenuCreationProfil(&affichage, &clavier, &jeu, &menu);
                 break;
+            case 3:
+                // Menu "principal" (jouer + statistiques)
+                afficherMenuPrincipal(&affichage, &clavier, &menu);
+                break;
+            case 4:
+                // Menu affichant les statistiques
+
+                break;
+            case 5:
+                // Menu permettant de paramétrer sa partie
+                afficherMenuParametragePartie(&affichage, &clavier, &jeu, &menu);
+                break;
+            case 6:
+                //Permet de lancer le jeu
+                demarrerJeu = 1;
+                break;
+            case -1:
+                clavier.toucheQuitter = 1;
+            break;
             }
         }
 
@@ -110,7 +121,6 @@ int main(int argc, char *argv[])
         {
             if(check == 0)
             {
-                fonctionTestMenu(&jeu);
                 initJeu(&jeu);
                 check = 1;
             }
@@ -120,7 +130,13 @@ int main(int argc, char *argv[])
             // Afficher les informations de debug
             system("clear");
             afficherStructureJeu(jeu);
+            if(clavier.toucheArriere == 1){
+                check = 0;
+                demarrerJeu = 0;
+                menu.numeroFenetre = 5;
+            }
         }
+
 
     }
     while(clavier.toucheQuitter != 1);

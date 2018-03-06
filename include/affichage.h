@@ -8,7 +8,7 @@
 #include "constantes.h"
 #include "jeu.h"
 #include "clavier.h"
-#include "menu.h"
+
 
 
 typedef struct{
@@ -26,6 +26,10 @@ typedef struct{
     SDL_Texture *defaite;
     SDL_Texture *flecheBasse;
     SDL_Texture *flecheHaute;
+    SDL_Texture *flecheGauche;
+    SDL_Texture *flecheDroite;
+    SDL_Texture *flecheGaucheBlanche;
+    SDL_Texture *flecheDroiteBlanche;
 }StructTextures;
 
 
@@ -34,7 +38,6 @@ typedef struct{
     SDL_Renderer *renderer;
     StructTextures structTextures;
     StructCouleur structCouleur;
-    int numeroFenetre;
 }StructAffichage;
 
 
@@ -44,11 +47,7 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer);
 void chargementCouleurs(StructCouleur *structCouleur);
 
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu);
-void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer);
 
-void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu);
-void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
-void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
 
 void animationVictoire(StructAffichage *affichage);
 void animationDefaite(StructAffichage *affichage);

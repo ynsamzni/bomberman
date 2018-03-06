@@ -21,9 +21,6 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[])
 
     chargementTextures(&affichage->structTextures, affichage->renderer);
     chargementCouleurs(&affichage->structCouleur);
-
-    // Numéro de la fenêtre qui doit être affichée
-    affichage->numeroFenetre = 2;
 }
 
 
@@ -58,6 +55,18 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     surfaceTmp = IMG_Load("assets/img/fleche_haut.png");
     (*structTextures).flecheHaute = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
+    surfaceTmp = IMG_Load("assets/img/fleche_gauche.png");
+    (*structTextures).flecheGauche = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+
+    surfaceTmp = IMG_Load("assets/img/fleche_droite.png");
+    (*structTextures).flecheDroite = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+
+    surfaceTmp = IMG_Load("assets/img/fleche_gauche_blanche.png");
+    (*structTextures).flecheGaucheBlanche = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+
+    surfaceTmp = IMG_Load("assets/img/fleche_droite_blanche.png");
+    (*structTextures).flecheDroiteBlanche = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+
     SDL_FreeSurface(surfaceTmp); //On peut donc "détruire" la surface
 }
 
@@ -72,33 +81,7 @@ void chargementCouleurs(StructCouleur *structCouleur)
     structCouleur->noir.b = 0;
 }
 
-void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer)
-{
-    int textureW, textureH;
 
-    // Charger le fichier comportant la police d'écriture
-    TTF_Font *policeEcriture = TTF_OpenFont(cheminPoliceEcriture, tailleTexte);
-
-	// Ecrire le texte dans une surface
-	SDL_Surface *surface = TTF_RenderText_Blended(policeEcriture, texte, couleurTexte);
-
-	// Créer une texture à partir de la surface
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-	// Déterminer les dimensions de la texture
-    SDL_QueryTexture(texture, NULL, NULL, &textureW, &textureH);
-
-    // Créer le rectangle qui contiendra les coordonnées et dimensions de la texture
-    SDL_Rect rectTexture = {positionX, positionY, textureW, textureH};
-
-    // Afficher le texte
-	SDL_RenderCopy(renderer, texture, NULL, &rectTexture);
-
-	// Libérer de la RAM
-    SDL_FreeSurface(surface);
-    TTF_CloseFont(policeEcriture);
-	SDL_DestroyTexture(texture);
-}
 
 /******************************************************************************/
 /*****************************AFFICHAGE DU JEU*********************************/
@@ -228,196 +211,4 @@ void animationDefaite(StructAffichage *affichage)
 }
 
 
-/******************************************************************************/
-/****************************AFFICHAGE DES MENUS*******************************/
-/******************************************************************************/
 
-
-void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu)
-{
-    // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheBas && menu->position != 2)
-        menu->position++;
-    if(clavier->toucheHaut && menu->position != 0)
-        menu->position--;
-
-    // Afficher le fond
-    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
-    SDL_RenderClear(affichage->renderer);
-
-    // Copier les éléments du menu dans le renderer
-    afficherTexte("BOMBERMAN", 50, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 140, 50, affichage->renderer);
-
-    if(menu->position == 0)
-        afficherTexte("DEBUG : Charger le jeu", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 140, 150, affichage->renderer);
-    else
-        afficherTexte("DEBUG : Charger le jeu", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 140, 150, affichage->renderer);
-
-    if(menu->position == 1)
-        afficherTexte("Jouer", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 250, 200, affichage->renderer);
-    else
-        afficherTexte("Jouer", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 250, 200, affichage->renderer);
-
-    if(menu->position == 2)
-        afficherTexte("Quitter", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 240, 250, affichage->renderer);
-    else
-        afficherTexte("Quitter", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 240, 250, affichage->renderer);
-
-    // Afficher le renderer
-    SDL_RenderPresent(affichage->renderer);
-
-    // Déterminer la prochaine fenêtre à afficher
-    if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
-    {
-        switch(menu->position)
-        {
-            case 0:
-                affichage->numeroFenetre = 1;
-                break;
-            case 1:
-                affichage->numeroFenetre = 3;
-                break;
-            case 2:
-                affichage->numeroFenetre = 0;
-                break;
-        }
-        initMenu(menu);
-    }
-    else if(clavier->toucheQuitter)
-        affichage->numeroFenetre = 0;
-}
-
-
-void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
-{
-    // Variables temporaires
-    int nbTotalProfils=1;
-    char nomProfil[5]="Yanis";
-
-    // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheBas && menu->position != nbTotalProfils)
-        menu->position++;
-    if(clavier->toucheHaut && menu->position != 0)
-        menu->position--;
-
-    // Afficher le fond
-    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
-    SDL_RenderClear(affichage->renderer);
-
-    // Copier les éléments du menu dans le renderer
-    afficherTexte("SELECTION DU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 65, 70, affichage->renderer);
-
-    for(int i=0; i<nbTotalProfils; i++)
-    {
-        if(menu->position == i)
-            afficherTexte(nomProfil, 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 260, 170 + 50 * i, affichage->renderer);
-        else
-            afficherTexte(nomProfil, 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 260, 170 + 50 * i, affichage->renderer);
-    }
-
-    if(menu->position == nbTotalProfils)
-        afficherTexte("Nouveau profil", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 190, 170 + 50 * nbTotalProfils, affichage->renderer);
-    else
-        afficherTexte("Nouveau profil", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 190, 170 + 50 * nbTotalProfils, affichage->renderer);
-
-    // Afficher le renderer
-    SDL_RenderPresent(affichage->renderer);
-
-    // Déterminer la prochaine fenêtre à afficher
-    if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
-    {
-        switch(menu->position)
-        {
-            case 0:
-                affichage->numeroFenetre = 1;
-                break;
-            case 1:
-                affichage->numeroFenetre = 4;
-                break;
-        }
-        initMenu(menu);
-    }
-    else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
-    {
-        affichage->numeroFenetre = 2;
-        initMenu(menu);
-    }
-    else if(clavier->toucheQuitter)
-        affichage->numeroFenetre = 0;
-}
-
-
-void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
-{
-    char caractereTmp;
-
-    // Coordonnées initiales des éléments du menu
-    SDL_Rect caseLettre = {130, 210, 65, 60};
-    SDL_Rect lettre = {caseLettre.x + 5, caseLettre.y - 5, 0, 0};
-    SDL_Rect flecheHaute = {caseLettre.x + 5, caseLettre.y - 30, 40, 30};
-    SDL_Rect flecheBasse = {caseLettre.x + 5, caseLettre.y + caseLettre.h, 40, 30};
-
-    // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheDroite && menu->position != 4)
-            menu->position++;
-    if(clavier->toucheGauche && menu->position != 0)
-            menu->position--;
-    if(clavier->toucheHaut && menu->entreeTexte[menu->position] != 'A')
-            menu->entreeTexte[menu->position]--;
-    if(clavier->toucheBas && menu->entreeTexte[menu->position] != 'Z')
-            menu->entreeTexte[menu->position]++;
-
-    // Afficher le fond
-    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
-    SDL_RenderClear(affichage->renderer);
-
-    // Copier les éléments du menu dans le renderer
-    afficherTexte("NOUVEAU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 110, 70, affichage->renderer);
-
-    SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
-    for(int i=0; i<5; i++)
-    {
-        // Cases contenant les lettres du nom
-        SDL_RenderDrawRect(affichage->renderer, &caseLettre);
-
-        // Nom
-        caractereTmp=menu->entreeTexte[i];
-        afficherTexte(&caractereTmp, 55, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, lettre.x, lettre.y, affichage->renderer);
-
-        // Flèches
-        if(i == menu->position)
-        {
-            if(menu->entreeTexte[menu->position] != 'A')
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheHaute, NULL, &flecheHaute);
-            if(menu->entreeTexte[menu->position] != 'Z')
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheBasse, NULL, &flecheBasse);
-        }
-
-        // Passer aux coordonnées de la prochaine case
-        caseLettre.x += caseLettre.w;
-        lettre.x += caseLettre.w;
-        flecheHaute.x += caseLettre.w;
-        flecheBasse.x += caseLettre.w;
-    }
-
-    afficherTexte("ENTREE pour continuer", 24, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 150, 380, affichage->renderer);
-
-    // Afficher le renderer
-    SDL_RenderPresent(affichage->renderer);
-
-    // Déterminer la prochaine fenêtre à afficher
-    if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
-    {
-        strcpy(jeu->listeDesJoueurs[0].nom, menu->entreeTexte);
-        affichage->numeroFenetre = 1;
-        initMenu(menu);
-    }
-    else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
-    {
-        affichage->numeroFenetre = 3;
-        initMenu(menu);
-    }
-    else if(clavier->toucheQuitter)
-        affichage->numeroFenetre = 0;
-
-}
