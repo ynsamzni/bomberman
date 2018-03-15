@@ -31,7 +31,7 @@ void initMenu(StructMenu *menu)
 void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
 {
     int nbTotalProfils;
-    CompteJoueur tabComptes[50];
+    CompteJoueur tabComptes[NBR_MAX_COMPTES];
 
     nbTotalProfils = chargerComptes(tabComptes);
 
@@ -225,7 +225,7 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
             break;
         }
     }
-     else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
+    else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
     {
         menu->numeroFenetre = 1;
     }
@@ -234,6 +234,78 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
 
 
 }
+
+/******************** MENU 4 : MENU STATISTIQUES **********************/
+void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu)
+{
+    CompteJoueur tabComptes[NBR_MAX_COMPTES];
+    int nbrDeComptes;
+    int tailleMaxListeAAfficher;
+    char chaine[15];
+    int nbrMaxVictoire;
+    CompteJoueur c = {"lambda", 0, -1};
+    int i = 0;
+
+    nbrDeComptes = chargerComptes(tabComptes);
+
+    // Afficher le fond
+    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
+    SDL_RenderClear(affichage->renderer);
+
+
+    afficherTexte("Statistiques", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 180, 50, affichage->renderer);
+
+    if(nbrDeComptes < 10)
+        tailleMaxListeAAfficher = nbrDeComptes;
+    else
+        tailleMaxListeAAfficher = 10;
+
+
+    for(int cmpt = 0; cmpt < tailleMaxListeAAfficher; cmpt++)
+    {
+        for(int j = cmpt+1; j<nbrDeComptes ; j++)
+        {
+            nbrMaxVictoire = 0;
+            if(tabComptes[j].nbrVictoires > nbrMaxVictoire)
+            {
+                nbrMaxVictoire = tabComptes[j].nbrVictoires;
+                c = tabComptes[cmpt];
+                tabComptes[cmpt] = tabComptes[j];
+                tabComptes[j] = c;
+                j = nbrDeComptes;
+            }
+
+        }
+    }
+
+    while(i < tailleMaxListeAAfficher)
+    {
+
+        sprintf(chaine, "Victoires : %d", tabComptes[i].nbrVictoires);
+        afficherTexte(tabComptes[i].nom, 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 80, (i+1)*50 + 80, affichage->renderer);
+
+        afficherTexte(chaine, 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 250, (i+1)*50 + 80, affichage->renderer);
+        sprintf(chaine, "Defaites : %d", tabComptes[i].nbrDefaites);
+
+        afficherTexte(chaine, 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 400, (i+1)*50 + 80, affichage->renderer);
+        i++;
+    }
+
+    afficherTexte("Appuyer sur Echap pour returner au menu", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 90, i*50 + 250, affichage->renderer);
+
+    // Afficher le renderer
+    SDL_RenderPresent(affichage->renderer);
+
+
+    if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
+    {
+        menu->numeroFenetre = 3;
+    }
+    else if(clavier->toucheQuitter)
+        menu->numeroFenetre = 0;
+
+}
+
 
 /******************** MENU 5 : MENU DE PARAMETRAGE DE LA PARTIE **********************/
 
@@ -419,21 +491,23 @@ void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char c
     SDL_DestroyTexture(texture);
 }
 
-void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu){
+void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu)
+{
     int nbrJoueursHumains = 0;
     int nbrJoueursIA = 0;
 
     CompteJoueur cDefault = {"Test", 0, 0};
 
-    for(int i = 0; i < 4; i ++){
-            if(menu->paramPartie[i] == 0)
-                nbrJoueursIA++;
-            else if (menu->paramPartie[i] == 2)
-                nbrJoueursHumains++;
+    for(int i = 0; i < 4; i ++)
+    {
+        if(menu->paramPartie[i] == 0)
+            nbrJoueursIA++;
+        else if (menu->paramPartie[i] == 2)
+            nbrJoueursHumains++;
     }
 
 
-     for(int i = 0; i < nbrJoueursHumains; i++)
+    for(int i = 0; i < nbrJoueursHumains; i++)
     {
         if(i == 0)
             jeu->listeDesJoueurs[i].compte = menu->profilSelectionne;

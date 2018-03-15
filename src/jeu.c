@@ -218,9 +218,9 @@ void afficherStructureJeu(StructJeu jeu)
 int deplacementPossible(int x, int y, char direction[], StructJeu *jeu)
 {
     if(!strcmp(direction, "HAUT") && contenuCoordonnees(jeu, x, y - 1) == 0 && contenuCoordonnees(jeu, x + 29, y - 1) == 0
-       || !strcmp(direction, "DROITE") && contenuCoordonnees(jeu, x + 31, y) == 0 && contenuCoordonnees(jeu, x + 31, y + 29) == 0
-       || !strcmp(direction, "BAS") && contenuCoordonnees(jeu, x, y + 31) == 0 && contenuCoordonnees(jeu, x + 29, y + 31)== 0
-       || !strcmp(direction, "GAUCHE") && contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x - 1, y + 29) == 0)
+            || !strcmp(direction, "DROITE") && contenuCoordonnees(jeu, x + 31, y) == 0 && contenuCoordonnees(jeu, x + 31, y + 29) == 0
+            || !strcmp(direction, "BAS") && contenuCoordonnees(jeu, x, y + 31) == 0 && contenuCoordonnees(jeu, x + 29, y + 31)== 0
+            || !strcmp(direction, "GAUCHE") && contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x - 1, y + 29) == 0)
         return 1;
     else
         return 0;
@@ -278,31 +278,87 @@ void checkVictoire(StructJeu *jeu)
     int nbrIA = 0; //pour une raison qui m'échappe, la syntaxe int nbrIA, nbrHumains = 0; me renvoyait n'importe quoi comme valeur pour les variables
     int nbrHumains = 0;
 
-    for(int i = 0; i < jeu->nbrDeJoueurs ; i ++){
+    for(int i = 0; i < jeu->nbrDeJoueurs ; i ++)
+    {
         if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1)
             nbrHumains++;
         if(jeu->listeDesJoueurs[i].humainOuIA == 1 && jeu->listeDesJoueurs[i].enVie == 1)
             nbrIA++;
     }
 
-    if(nbrHumains == 0){
+    if(nbrHumains == 0)
+    {
         jeu->animations.defaite = 1;
-        for(int i = 0; i < jeu->nbrDeJoueurs; i++){
-            if(jeu->listeDesJoueurs[i].humainOuIA == 0)
-                jeu->listeDesJoueurs[i].compte.nbrDefaites++;
+        for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+        {
+            if(jeu->listeDesJoueurs[i].humainOuIA == 0 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0) //2eme condition pour empecher de créer un joueur dans le fichier des comptes. Améliorations à venir
+                joueurNbrVictoireOuDefaitePlusUn(jeu, i, 0);
         }
     }
-    else if(nbrHumains == 1 && nbrIA == 0){
+    else if(nbrHumains == 1 && nbrIA == 0)
+    {
         jeu->animations.victoire = 1;
-        for(int i = 0; i < jeu->nbrDeJoueurs; i++){
-            if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1)
-                jeu->listeDesJoueurs[i].compte.nbrVictoires++;
-            if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 0)
-                jeu->listeDesJoueurs[i].compte.nbrDefaites++;
-
+        for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+        {
+            if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0)
+                joueurNbrVictoireOuDefaitePlusUn(jeu, i, 1);
+            if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 0 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0)
+                joueurNbrVictoireOuDefaitePlusUn(jeu, i, 0);
         }
     }
 
 
 }
+
+void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int victoireOuDefaite)
+{
+    FILE* fic;
+    CompteJoueur c;
+    int a = 0;
+    int i = 0;
+
+
+
+
+
+    fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "rb");
+
+    if(fic == NULL)
+        printf("[LECTURE] Erreur d'accès au fichier ! \n");
+    else
+    {
+        while(fread(&c, sizeof(CompteJoueur),1,fic) && !feof(fic))
+        {
+            if(strcmp(jeu->listeDesJoueurs[indiceJoueur].compte.nom, c.nom) == 0)
+                a = 1;
+            if(a != 1)
+                i++;
+        }
+    }
+    fclose(fic);
+
+
+
+    c = jeu->listeDesJoueurs[indiceJoueur].compte;
+    if(victoireOuDefaite == 1)
+        c.nbrVictoires++;
+    if(victoireOuDefaite == 0)
+        c.nbrDefaites++;
+
+
+    fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "r+");
+
+    if(fic == NULL)
+        printf("[ECRITURE] Erreur d'accès au fichier ! \n");
+    else
+    {
+        printf("Retour de fseek : %d \n", fseek(fic, sizeof(CompteJoueur)*i, SEEK_SET));
+
+        fwrite(&c, sizeof(c), 1, fic);
+    }
+    SDL_Delay(2000);
+    fclose(fic);
+
+}
+
 

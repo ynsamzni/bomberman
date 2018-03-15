@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
                 break;
             case 4:
                 // Menu affichant les statistiques
-
+                afficherMenuStatistiques(&affichage, &clavier, &menu);
                 break;
             case 5:
                 // Menu permettant de paramétrer sa partie
@@ -136,6 +136,12 @@ int main(int argc, char *argv[])
                 menu.numeroFenetre = 5;
             }
         }
+
+        if((jeu.animations.defaite == 1 || jeu.animations.victoire == 1 )&& demarrerJeu == 1){
+            menu.numeroFenetre = 3;
+            demarrerJeu = 0;
+        }
+
 
 
     }
