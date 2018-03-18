@@ -71,9 +71,7 @@ void initJeu(StructJeu *jeu)
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction Ã  revoir
 {
-
-
-
+    // Actions joueur
     if(clavier->toucheBombeJ1 == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0)
         poserBombe(jeu, 0);
 
@@ -83,15 +81,17 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction Ã
     deplacerJoueurJ1(clavier, jeu, 0);
     deplacerJoueurJ2(clavier, jeu, 1);
 
-
+    // Actions joueur + IA
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
-    {
-        exploserBombe(jeu, i); // Actions joueur + IA
-    }
+        exploserBombe(jeu, i);
 
-    // Action IA
+    // Actions IA
     deplacerIA(jeu);
 
+    if(ennemiDansAxe(1, jeu))
+        poserBombe(jeu, 1);
+
+    // Autres
     tuerJoueur(jeu);
     checkVictoire(jeu);
 }

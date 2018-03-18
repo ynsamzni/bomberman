@@ -505,6 +505,61 @@ int itineraireDangereux(Coordonnes itineraire[300], Coordonnes casesDangereuses[
     return resultat;
 }
 
+int ennemiDansAxe(int indiceJoueur, StructJeu *jeu)
+{
+    int x, y;
+    int directionActuelleTestee;
+    int ennemiPresentDansAxe = 0;
+    Direction direction = HAUT;
+
+    // Tester les 4 directions
+    for(int i=0; i<4; i++)
+    {
+        x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
+        y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
+        directionActuelleTestee = 0;
+
+        // Tester l'ensemble des déplacements possibles dans la direction en cours
+        while(!directionActuelleTestee)
+        {
+            for(int j=0; j<jeu->nbrDeJoueurs; j++)
+            {
+                if(j != indiceJoueur)
+                {
+                    if(jeu->listeDesJoueurs[j].coordonnes.x == x && jeu->listeDesJoueurs[j].coordonnes.y == y)
+                        ennemiPresentDansAxe = 1;
+                }
+            }
+            if(deplacementPossible(x, y, direction + i, jeu))
+            {
+                switch(direction + i)
+                {
+                    case HAUT:
+                        x = x;
+                        y -= VITESSE_DES_JOUEURS;
+                        break;
+                    case DROITE:
+                        x += VITESSE_DES_JOUEURS;
+                        y = y;
+                        break;
+                    case BAS:
+                        x = x;
+                        y += VITESSE_DES_JOUEURS;
+                        break;
+                    case GAUCHE:
+                        x -= VITESSE_DES_JOUEURS;
+                        y = y;
+                        break;
+                }
+            }
+            else
+                directionActuelleTestee = 1;
+        }
+    }
+
+    return ennemiPresentDansAxe;
+}
+
 
 /********** Traitement des coordonnées **********/
 

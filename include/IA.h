@@ -12,6 +12,8 @@ void randomMove(StructJeu *jeu, int indiceJoueur, Direction direction, int situa
 
 void debugRandomMove(int indiceJoueur, Direction direction, int situation, int faceAuMur);
 
+int ennemiDansAxe(int indiceJoueur, StructJeu *jeu);
+
 
 
 #endif // IA_H_INCLUDED
