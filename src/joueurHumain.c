@@ -61,7 +61,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
         printf("Appui Haut\n");
-        if(deplacementPossible(x, y, "HAUT", jeu))
+        if(deplacementPossible(x, y, HAUT, jeu))
             y = y - VITESSE_DES_JOUEURS;
     }
 
@@ -69,7 +69,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
         printf("Appui Bas\n");
-        if(deplacementPossible(x, y, "BAS", jeu))
+        if(deplacementPossible(x, y, BAS, jeu))
             y = y + VITESSE_DES_JOUEURS;
     }
 
@@ -77,7 +77,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
         printf("Appui Droite\n");
-        if(deplacementPossible(x, y, "DROITE", jeu))
+        if(deplacementPossible(x, y, DROITE, jeu))
             x = x + VITESSE_DES_JOUEURS;
     }
 
@@ -85,7 +85,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
         printf("Appui Gauche\n");
-        if(deplacementPossible(x, y, "GAUCHE", jeu))
+        if(deplacementPossible(x, y, GAUCHE, jeu))
             x = x - VITESSE_DES_JOUEURS;
     }
 
@@ -109,7 +109,7 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
         printf("Appui Haut\n");
-        if(deplacementPossible(x, y, "HAUT", jeu))
+        if(deplacementPossible(x, y, HAUT, jeu))
             y = y - VITESSE_DES_JOUEURS;
     }
 
@@ -117,7 +117,7 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
         printf("Appui Bas\n");
-        if(deplacementPossible(x, y, "BAS", jeu))
+        if(deplacementPossible(x, y, BAS, jeu))
             y = y + VITESSE_DES_JOUEURS;
     }
 
@@ -125,7 +125,7 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
         printf("Appui Droite\n");
-        if(deplacementPossible(x, y, "DROITE", jeu))
+        if(deplacementPossible(x, y, DROITE, jeu))
             x = x + VITESSE_DES_JOUEURS;
     }
 
@@ -133,7 +133,7 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     {
         jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
         printf("Appui Gauche\n");
-        if(deplacementPossible(x, y, "GAUCHE", jeu))
+        if(deplacementPossible(x, y, GAUCHE, jeu))
             x = x - VITESSE_DES_JOUEURS;
     }
 

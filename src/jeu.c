@@ -215,12 +215,12 @@ void afficherStructureJeu(StructJeu jeu)
 /*********************************************************************************/
 
 
-int deplacementPossible(int x, int y, char direction[], StructJeu *jeu)
+int deplacementPossible(int x, int y, Direction direction, StructJeu *jeu)
 {
-    if(!strcmp(direction, "HAUT") && contenuCoordonnees(jeu, x, y - 1) == 0 && contenuCoordonnees(jeu, x + 29, y - 1) == 0
-            || !strcmp(direction, "DROITE") && contenuCoordonnees(jeu, x + 31, y) == 0 && contenuCoordonnees(jeu, x + 31, y + 29) == 0
-            || !strcmp(direction, "BAS") && contenuCoordonnees(jeu, x, y + 31) == 0 && contenuCoordonnees(jeu, x + 29, y + 31)== 0
-            || !strcmp(direction, "GAUCHE") && contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x - 1, y + 29) == 0)
+    if((direction == HAUT && contenuCoordonnees(jeu, x, y - 1) == 0 && contenuCoordonnees(jeu, x + 29, y - 1) == 0)
+       || (direction == DROITE && contenuCoordonnees(jeu, x + 31, y) == 0 && contenuCoordonnees(jeu, x + 31, y + 29) == 0)
+       || (direction == BAS && contenuCoordonnees(jeu, x, y + 31) == 0 && contenuCoordonnees(jeu, x + 29, y + 31)== 0)
+       || (direction == GAUCHE && contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x - 1, y + 29) == 0))
         return 1;
     else
         return 0;
