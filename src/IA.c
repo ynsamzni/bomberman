@@ -33,576 +33,151 @@ void initIA(StructJeu *jeu)  //Gère l'apparition des IA
 
 }
 
-
-void deplacerIA(StructJeu *jeu)  //Permet de déplacer une IA
+void deplacerIA(StructJeu *jeu)
 {
-    int x, y;
-    int faceAuMur;
+    Coordonnes itineraire[300][300];
+    int nbTotalItineraire;
 
-    /* POINT INITIALE :
-            - vérification case à droite x + 31
-            - vérification case à gauche x - 1
-        DEUXIEME POINT
-            - vérification case à droite x + 31 / y + 29
-            - vérification case à gauche x - 1 / y + 29
-    */
+    // Calculer tous les itinéraires disponibles
+    nbTotalItineraire = calculerItineraires(1, itineraire, 0, 0, jeu);
 
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+
+    /***** Debug *****/
+    int j;
+    for(int i = 0; i < nbTotalItineraire; i++)
     {
-        if(jeu->listeDesJoueurs[i].humainOuIA == 1 && jeu->listeDesJoueurs[i].enVie == 1)
+        j = 0;
+        printf("\nItineraire %d :", i);
+        while(itineraire[i][j].x != -1 || itineraire[i][j].y != -1)
         {
-            x = jeu->listeDesJoueurs[i].coordonnes.x;
-            y = jeu->listeDesJoueurs[i].coordonnes.y;
-            faceAuMur = 0;
-
-
-
-
-            /*******************HAUT************************************/
-            if(jeu->listeDesJoueurs[i].direction == HAUT)
-            {
-                if(y%30 != 0 ) //Si le perso n'est pas juste une case
-                {
-                    jeu->listeDesJoueurs[i].coordonnes.y = y - VITESSE_DES_JOUEURS;
-                }
-                else //Sinon, il est nécessairement juste sur une case
-                {
-
-                    if(contenuCoordonnees(jeu, x, y - 1) != 0)
-                    {
-                        faceAuMur = 1;
-                    }
-                    //1 - SI UNIQUEMENT LA CASE DE DROITE EST VIDE
-                    if(contenuCoordonnees(jeu, x - 1, y)  != 0 && contenuCoordonnees(jeu, x + 31, y) == 0)
-                    {
-                        randomMove(jeu, i, HAUT, 1, faceAuMur);
-                    }
-                    //2 - SI UNIQUEMENT LA CASE DE GAUCHE EST VIDE
-                    else if(contenuCoordonnees(jeu, x -1, y) == 0 && contenuCoordonnees(jeu, x + 31, y) != 0)
-                    {
-                        randomMove(jeu, i, HAUT, 2, faceAuMur);
-                    }
-                    //3 - SI LES CASES DE DROITE ET GAUCHE SONT VIDES
-                    else if(contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x + 31, y) == 0)
-                    {
-                        randomMove(jeu, i, HAUT, 3, faceAuMur);
-                    }
-                    //SI LA CASE DE DROITE ET DE GAUCHE SONT PLEINES ET faceAuMur = 0
-                    else if(contenuCoordonnees(jeu, x - 1, y) != 0 && contenuCoordonnees(jeu, x + 31, y) != 0 && faceAuMur == 0)
-                    {
-                        jeu->listeDesJoueurs[i].coordonnes.y = y - VITESSE_DES_JOUEURS;
-                    }
-                    //SI LA CASE DE DROITE ET DE GAUCHE SONT PLEINES ET faceAuMur = 0
-                    else if(contenuCoordonnees(jeu, x - 1, y) != 0 && contenuCoordonnees(jeu, x + 31, y) != 0 && faceAuMur == 1)
-                    {
-                        jeu->listeDesJoueurs[i].direction = BAS;
-                        jeu->listeDesJoueurs[i].coordonnes.y = y + VITESSE_DES_JOUEURS;
-                    }
-
-                }
-            }
-
-            /****************************BAS************************************/
-            else if(jeu->listeDesJoueurs[i].direction == BAS)
-            {
-                if(y%30 != 0) //Si le perso n'est pas juste sur une case
-                {
-                    jeu->listeDesJoueurs[i].coordonnes.y = y + VITESSE_DES_JOUEURS;
-                }
-                else //Sinon, il est nécessairement juste sur une case
-                {
-
-                    if(contenuCoordonnees(jeu, x, y + 31) != 0)
-                    {
-                        faceAuMur = 1;
-                    }
-                    //1 - SI UNIQUEMENT LA CASE DE DROITE EST VIDE
-                    if(contenuCoordonnees(jeu, x - 1, y)  != 0 && contenuCoordonnees(jeu, x + 31, y) == 0)
-                    {
-                        randomMove(jeu, i, BAS, 1, faceAuMur);
-                    }
-                    //2 - SI UNIQUEMENT LA CASE DE GAUCHE EST VIDE
-                    else if(contenuCoordonnees(jeu, x -1, y) == 0 && contenuCoordonnees(jeu, x + 31, y) != 0)
-                    {
-                        randomMove(jeu, i, BAS, 2, faceAuMur);
-                    }
-                    //3 - SI LES CASES DE DROITE ET GAUCHE SONT VIDES
-                    else if(contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x + 31, y) == 0)
-                    {
-                        randomMove(jeu, i, BAS, 3, faceAuMur);
-                    }
-                    //SI LA CASE DE DROITE ET DE GAUCHE SONT PLEINES ET faceAuMur = 0
-                    else if(contenuCoordonnees(jeu, x - 1, y) != 0 && contenuCoordonnees(jeu, x + 31, y) != 0 && faceAuMur == 0)
-                    {
-                        jeu->listeDesJoueurs[i].coordonnes.y = y + VITESSE_DES_JOUEURS;
-                    }
-                    //SI LA CASE DE DROITE ET DE GAUCHE SONT PLEINES ET faceAuMur = 0
-                    else if(contenuCoordonnees(jeu, x - 1, y) != 0 && contenuCoordonnees(jeu, x + 31, y) != 0 && faceAuMur == 1)
-                    {
-                        jeu->listeDesJoueurs[i].direction = HAUT;
-                        jeu->listeDesJoueurs[i].coordonnes.y = y - VITESSE_DES_JOUEURS;
-                    }
-
-                }
-
-            }
-
-            /*******************************DROITE***************************/
-            else if(jeu->listeDesJoueurs[i].direction == DROITE)
-            {
-                if(x%30 != 0) //Si le perso n'est pas juste sur une case
-                {
-                    jeu->listeDesJoueurs[i].coordonnes.x = x + VITESSE_DES_JOUEURS;
-                }
-                else //Sinon, il est nécessairement juste sur une case
-                {
-
-                    if(contenuCoordonnees(jeu, x + 31, y) != 0)
-                    {
-                        faceAuMur = 1;
-                    }
-                    //1 - SI UNIQUEMENT LA CASE DU HAUT EST VIDE
-                    if(contenuCoordonnees(jeu, x, y - 1)  == 0 && contenuCoordonnees(jeu, x, y + 31) != 0)
-                    {
-                        randomMove(jeu, i, DROITE, 1, faceAuMur);
-                    }
-                    //2 - SI UNIQUEMENT LA CASE DU BAS EST VIDE
-                    else if(contenuCoordonnees(jeu, x, y - 1)  != 0 && contenuCoordonnees(jeu, x, y + 31) == 0)
-                    {
-                        randomMove(jeu, i, DROITE, 2, faceAuMur);
-                    }
-                    //3 - SI LES CASES DU HAUT ET DU BAS SONT VIDES
-                    else if(contenuCoordonnees(jeu, x, y - 1)  == 0 && contenuCoordonnees(jeu, x, y + 31) == 0)
-                    {
-                        randomMove(jeu, i, DROITE, 3, faceAuMur);
-                    }
-                    //SI LES CASES DU HAUT ET DU BAS SONT PLEINES ET faceAuMur = 0
-                    else if(contenuCoordonnees(jeu, x, y - 1)  != 0 && contenuCoordonnees(jeu, x, y + 31) != 0 && faceAuMur == 0)
-                    {
-                        jeu->listeDesJoueurs[i].coordonnes.x = x + VITESSE_DES_JOUEURS;
-                    }
-                    //SI LES CASES DU HAUT ET DU BAS SONT PLEINES ET faceAuMur = 1
-                    else if(contenuCoordonnees(jeu, x, y - 1)  != 0 && contenuCoordonnees(jeu, x, y + 31) != 0 && faceAuMur == 1)
-                    {
-                        jeu->listeDesJoueurs[i].direction = GAUCHE;
-                        jeu->listeDesJoueurs[i].coordonnes.x = x - VITESSE_DES_JOUEURS;
-                    }
-
-                }
-
-            }
-
-            /*******************************GAUCHE***************************/
-            else if(jeu->listeDesJoueurs[i].direction == GAUCHE)
-            {
-                if( x%30 != 0) //Si le perso n'est pas juste sur une case
-                {
-                    jeu->listeDesJoueurs[i].coordonnes.x = x - VITESSE_DES_JOUEURS;
-                }
-                else //Sinon, il est nécessairement juste sur une case
-                {
-
-                    if(contenuCoordonnees(jeu, x - 1, y) != 0)
-                    {
-                        faceAuMur = 1;
-                    }
-                    //1 - SI UNIQUEMENT LA CASE DU HAUT EST VIDE
-                    if(contenuCoordonnees(jeu, x, y - 1)  == 0 && contenuCoordonnees(jeu, x, y + 31) != 0)
-                    {
-                        randomMove(jeu, i, GAUCHE, 1, faceAuMur);
-                    }
-                    //2 - SI UNIQUEMENT LA CASE DU BAS EST VIDE
-                    else if(contenuCoordonnees(jeu, x, y - 1)  != 0 && contenuCoordonnees(jeu, x, y + 31) == 0)
-                    {
-                        randomMove(jeu, i, GAUCHE, 2, faceAuMur);
-                    }
-                    //3 - SI LES CASES DU HAUT ET DU BAS SONT VIDES
-                    else if(contenuCoordonnees(jeu, x, y - 1)  == 0 && contenuCoordonnees(jeu, x, y + 31) == 0)
-                    {
-                        randomMove(jeu, i, GAUCHE, 3, faceAuMur);
-                    }
-                    //SI LES CASES DU HAUT ET DU BAS SONT PLEINES ET faceAuMur = 0
-                    else if(contenuCoordonnees(jeu, x, y - 1)  != 0 && contenuCoordonnees(jeu, x, y + 31) != 0 && faceAuMur == 0)
-                    {
-                        jeu->listeDesJoueurs[i].coordonnes.x = x - VITESSE_DES_JOUEURS;
-                    }
-                    //SI LES CASES DU HAUT ET DU BAS SONT PLEINES ET faceAuMur = 1
-                    else if(contenuCoordonnees(jeu, x, y - 1)  != 0 && contenuCoordonnees(jeu, x, y + 31) != 0 && faceAuMur == 1)
-                    {
-                        jeu->listeDesJoueurs[i].direction = DROITE;
-                        jeu->listeDesJoueurs[i].coordonnes.x = x + VITESSE_DES_JOUEURS;
-                    }
-
-                }
-
-            }
-
-
-        }
-
-        //Ancienne ligne de debug printf("faceAuMur = %d \n", faceAuMur);
-
-    }
-}
-
-/**********************************************************************/
-/**********GESTION DU CHOIX DE DIRECTION ALEATOIRE*********************/
-/**********************************************************************/
-
-void randomMove(StructJeu *jeu, int indiceJoueur, Direction direction, int situation, int faceAuMur)
-{
-   // debugRandomMove(indiceJoueur, direction, situation, faceAuMur);
-
-
-    int  randomizer;
-    /*********************************************HAUT*********************************************************************/
-
-    if(direction == HAUT)
-    {
-        if(situation == 1) //CASE DROITE VIDE
-        {
-            randomizer = rand()%3+1;  /* nombre aléatoire compris entre 1 et 3 */
-            if(randomizer == 1 || randomizer == 2)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-                }
-
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 3)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-            }
-
-        }
-        if(situation == 2) //CASE GAUCHE VIDE
-        {
-            randomizer = rand()%3+1;
-            if(randomizer == 1 || randomizer == 2)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-                }
-
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 3)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-            }
-
-        }
-        if(situation == 3) //CASE DROITE ET GAUCHE VIDE
-        {
-            randomizer = rand()%6+1;
-            if(randomizer == 1 || randomizer == 2 || randomizer == 3 || randomizer == 4)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-                }
-
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 5)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-            }
-            if(randomizer == 6)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-            }
-
+            printf(" %d/%d", itineraire[i][j].x, itineraire[i][j].y);
+            j++;
         }
     }
-
-    /*********************************************BAS*********************************************************************/
-
-
-    else if(direction == BAS)
-    {
-        if(situation == 1) //CASE DROITE VIDE
-        {
-            randomizer = rand()%3+1;  /* nombre aléatoire compris entre 1 et 3 */
-            if(randomizer == 1 || randomizer == 2)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-                }
-
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 3)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-            }
-
-        }
-        if(situation == 2) //CASE GAUCHE VIDE
-        {
-            randomizer = rand()%3+1;
-            if(randomizer == 1 || randomizer == 2)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-                }
-
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 3)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-            }
-
-        }
-        if(situation == 3) //CASE DROITE ET GAUCHE VIDE
-        {
-            randomizer = rand()%6+1;
-            if(randomizer == 1 || randomizer == 2 || randomizer == 3 || randomizer == 4)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-                }
-
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 5)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-            }
-            if(randomizer == 6)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-            }
-
-        }
-    }
-
-
-    /***********************************DROITE*************************************************************/
-
-
-    else if(direction == DROITE)
-    {
-        if(situation == 1) //CASE HAUT VIDE
-        {
-            randomizer = rand()%3+1;  /* nombre aléatoire compris entre 1 et 3 */
-            if(randomizer == 1 || randomizer == 2)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-                }
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 3)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-            }
-
-        }
-        if(situation == 2) //CASE BAS VIDE
-        {
-            randomizer = rand()%3+1;
-            if(randomizer == 1 || randomizer == 2)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-                }
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 3)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-            }
-
-        }
-        if(situation == 3) //CASE HAUT ET BAS VIDE
-        {
-            randomizer = rand()%6+1;
-            if(randomizer == 1 || randomizer == 2 || randomizer == 3 || randomizer == 4)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-                }
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 5)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-            }
-            if(randomizer == 6)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-            }
-
-        }
-    }
-
-    /**************************************GAUCHE**************************************************************/
-
-
-    else if(direction == GAUCHE)
-    {
-        if(situation == 1) //CASE HAUT VIDE
-        {
-            randomizer = rand()%3+1;  /* nombre aléatoire compris entre 1 et 3 */
-            if(randomizer == 1 || randomizer == 2)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-                }
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 3)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-            }
-
-        }
-        if(situation == 2) //CASE BAS VIDE
-        {
-            randomizer = rand()%3+1;
-            if(randomizer == 1 || randomizer == 2)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-                }
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 3)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-            }
-
-        }
-        if(situation == 3) //CASE HAUT ET BAS VIDE
-        {
-            randomizer = rand()%6+1;
-            if(randomizer == 1 || randomizer == 2 || randomizer == 3 || randomizer == 4)
-            {
-                if(faceAuMur == 0)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - VITESSE_DES_JOUEURS;
-                }
-                if(faceAuMur == 1)
-                {
-                    jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-                    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + VITESSE_DES_JOUEURS;
-                }
-            }
-            if(randomizer == 5)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - VITESSE_DES_JOUEURS;
-            }
-            if(randomizer == 6)
-            {
-                jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + VITESSE_DES_JOUEURS;
-            }
-
-        }
-    }
-
-
-
-
+    printf("\n---------\n");
 }
 
 
+/********** Traitement des itinéraires **********/
 
-void debugRandomMove(int indiceJoueur, Direction direction, int situation, int faceAuMur)
+int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbItineraire, int nbDeplacement, StructJeu *jeu)
 {
+    int nbDeplacementIterationActuelle = 0;
+    int x, y, xInitial, yInitial;
+    Direction direction = HAUT;
+    Coordonnes nvllePosition;
+    int nbMaxItineraires = 50;
 
-    if(direction == HAUT)
+    // Déterminer la position initiale
+    xInitial = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
+    yInitial = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
+
+    while(xInitial%30 != 0)
+        xInitial -= VITESSE_DES_JOUEURS;
+    while(yInitial%30 != 0)
+        yInitial -= VITESSE_DES_JOUEURS;
+
+    // Déterminer la dernière position calculée de l'itinéraire
+    if(nbDeplacement == 0)
     {
-        printf("L'IA %d va dans la direction HAUT et est dans la situation %d  et faceAuMur = %d \n", indiceJoueur, situation, faceAuMur);
+        x = xInitial;
+        y = yInitial;
     }
-    if(direction == BAS)
+    else
     {
-        printf("L'IA %d va dans la direction BAS et est dans la situation %d et faceAuMur = %d \n", indiceJoueur, situation, faceAuMur);
-    }
-    if(direction == DROITE)
-    {
-        printf("L'IA %d va dans la direction DROITE et est dans la situation %d et faceAuMur = %d \n", indiceJoueur, situation, faceAuMur);
-    }
-    if(direction == GAUCHE)
-    {
-        printf("L'IA %d va dans la direction GAUCHE et est dans la situation %d et faceAuMur = %d \n", indiceJoueur, situation, faceAuMur);
+        x = itineraire[nbItineraire][nbDeplacement - 1].x;
+        y = itineraire[nbItineraire][nbDeplacement - 1].y;
     }
 
+    // Tester les déplacements : HAUT -> DROITE -> BAS -> GAUCHE
+    for(int i=0; i<4; i++)
+    {
+        // Déterminer la position à étudier
+        switch(direction + i)
+        {
+            case HAUT:
+                nvllePosition.x = x;
+                nvllePosition.y = y - 30;
+                break;
+            case DROITE:
+                nvllePosition.x = x + 30;
+                nvllePosition.y = y;
+                break;
+            case BAS:
+                nvllePosition.x = x;
+                nvllePosition.y = y + 30;
+                break;
+            case GAUCHE:
+                nvllePosition.x = x - 30;
+                nvllePosition.y = y;
+                break;
+        }
 
+        // Déterminer si la position étudiée doit faire partie de l'itinéraire
+        if(deplacementPossible(x, y, direction + i, jeu)
+           && (nbDeplacement == 0 || !rechercherItineraire(nvllePosition.x, nvllePosition.y, itineraire[nbItineraire])) && (nvllePosition.x != xInitial || nvllePosition.y != yInitial)) // Si on n'est pas déjà passé par cette case
+        {
+           // Passer à un nouvel itineraire si un déplacement a déjà été effectué dans cette itération
+            if(nbDeplacementIterationActuelle != 0)
+            {
+                // Stop si cela fait dépasser le nombre max d'itinéraires autorisés
+                if(nbItineraire > nbMaxItineraires - 2)
+                    return nbItineraire;
+
+                nbItineraire++;
+                for(int i=0; i<=nbDeplacement; i++)
+                {
+                    itineraire[nbItineraire][i].x = itineraire[nbItineraire-1][i].x;
+                    itineraire[nbItineraire][i].y = itineraire[nbItineraire-1][i].y;
+                }
+            }
+
+            // Actualiser le nombre de déplacements possibles dans cette itération
+            nbDeplacementIterationActuelle++;
+
+            // Ajouter le déplacement dans l'itinéraire actuel
+            modifierCoordonnees(&itineraire[nbItineraire][nbDeplacement], nvllePosition.x, nvllePosition.y);
+            modifierCoordonnees(&itineraire[nbItineraire][nbDeplacement+1], -1, -1);
+
+            // Calculer le prochain déplacement de cet itineraire
+            nbItineraire = calculerItineraires(indiceJoueur, itineraire, nbItineraire, nbDeplacement+1, jeu);
+        }
+    }
+
+    if(nbDeplacement == 0 && nbDeplacementIterationActuelle != 0)
+        return nbItineraire + 1;
+    else
+        return nbItineraire;
+}
+
+int longueurItineraire(Coordonnes itineraire[300])
+{
+    int longueur = 0;
+
+    while(itineraire[longueur].x != -1 || itineraire[longueur].y != -1)
+        longueur++;
+
+    return longueur;
+}
+
+int rechercherItineraire(int x, int y, Coordonnes itineraire[300])
+{
+    int resultat = 0;
+
+    for(int i=0; i<longueurItineraire(itineraire); i++)
+    {
+        if(itineraire[i].x == x && itineraire[i].y == y)
+            resultat = i + 1;
+    }
+
+    return resultat; // Renvoyer la position
 }
 
 
+/********** Traitement des coordonnées **********/
 
-
+void modifierCoordonnees(Coordonnes *coordonneesAModifier, int x, int y)
+{
+    coordonneesAModifier->x = x;
+    coordonneesAModifier->y = y;
+}
