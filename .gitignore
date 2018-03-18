@@ -55,3 +55,7 @@ dkms.conf
 # Code::Blocks IDE
 *.depend
 *.layout
+
+# Game saves
+comptes_joueurs.dat
+
