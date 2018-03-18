@@ -52,13 +52,17 @@ void deplacerIA(StructJeu *jeu)
         comparerItineraires(jeu->listeDesJoueurs[0].coordonnes.x, jeu->listeDesJoueurs[0].coordonnes.y, itineraire, nbTotalItineraire, jeu, casesDangereuses);
     }
 
+    // Réaliser un déplacement
+    suivreItineraire(1, jeu);
+
 
     /***** Debug *****/
-
+/*
     printf("\nItineraire :");
     for(int j=0; j< longueurItineraire(jeu->listeDesJoueurs[1].itineraireSuivi); j++)
         printf(" %d/%d", jeu->listeDesJoueurs[1].itineraireSuivi[j].x, jeu->listeDesJoueurs[1].itineraireSuivi[j].y);
-
+*/
+/*
     int j;
     for(int i = 0; i < nbTotalItineraire; i++)
     {
@@ -70,15 +74,16 @@ void deplacerIA(StructJeu *jeu)
             j++;
         }
     }
-
+*/
+/*
     int i = 0;
     while(casesDangereuses[i].x != -1 || casesDangereuses[i].y != -1)
     {
         printf("\nBombe %d/%d", casesDangereuses[i].x, casesDangereuses[i].y);
         i++;
     }
-
-    printf("\n---------\n");
+*/
+    //printf("\n---------\n");
 }
 
 
@@ -172,6 +177,63 @@ int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int n
         return nbItineraire + 1;
     else
         return nbItineraire;
+}
+
+void suivreItineraire(int indiceJoueur, StructJeu *jeu)
+{
+    // Si le joueur doit terminer un déplacement
+    if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 != 0 || jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 != 0)
+    {
+        jeu->listeDesJoueurs[indiceJoueur].deplacement = 1;
+
+        switch(jeu->listeDesJoueurs[indiceJoueur].direction)
+        {
+            case HAUT:
+                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y -= VITESSE_DES_JOUEURS;
+                break;
+            case DROITE:
+                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x += VITESSE_DES_JOUEURS;
+                break;
+            case BAS:
+                jeu->listeDesJoueurs[indiceJoueur].coordonnes.y += VITESSE_DES_JOUEURS;
+                break;
+            case GAUCHE:
+                jeu->listeDesJoueurs[indiceJoueur].coordonnes.x -= VITESSE_DES_JOUEURS;
+                break;
+        }
+    }
+    // Si le joueur doit commencer un nouveau déplacement
+    else if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
+    {
+        jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
+
+        // Si une position de l'itinéraire a été atteinte : la supprimer
+        if(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].x == jeu->listeDesJoueurs[indiceJoueur].coordonnes.x
+           && jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].y == jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)
+            supprimerDeplacementItineraire(0, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi);
+
+        // Passer au prochain déplacement de l'itinéraire
+        if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + 30 == jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].y)
+        {
+            jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
+            jeu->listeDesJoueurs[indiceJoueur].coordonnes.y += VITESSE_DES_JOUEURS;
+        }
+        else if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - 30 == jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].y)
+        {
+            jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
+            jeu->listeDesJoueurs[indiceJoueur].coordonnes.y -= VITESSE_DES_JOUEURS;
+        }
+        else if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x + 30 == jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].x)
+        {
+            jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
+            jeu->listeDesJoueurs[indiceJoueur].coordonnes.x += VITESSE_DES_JOUEURS;
+        }
+        else if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - 30 == jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].x)
+        {
+            jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
+            jeu->listeDesJoueurs[indiceJoueur].coordonnes.x -= VITESSE_DES_JOUEURS;
+        }
+    }
 }
 
 void comparerItineraires(int x, int y, Coordonnes itineraire[300][300], int nbTotalItineraire, StructJeu *jeu, Coordonnes casesDangereuses[148])
@@ -330,6 +392,16 @@ void copierItineraire(Coordonnes itineraireSrc[300], Coordonnes itineraireDest[3
         copierCoordonnees(&itineraireSrc[i], &itineraireDest[i]);
 
     modifierCoordonnees(&itineraireDest[longueurACopier], -1, -1);
+}
+
+void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itineraire[300])
+{
+    for(int i=0; i<longueurItineraire(itineraire); i++)
+    {
+        if(i >= deplacementASupprimer)
+            copierCoordonnees(&itineraire[i + 1], &itineraire[i]);
+    }
+    modifierCoordonnees(&itineraire[longueurItineraire(itineraire)], -1, -1);
 }
 
 
