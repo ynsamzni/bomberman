@@ -56,7 +56,6 @@ void initTousLesJoueurs(StructJeu *jeu) //Initialisation par dÃ©fault des joueur
 void initJeu(StructJeu *jeu)
 {
 
-
     initMap(jeu);
     initTousLesJoueurs(jeu);
     initJoueursHumains(jeu);
@@ -86,7 +85,8 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction Ã
         exploserBombe(jeu, i);
 
     // Actions IA
-    deplacerIA(jeu);
+
+    //deplacerIA(jeu);
 
     if(ennemiDansAxe(1, jeu))
         poserBombe(jeu, 1);
@@ -94,6 +94,10 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction Ã
     // Autres
     tuerJoueur(jeu);
     checkVictoire(jeu);
+
+    if(clavier->toucheArriere == 1 || jeu->animations.defaite == 1 || jeu->animations.victoire == 1){
+        jeu->etat = EXTINCTION;
+    }
 }
 
 
@@ -356,7 +360,7 @@ void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int vict
 
         fwrite(&c, sizeof(c), 1, fic);
     }
-    SDL_Delay(2000);
+
     fclose(fic);
 
 }

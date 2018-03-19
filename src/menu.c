@@ -3,6 +3,8 @@
 #include <string.h>
 
 #include "../include/affichage.h"
+#include "../include/clavier.h"
+
 
 #include "../include/menu.h"
 
@@ -23,8 +25,50 @@ void initMenu(StructMenu *menu)
 
 
     strcpy(menu->entreeTexte, "AAAAA");
-    strcpy(menu->profilSelectionne.nom, "Humai");
 }
+
+
+void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage)
+{
+
+    switch(menu->numeroFenetre)
+    {
+    case 0:
+        // Première page du menu, page d'acceuil
+        break;
+    case 1:
+        // Menu demandant de sélectionner un profil et/ou d'en créer un
+        afficherMenuSelectionProfil(affichage, clavier, jeu, menu);
+        break;
+    case 2:
+        // Menu de création de profil
+        afficherMenuCreationProfil(affichage, clavier, jeu, menu);
+        break;
+    case 3:
+        // Menu "principal" (jouer + statistiques)
+        afficherMenuPrincipal(affichage, clavier, menu);
+        break;
+    case 4:
+        // Menu affichant les statistiques
+        afficherMenuStatistiques(affichage, clavier, menu);
+        break;
+    case 5:
+        // Menu permettant de paramétrer sa partie
+        afficherMenuParametragePartie(affichage, clavier, jeu, menu);
+        break;
+    case 6:
+        jeu->etat = LANCEMENT;
+        break;
+    case -1:
+        clavier->toucheQuitter = 1;
+        break;
+    }
+
+
+}
+
+
+
 
 /******************** MENU 1 : SELECTION PROFIL **********************/
 
@@ -243,8 +287,9 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
     int tailleMaxListeAAfficher;
     char chaine[15];
     int nbrMaxVictoire;
-    CompteJoueur c = {"lambda", 0, -1};
+    CompteJoueur c;
     int i = 0;
+    int indiceJoueurAvecMaxVictoire;
 
     nbrDeComptes = chargerComptes(tabComptes);
 
@@ -263,19 +308,19 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
 
     for(int cmpt = 0; cmpt < tailleMaxListeAAfficher; cmpt++)
     {
-        for(int j = cmpt+1; j<nbrDeComptes ; j++)
+        nbrMaxVictoire = 0;
+        indiceJoueurAvecMaxVictoire = 0;
+        for(int j = cmpt; j<nbrDeComptes ; j++)
         {
-            nbrMaxVictoire = 0;
-            if(tabComptes[j].nbrVictoires > nbrMaxVictoire)
+            if(tabComptes[j].nbrVictoires >= nbrMaxVictoire)
             {
                 nbrMaxVictoire = tabComptes[j].nbrVictoires;
-                c = tabComptes[cmpt];
-                tabComptes[cmpt] = tabComptes[j];
-                tabComptes[j] = c;
-                j = nbrDeComptes;
+                indiceJoueurAvecMaxVictoire = j;
             }
-
         }
+        c = tabComptes[cmpt];
+        tabComptes[cmpt] = tabComptes[indiceJoueurAvecMaxVictoire];
+        tabComptes[indiceJoueurAvecMaxVictoire] = c;
     }
 
     while(i < tailleMaxListeAAfficher)

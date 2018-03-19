@@ -47,6 +47,8 @@ void enregistrerNouveauCompte(char nomCompte[]);
 int chargerComptes(CompteJoueur *tabComptes);
 void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu);
 
+void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage);
+
 
 #endif // AFFICHAGE_INCLUDED
 
