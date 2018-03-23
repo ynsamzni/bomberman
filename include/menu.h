@@ -22,6 +22,7 @@ Menu 6 : Le jeu
 typedef struct
 {
     int numeroFenetre;
+    int lastNumeroFenetre; //enregistre la fenêtre précédente et permet ainsi de savoir que l'on à changé pour pouvoir réinitialiser les curseurs
     int positionCurseurY;
     int positionCurseurX;
     CompteJoueur profilSelectionne;

@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
 
         if(jeu.etat == ON)
         {
+            SDL_Delay(40); //PERMET DE REGLER LA VITESSE DU JEU (Initialement dans clavier.c mais ralentissait le menu)
             calculerJeu(&jeu, &clavier);
             afficherJeu(&affichage, &jeu);
             // Afficher les informations de debug

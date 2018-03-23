@@ -35,7 +35,7 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
 {
 
     SDL_Event event;
-    SDL_Delay(40);
+    //Suppression car ralentit le menu SDL_Delay(40);
 
     while (SDL_PollEvent(&event))
     {

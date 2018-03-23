@@ -11,6 +11,7 @@
 void initMenu(StructMenu *menu)
 {
     menu->numeroFenetre = 1;
+    menu->lastNumeroFenetre = menu->numeroFenetre;
 
     menu->positionCurseurY = 0;
     menu->positionCurseurX = 0;
@@ -23,13 +24,18 @@ void initMenu(StructMenu *menu)
         menu->paramPartie[i] = 1;
     }
 
-
     strcpy(menu->entreeTexte, "AAAAA");
+
 }
 
 
 void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage)
 {
+    if(menu->numeroFenetre != menu->lastNumeroFenetre){ //réinitialise les curseurs lors du cght de fenetre
+        menu->positionCurseurY = 0;
+        menu->positionCurseurX = 0;
+        menu->lastNumeroFenetre = menu->numeroFenetre;
+    }
 
     switch(menu->numeroFenetre)
     {
@@ -80,9 +86,9 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     nbTotalProfils = chargerComptes(tabComptes);
 
     // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheBas && menu->positionCurseurY != nbTotalProfils)
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != nbTotalProfils)
         menu->positionCurseurY++;
-    if(clavier->toucheHaut && menu->positionCurseurY != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
         menu->positionCurseurY--;
 
     // Afficher le fond
@@ -147,13 +153,13 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     SDL_Rect flecheBasse = {caseLettre.x + 5, caseLettre.y + caseLettre.h, 40, 30};
 
     // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheDroite && menu->positionCurseurX != 4)
+    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) && menu->positionCurseurX != 4)
         menu->positionCurseurX++;
-    if(clavier->toucheGauche && menu->positionCurseurX != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurX != 0)
         menu->positionCurseurX--;
-    if(clavier->toucheHaut && menu->entreeTexte[menu->positionCurseurX] != 'A')
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->entreeTexte[menu->positionCurseurX] != 'A')
         menu->entreeTexte[menu->positionCurseurX]--;
-    if(clavier->toucheBas && menu->entreeTexte[menu->positionCurseurX] != 'Z')
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->entreeTexte[menu->positionCurseurX] != 'Z')
         menu->entreeTexte[menu->positionCurseurX]++;
 
     // Afficher le fond
@@ -220,9 +226,9 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
     char chaineBienvenue[40] = "";
 
     // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheBas && menu->positionCurseurY != 2)
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 2)
         menu->positionCurseurY++;
-    if(clavier->toucheHaut && menu->positionCurseurY != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
         menu->positionCurseurY--;
 
     // Afficher le fond
@@ -363,21 +369,21 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
 
     // Si l'utilisateur se déplace dans le menu
 
-    if(clavier->toucheHaut && menu->positionCurseurY != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
     {
         menu->positionCurseurY--;
     }
 
-    if(clavier->toucheBas && menu->positionCurseurY != 3)
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 3)
     {
         menu->positionCurseurY++;
     }
 
-    if(clavier->toucheGauche && menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 0 )
+    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 0 )
     {
         menu->paramPartie[menu->positionCurseurY]--;
     }
-    if(clavier->toucheDroite && menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 2 && menu->positionCurseurY != 2 && menu->positionCurseurY != 3 )
+    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier)&& menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 2 && menu->positionCurseurY != 2 && menu->positionCurseurY != 3 )
     {
         menu->paramPartie[menu->positionCurseurY]++;
     }

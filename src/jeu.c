@@ -322,9 +322,6 @@ void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int vict
     int i = 0;
 
 
-
-
-
     fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "rb");
 
     if(fic == NULL)
@@ -341,14 +338,11 @@ void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int vict
     }
     fclose(fic);
 
-
-
     c = jeu->listeDesJoueurs[indiceJoueur].compte;
     if(victoireOuDefaite == 1)
         c.nbrVictoires++;
     if(victoireOuDefaite == 0)
         c.nbrDefaites++;
-
 
     fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "r+");
 
