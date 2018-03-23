@@ -102,8 +102,10 @@ int main(int argc, char *argv[])
         if(jeu.etat == EXTINCTION){
             jeu.etat = OFF;
             initMenu(&menu);
-            menu.numeroFenetre = 3;
+            menu.numeroFenetre = 4;
         }
+
+        printf("YOOOOOOOOOOOO\n");
 
     }
     while(clavier.toucheQuitter != 1);

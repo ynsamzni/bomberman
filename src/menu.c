@@ -497,6 +497,7 @@ int chargerComptes(CompteJoueur *tabComptes)
     if(fic == NULL)
     {
         printf("Impossible d'accéder à la liste des joueurs\n");
+        // fclose(fic); crée une erreur lorsque le fichier n'existe pas sinon
         return -1;
     }
     else
@@ -509,9 +510,10 @@ int chargerComptes(CompteJoueur *tabComptes)
         }
 
         printf("Lecture réussit ! Il y a  %d profils enregistrés !\n", nbrDeComptes);
+        fclose(fic);
         return nbrDeComptes;
     }
-    fclose(fic);
+
 }
 
 void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer)

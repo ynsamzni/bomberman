@@ -27,7 +27,8 @@ typedef struct
     int positionCurseurX;
     CompteJoueur profilSelectionne;
     int paramPartie[4];
-    char entreeTexte[];
+    char entreeTexte[5];
+
 } StructMenu;
 
 

@@ -175,7 +175,6 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
 
 int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier)
 {
-    recupererTouchesClavier(clavier);
 
     // Si l'utilisateur appuie sur la touche
     if(*etatToucheClavier == 1)
