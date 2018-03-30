@@ -14,26 +14,25 @@ void initIA(StructJeu *jeu)  //Gère l'apparition des IA
         jeu->listeDesJoueurs[1].itineraireSuivi[0].y = -1;
     }
 
-    if(jeu->nbrDeJoueurs >= 3)                                  //En haut à droite
+    if(jeu->nbrDeJoueurs >= 3 && jeu->listeDesJoueurs[2].humainOuIA == 1)                                  //En haut à droite
     {
         jeu->listeDesJoueurs[2].coordonnes.x = WIDTH - 30;
         jeu->listeDesJoueurs[2].coordonnes.y = 0;
         jeu->listeDesJoueurs[2].direction = GAUCHE;
         jeu->listeDesJoueurs[2].itineraireSuivi[0].x = -1;
         jeu->listeDesJoueurs[2].itineraireSuivi[0].y = -1;
-
-        if(jeu->nbrDeJoueurs >= 4)
-        {
-            jeu->listeDesJoueurs[3].coordonnes.x = 0;    //En bas à gauche
-            jeu->listeDesJoueurs[3].coordonnes.y = HEIGHT - 30;
-            jeu->listeDesJoueurs[3].direction = HAUT;
-            jeu->listeDesJoueurs[3].itineraireSuivi[0].x = -1;
-            jeu->listeDesJoueurs[3].itineraireSuivi[0].y = -1;
-        }
+    }
+    if(jeu->nbrDeJoueurs >= 4 && jeu->listeDesJoueurs[3].humainOuIA == 1)
+    {
+        jeu->listeDesJoueurs[3].coordonnes.x = 0;    //En bas à gauche
+        jeu->listeDesJoueurs[3].coordonnes.y = HEIGHT - 30;
+        jeu->listeDesJoueurs[3].direction = HAUT;
+        jeu->listeDesJoueurs[3].itineraireSuivi[0].x = -1;
+        jeu->listeDesJoueurs[3].itineraireSuivi[0].y = -1;
     }
 }
 
-void deplacerIA(StructJeu *jeu)
+void deplacerIA(int indiceJoueur, StructJeu *jeu)
 {
     Coordonnes itineraire[300][300];
     Coordonnes casesDangereuses[148];
@@ -43,20 +42,21 @@ void deplacerIA(StructJeu *jeu)
     calculerCasesDangereuses(casesDangereuses, jeu);
 
     // Si un nouvel itinéraire doit être généré
-    if(itineraireDangereux(jeu->listeDesJoueurs[1].itineraireSuivi, casesDangereuses) || longueurItineraire(jeu->listeDesJoueurs[1].itineraireSuivi) == 0)
+    if(itineraireDangereux(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses) || longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) == 0)
     {
         // Calculer tous les itinéraires disponibles
-        nbTotalItineraire = calculerItineraires(1, itineraire, 0, 0, jeu);
+        nbTotalItineraire = calculerItineraires(indiceJoueur, itineraire, 0, 0, jeu);
 
         // Déterminer l'itinéraire à prendre
-        comparerItineraires(jeu->listeDesJoueurs[0].coordonnes.x, jeu->listeDesJoueurs[0].coordonnes.y, itineraire, nbTotalItineraire, jeu, casesDangereuses);
+        comparerItineraires(indiceJoueur, itineraire, nbTotalItineraire, jeu, casesDangereuses);
     }
 
     // Réaliser un déplacement
-    suivreItineraire(1, jeu);
+    suivreItineraire(indiceJoueur, jeu);
 
 
     /***** Debug *****/
+    printf("\nCOORDONNEES : %d/%d", jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
 /*
     printf("\nItineraire :");
     for(int j=0; j< longueurItineraire(jeu->listeDesJoueurs[1].itineraireSuivi); j++)
@@ -236,10 +236,14 @@ void suivreItineraire(int indiceJoueur, StructJeu *jeu)
     }
 }
 
-void comparerItineraires(int x, int y, Coordonnes itineraire[300][300], int nbTotalItineraire, StructJeu *jeu, Coordonnes casesDangereuses[148])
+void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbTotalItineraire, StructJeu *jeu, Coordonnes casesDangereuses[148])
 {
     int numeroMeilleurItineraire = -1;
     int longueurMeilleurItineraire = -1;
+
+    // Coordonnées de l'ennemi (A FAIRE : Déterminer coordonnées tout seul)
+    int x = jeu->listeDesJoueurs[0].coordonnes.x;
+    int y = jeu->listeDesJoueurs[0].coordonnes.y;
 
     // Si le target se trouve sur deux cases
     while(x%30 != 0)
@@ -248,11 +252,11 @@ void comparerItineraires(int x, int y, Coordonnes itineraire[300][300], int nbTo
         y -= VITESSE_DES_JOUEURS;
 
     // Si l'IA se trouve sur une case dangereuse : Trouver l'itinéraire qui mène le plus rapidement à une case non dangereuse
-    if(coordonneesDangereuses(jeu->listeDesJoueurs[1].coordonnes.x, jeu->listeDesJoueurs[1].coordonnes.y, casesDangereuses))
+    if(coordonneesDangereuses(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y, casesDangereuses))
     {
         // Analyser l'itinéraire en cours
-        if(longueurItineraire(jeu->listeDesJoueurs[1].itineraireSuivi) != 0)
-            comparerItineraireEloignementDangerosite(jeu->listeDesJoueurs[1].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
+        if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
+            comparerItineraireEloignementDangerosite(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
 
         // Analyser l'ensemble des itinéraires calculés
         for(int i = 0; i < nbTotalItineraire; i++)
@@ -266,8 +270,8 @@ void comparerItineraires(int x, int y, Coordonnes itineraire[300][300], int nbTo
     else
     {
         // Analyser l'itinéraire en cours
-        if(longueurItineraire(jeu->listeDesJoueurs[1].itineraireSuivi) != 0)
-            comparerItineraireRapprochementTarget(x, y, jeu->listeDesJoueurs[1].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
+        if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
+            comparerItineraireRapprochementTarget(x, y, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
 
         // Analyser l'ensemble des itinéraires calculés
         for(int i = 0; i < nbTotalItineraire; i++)
@@ -291,9 +295,9 @@ void comparerItineraires(int x, int y, Coordonnes itineraire[300][300], int nbTo
 
     // Copier l'itinéraire dans le profil de l'IA
     if(numeroMeilleurItineraire != -1)
-        copierItineraire(itineraire[numeroMeilleurItineraire], jeu->listeDesJoueurs[1].itineraireSuivi, longueurMeilleurItineraire);
+        copierItineraire(itineraire[numeroMeilleurItineraire], jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, longueurMeilleurItineraire);
     if(longueurMeilleurItineraire != -1)
-        modifierCoordonnees(&jeu->listeDesJoueurs[1].itineraireSuivi[longueurMeilleurItineraire], -1, -1);
+        modifierCoordonnees(&jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[longueurMeilleurItineraire], -1, -1);
 }
 
 int comparerItineraireEloignementDangerosite(Coordonnes itineraire[300], Coordonnes casesDangereuses[148], int *longueurMeilleurItineraire)

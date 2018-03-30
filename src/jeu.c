@@ -44,7 +44,7 @@ void initTousLesJoueurs(StructJeu *jeu) //Initialisation par dÃ©fault des joueur
         jeu->listeDesJoueurs[i].coordonnes.x = 0;
         jeu->listeDesJoueurs[i].coordonnes.y = 0;
         jeu->listeDesJoueurs[i].direction = BAS;
-        jeu->listeDesJoueurs[i].deplacement = 1;
+        jeu->listeDesJoueurs[i].deplacement = 0;
 
         jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x = 0;
         jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y = 0;
@@ -86,10 +86,17 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction Ã
         exploserBombe(jeu, i);
 
     // Actions IA
-    deplacerIA(jeu);
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+    {
+        if(jeu->listeDesJoueurs[i].humainOuIA)
+        {
+            printf("\n%d est une IA", i);
+            deplacerIA(i, jeu);
 
-    if(ennemiDansAxe(1, jeu))
-        poserBombe(jeu, 1);
+            if(ennemiDansAxe(i, jeu))
+                poserBombe(jeu, i);
+        }
+    }
 
     // Autres
     tuerJoueur(jeu);

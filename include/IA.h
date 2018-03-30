@@ -5,10 +5,10 @@
 #include "constantes.h"
 
 void initIA(StructJeu *jeu);
-void deplacerIA(StructJeu *jeu);
+void deplacerIA(int indiceJoueur, StructJeu *jeu);
 int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbItineraire, int nbDeplacement, StructJeu *jeu);
 void suivreItineraire(int indiceJoueur, StructJeu *jeu);
-void comparerItineraires(int x, int y, Coordonnes itineraire[300][300], int nbTotalItineraire, StructJeu *jeu, Coordonnes casesDangereuses[148]);
+void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbTotalItineraire, StructJeu *jeu, Coordonnes casesDangereuses[148]);
 int comparerItineraireEloignementDangerosite(Coordonnes itineraire[300], Coordonnes casesDangereuses[148], int *longueurMeilleurItineraire);
 int comparerItineraireRapprochementTarget(int x, int y, Coordonnes itineraire[300], Coordonnes casesDangereuses[148], int *longueurMeilleurItineraire);
 int longueurItineraire(Coordonnes itineraire[300]);
