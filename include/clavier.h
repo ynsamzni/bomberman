@@ -28,8 +28,10 @@ typedef struct{
     int toucheDroite;
     int toucheGauche;
     int toucheAction;
+    int toucheSupprimer;
     int toucheArriere;
     int toucheQuitter;
+
 
 }StructTouchesClavier;
 

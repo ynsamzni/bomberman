@@ -104,9 +104,6 @@ int main(int argc, char *argv[])
             initMenu(&menu);
             menu.numeroFenetre = 4;
         }
-
-        printf("YOOOOOOOOOOOO\n");
-
     }
     while(clavier.toucheQuitter != 1);
 
