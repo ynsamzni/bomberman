@@ -63,7 +63,6 @@ int main(int argc, char *argv[])
     StructAffichage affichage;
     StructTouchesClavier clavier;
 
-    int demarrerJeu = 0;
     int check = 0;
 
 
@@ -72,7 +71,7 @@ int main(int argc, char *argv[])
     initMenu(&menu); // NUMERO FENETRE => 1
     initAffichage(&affichage, "Bomberman");
     initClavier(&clavier);
-
+    jeu.etat = OFF;
 
 
     do
@@ -80,70 +79,31 @@ int main(int argc, char *argv[])
 
         recupererTouchesClavier(&clavier);
 
-        if(demarrerJeu == 0)
+        if(jeu.etat == OFF)
+            gestionDuMenu(&menu, &jeu, &clavier, &affichage);
+
+        if(jeu.etat == LANCEMENT)
         {
-            switch(menu.numeroFenetre)
-            {
-            case 0:
-                // Première page du menu, page d'acceuil
-                break;
-            case 1:
-                 // Menu demandant de sélectionner un profil et/ou d'en créer un
-                afficherMenuSelectionProfil(&affichage, &clavier, &jeu, &menu);
-                break;
-            case 2:
-                // Menu de création de profil
-                afficherMenuCreationProfil(&affichage, &clavier, &jeu, &menu);
-                break;
-            case 3:
-                // Menu "principal" (jouer + statistiques)
-                afficherMenuPrincipal(&affichage, &clavier, &menu);
-                break;
-            case 4:
-                // Menu affichant les statistiques
-                afficherMenuStatistiques(&affichage, &clavier, &menu);
-                break;
-            case 5:
-                // Menu permettant de paramétrer sa partie
-                afficherMenuParametragePartie(&affichage, &clavier, &jeu, &menu);
-                break;
-            case 6:
-                //Permet de lancer le jeu
-                demarrerJeu = 1;
-                break;
-            case -1:
-                clavier.toucheQuitter = 1;
-            break;
-            }
+            initJeu(&jeu);
+            jeu.etat = ON;
         }
 
-        if(demarrerJeu == 1)
+        if(jeu.etat == ON)
         {
-            if(check == 0)
-            {
-                initJeu(&jeu);
-                check = 1;
-            }
-
+            SDL_Delay(40); //PERMET DE REGLER LA VITESSE DU JEU (Initialement dans clavier.c mais ralentissait le menu)
             calculerJeu(&jeu, &clavier);
             afficherJeu(&affichage, &jeu);
             // Afficher les informations de debug
             system("clear");
             afficherStructureJeu(jeu);
-            if(clavier.toucheArriere == 1){
-                check = 0;
-                demarrerJeu = 0;
-                menu.numeroFenetre = 5;
-            }
+            //***********************************
         }
 
-        if((jeu.animations.defaite == 1 || jeu.animations.victoire == 1 )&& demarrerJeu == 1){
-            menu.numeroFenetre = 3;
-            demarrerJeu = 0;
+        if(jeu.etat == EXTINCTION){
+            jeu.etat = OFF;
+            initMenu(&menu);
+            menu.numeroFenetre = 4;
         }
-
-
-
     }
     while(clavier.toucheQuitter != 1);
 

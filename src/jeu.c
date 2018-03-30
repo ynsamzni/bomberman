@@ -56,7 +56,6 @@ void initTousLesJoueurs(StructJeu *jeu) //Initialisation par d√©fault des joueur
 void initJeu(StructJeu *jeu)
 {
 
-
     initMap(jeu);
     initTousLesJoueurs(jeu);
     initJoueursHumains(jeu);
@@ -86,12 +85,14 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction √
         exploserBombe(jeu, i);
 
     // Actions IA
+
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
         if(jeu->listeDesJoueurs[i].humainOuIA)
         {
             printf("\n%d est une IA", i);
             deplacerIA(i, jeu);
+
 
             if(ennemiDansAxe(i, jeu))
                 poserBombe(jeu, i);
@@ -101,6 +102,10 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction √
     // Autres
     tuerJoueur(jeu);
     checkVictoire(jeu);
+
+    if(clavier->toucheArriere == 1 || jeu->animations.defaite == 1 || jeu->animations.victoire == 1){
+        jeu->etat = EXTINCTION;
+    }
 }
 
 
@@ -325,9 +330,6 @@ void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int vict
     int i = 0;
 
 
-
-
-
     fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "rb");
 
     if(fic == NULL)
@@ -344,14 +346,11 @@ void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int vict
     }
     fclose(fic);
 
-
-
     c = jeu->listeDesJoueurs[indiceJoueur].compte;
     if(victoireOuDefaite == 1)
         c.nbrVictoires++;
     if(victoireOuDefaite == 0)
         c.nbrDefaites++;
-
 
     fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "r+");
 
@@ -363,7 +362,7 @@ void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int vict
 
         fwrite(&c, sizeof(c), 1, fic);
     }
-    SDL_Delay(2000);
+
     fclose(fic);
 
 }

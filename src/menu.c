@@ -3,28 +3,84 @@
 #include <string.h>
 
 #include "../include/affichage.h"
+#include "../include/clavier.h"
+
 
 #include "../include/menu.h"
 
 void initMenu(StructMenu *menu)
 {
-    menu->numeroFenetre = 1;
+    menu->numeroFenetre = 2;
+    menu->lastNumeroFenetre = menu->numeroFenetre;
 
     menu->positionCurseurY = 0;
     menu->positionCurseurX = 0;
+
+
+
+
+
 
     menu->paramPartie[0] = 2; // 0 = Ordinateur / 1 = Vide / 2 = Humain
     menu->paramPartie[1] = 0;
 
     for(int i = 2; i < 4; i++)
-    {
         menu->paramPartie[i] = 1;
+
+
+    for(int i =0; i <8; i++)
+        menu->tabNomDuJoueur[i] = 0;
+
+
+}
+
+
+void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage)
+{
+    if(menu->numeroFenetre != menu->lastNumeroFenetre){ //réinitialise les curseurs lors du cght de fenetre
+        menu->positionCurseurY = 0;
+        menu->positionCurseurX = 0;
+        menu->lastNumeroFenetre = menu->numeroFenetre;
+    }
+
+    switch(menu->numeroFenetre)
+    {
+    case 0:
+        // Première page du menu, page d'acceuil
+        break;
+    case 1:
+        // Menu demandant de sélectionner un profil et/ou d'en créer un
+        afficherMenuSelectionProfil(affichage, clavier, jeu, menu);
+        break;
+    case 2:
+        // Menu de création de profil
+        afficherMenuCreationProfil(affichage, clavier, jeu, menu);
+        break;
+    case 3:
+        // Menu "principal" (jouer + statistiques)
+        afficherMenuPrincipal(affichage, clavier, menu);
+        break;
+    case 4:
+        // Menu affichant les statistiques
+        afficherMenuStatistiques(affichage, clavier, menu);
+        break;
+    case 5:
+        // Menu permettant de paramétrer sa partie
+        afficherMenuParametragePartie(affichage, clavier, jeu, menu);
+        break;
+    case 6:
+        jeu->etat = LANCEMENT;
+        break;
+    case -1:
+        clavier->toucheQuitter = 1;
+        break;
     }
 
 
-    strcpy(menu->entreeTexte, "AAAAA");
-    strcpy(menu->profilSelectionne.nom, "Humai");
 }
+
+
+
 
 /******************** MENU 1 : SELECTION PROFIL **********************/
 
@@ -36,9 +92,9 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     nbTotalProfils = chargerComptes(tabComptes);
 
     // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheBas && menu->positionCurseurY != nbTotalProfils)
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != nbTotalProfils)
         menu->positionCurseurY++;
-    if(clavier->toucheHaut && menu->positionCurseurY != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
         menu->positionCurseurY--;
 
     // Afficher le fond
@@ -94,23 +150,42 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
 
 void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
 {
-    char caractereTmp;
+    char caractereActuel;
 
     // Coordonnées initiales des éléments du menu
-    SDL_Rect caseLettre = {130, 210, 65, 60};
+    SDL_Rect caseLettre = {70, 210, 55, 50};
     SDL_Rect lettre = {caseLettre.x + 5, caseLettre.y - 5, 0, 0};
     SDL_Rect flecheHaute = {caseLettre.x + 5, caseLettre.y - 30, 40, 30};
     SDL_Rect flecheBasse = {caseLettre.x + 5, caseLettre.y + caseLettre.h, 40, 30};
 
     // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheDroite && menu->positionCurseurX != 4)
+    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) && menu->positionCurseurX != 7 && menu->tabNomDuJoueur[menu->positionCurseurX] != 0)
         menu->positionCurseurX++;
-    if(clavier->toucheGauche && menu->positionCurseurX != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurX != 0)
         menu->positionCurseurX--;
-    if(clavier->toucheHaut && menu->entreeTexte[menu->positionCurseurX] != 'A')
-        menu->entreeTexte[menu->positionCurseurX]--;
-    if(clavier->toucheBas && menu->entreeTexte[menu->positionCurseurX] != 'Z')
-        menu->entreeTexte[menu->positionCurseurX]++;
+
+    //Si l'utilisateur essaye de se déplacer alors que la case est vide
+    if(clavier->toucheHaut == 1 && menu->tabNomDuJoueur[menu->positionCurseurX] == 0)
+        menu->tabNomDuJoueur[menu->positionCurseurX] = 65;
+    if(clavier->toucheBas == 1 && menu->tabNomDuJoueur[menu->positionCurseurX] == 0)
+        menu->tabNomDuJoueur[menu->positionCurseurX] = 66;
+
+    //si l'utilisateur se déplace dans une lettre
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'A')
+        menu->tabNomDuJoueur[menu->positionCurseurX]--; //décrémente le caractere ASCII de 1
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'Z')
+        menu->tabNomDuJoueur[menu->positionCurseurX]++;
+
+    //gestion de la suppression d'une lettre
+    if(cycleToucheClavierRealise(&clavier->toucheSupprimer, clavier) == 1 && menu->tabNomDuJoueur[menu->positionCurseurX + 1] == 0 && menu->positionCurseurX != -1){
+        menu->tabNomDuJoueur[menu->positionCurseurX] = 0;
+        if(menu->positionCurseurX != 0) //empeche de sortir de la zone de saisie en supprimant
+            menu->positionCurseurX--;
+    }
+
+
+
+
 
     // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
@@ -120,21 +195,21 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     afficherTexte("NOUVEAU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 110, 70, affichage->renderer);
 
     SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
-    for(int i=0; i<5; i++)
+    for(int i=0; i<8; i++)
     {
         // Cases contenant les lettres du nom
         SDL_RenderDrawRect(affichage->renderer, &caseLettre);
 
         // Nom
-        caractereTmp=menu->entreeTexte[i];
-        afficherTexte(&caractereTmp, 55, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, lettre.x, lettre.y, affichage->renderer);
+        caractereActuel = menu->tabNomDuJoueur[i];
+        afficherTexte(&caractereActuel, 45, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, lettre.x, lettre.y, affichage->renderer);
 
         // Flèches
         if(i == menu->positionCurseurX)
         {
-            if(menu->entreeTexte[menu->positionCurseurX] != 'A')
+            if(menu->tabNomDuJoueur[menu->positionCurseurX] != 'A')
                 SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheHaute, NULL, &flecheHaute);
-            if(menu->entreeTexte[menu->positionCurseurX] != 'Z')
+            if(menu->tabNomDuJoueur[menu->positionCurseurX] != 'Z')
                 SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheBasse, NULL, &flecheBasse);
         }
 
@@ -145,6 +220,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
         flecheBasse.x += caseLettre.w;
     }
 
+
     afficherTexte("ENTREE pour continuer", 24, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 150, 380, affichage->renderer);
 
     // Afficher le renderer
@@ -154,8 +230,8 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
-        strcpy(jeu->listeDesJoueurs[0].nom, menu->entreeTexte);
-        enregistrerNouveauCompte(menu->entreeTexte);
+        strcpy(jeu->listeDesJoueurs[0].nom, menu->tabNomDuJoueur);
+        enregistrerNouveauCompte(menu->tabNomDuJoueur);
         menu->numeroFenetre = 1;
 
     }
@@ -176,9 +252,9 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
     char chaineBienvenue[40] = "";
 
     // Si l'utilisateur se déplace dans le menu
-    if(clavier->toucheBas && menu->positionCurseurY != 2)
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 2)
         menu->positionCurseurY++;
-    if(clavier->toucheHaut && menu->positionCurseurY != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
         menu->positionCurseurY--;
 
     // Afficher le fond
@@ -243,8 +319,9 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
     int tailleMaxListeAAfficher;
     char chaine[15];
     int nbrMaxVictoire;
-    CompteJoueur c = {"lambda", 0, -1};
+    CompteJoueur c;
     int i = 0;
+    int indiceJoueurAvecMaxVictoire;
 
     nbrDeComptes = chargerComptes(tabComptes);
 
@@ -263,19 +340,19 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
 
     for(int cmpt = 0; cmpt < tailleMaxListeAAfficher; cmpt++)
     {
-        for(int j = cmpt+1; j<nbrDeComptes ; j++)
+        nbrMaxVictoire = 0;
+        indiceJoueurAvecMaxVictoire = 0;
+        for(int j = cmpt; j<nbrDeComptes ; j++)
         {
-            nbrMaxVictoire = 0;
-            if(tabComptes[j].nbrVictoires > nbrMaxVictoire)
+            if(tabComptes[j].nbrVictoires >= nbrMaxVictoire)
             {
                 nbrMaxVictoire = tabComptes[j].nbrVictoires;
-                c = tabComptes[cmpt];
-                tabComptes[cmpt] = tabComptes[j];
-                tabComptes[j] = c;
-                j = nbrDeComptes;
+                indiceJoueurAvecMaxVictoire = j;
             }
-
         }
+        c = tabComptes[cmpt];
+        tabComptes[cmpt] = tabComptes[indiceJoueurAvecMaxVictoire];
+        tabComptes[indiceJoueurAvecMaxVictoire] = c;
     }
 
     while(i < tailleMaxListeAAfficher)
@@ -318,21 +395,21 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
 
     // Si l'utilisateur se déplace dans le menu
 
-    if(clavier->toucheHaut && menu->positionCurseurY != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
     {
         menu->positionCurseurY--;
     }
 
-    if(clavier->toucheBas && menu->positionCurseurY != 3)
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 3)
     {
         menu->positionCurseurY++;
     }
 
-    if(clavier->toucheGauche && menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 0 )
+    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 0 )
     {
         menu->paramPartie[menu->positionCurseurY]--;
     }
-    if(clavier->toucheDroite && menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 2 && menu->positionCurseurY != 2 && menu->positionCurseurY != 3 )
+    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier)&& menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 2 && menu->positionCurseurY != 2 && menu->positionCurseurY != 3 )
     {
         menu->paramPartie[menu->positionCurseurY]++;
     }
@@ -446,6 +523,7 @@ int chargerComptes(CompteJoueur *tabComptes)
     if(fic == NULL)
     {
         printf("Impossible d'accéder à la liste des joueurs\n");
+        // fclose(fic); crée une erreur lorsque le fichier n'existe pas sinon
         return -1;
     }
     else
@@ -458,9 +536,10 @@ int chargerComptes(CompteJoueur *tabComptes)
         }
 
         printf("Lecture réussit ! Il y a  %d profils enregistrés !\n", nbrDeComptes);
+        fclose(fic);
         return nbrDeComptes;
     }
-    fclose(fic);
+
 }
 
 void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer)

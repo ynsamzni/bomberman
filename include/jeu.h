@@ -12,6 +12,10 @@ typedef struct{
     int y;
 }Coordonnes;
 
+typedef enum{
+    ON, OFF, LANCEMENT, EXTINCTION, PAUSE
+}EtatJeu;
+
 typedef struct{
     Coordonnes coordonnesBombe;
     int tickDePose;
@@ -48,6 +52,7 @@ typedef struct{
 
 
 typedef struct{
+    EtatJeu etat;
     int mapJeu[NBR_DE_CASES_HORIZONTALES][NBR_DE_CASES_VERTICALES];
     int nbrDeJoueurs;
     Joueur listeDesJoueurs[4];

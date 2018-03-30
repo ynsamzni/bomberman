@@ -27,15 +27,17 @@ void initClavier(StructTouchesClavier *clavier)
     clavier->toucheDroite = 0;
     clavier->toucheGauche = 0;
     clavier->toucheAction = 0;
+    clavier->toucheSupprimer = 0;
     clavier->toucheArriere = 0;
     clavier->toucheQuitter = 0;
+
 }
 
 void recupererTouchesClavier(StructTouchesClavier *clavier)
 {
 
     SDL_Event event;
-    SDL_Delay(40);
+    //Suppression car ralentit le menu SDL_Delay(40);
 
     while (SDL_PollEvent(&event))
     {
@@ -90,6 +92,10 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
 
             case SDLK_RETURN:
                 clavier->toucheAction = 1;
+                break;
+
+             case SDLK_BACKSPACE:
+                clavier->toucheSupprimer  = 1;
                 break;
 
             case SDLK_ESCAPE:
@@ -155,6 +161,10 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
                 clavier->toucheAction = 0;
                 break;
 
+             case SDLK_BACKSPACE:
+                clavier->toucheSupprimer  = 0;
+                break;
+
             case SDLK_ESCAPE:
                 clavier->toucheArriere = 0;
                 break;
@@ -175,10 +185,10 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
 
 int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier)
 {
-    recupererTouchesClavier(clavier);
+
 
     // Si l'utilisateur appuie sur la touche
-    if(*etatToucheClavier == 1)
+    if(*etatToucheClavier == 1 )
     {
         // Attendre que l'utilisateur relâche la touche
         while(*etatToucheClavier == 1)

@@ -22,11 +22,13 @@ Menu 6 : Le jeu
 typedef struct
 {
     int numeroFenetre;
+    int lastNumeroFenetre; //enregistre la fenêtre précédente et permet ainsi de savoir que l'on à changé pour pouvoir réinitialiser les curseurs
     int positionCurseurY;
     int positionCurseurX;
     CompteJoueur profilSelectionne;
     int paramPartie[4];
-    char entreeTexte[];
+    char tabNomDuJoueur[8];
+
 } StructMenu;
 
 
@@ -46,6 +48,8 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
 void enregistrerNouveauCompte(char nomCompte[]);
 int chargerComptes(CompteJoueur *tabComptes);
 void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu);
+
+void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage);
 
 
 #endif // AFFICHAGE_INCLUDED
