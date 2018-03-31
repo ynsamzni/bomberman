@@ -68,31 +68,30 @@ void initJeu(StructJeu *jeu)
 
 
 
-void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction Ã  revoir
-{
-    // Actions joueur
-    if(clavier->toucheBombeJ1 == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0)
-        poserBombe(jeu, 0);
+void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier){
 
-    if(clavier->toucheBombeJ2 == 1 && jeu->listeDesJoueurs[1].humainOuIA == 0)
-        poserBombe(jeu, 1);
+    if(jeu->listeDesJoueurs[0].enVie == 1)    // Actions joueurs uniquement
+    {
+        if(clavier->toucheBombeJ1 == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0)
+            poserBombe(jeu, 0);
+        deplacerJoueurJ1(clavier, jeu, 0);
+    }
+    if(jeu->listeDesJoueurs[1].enVie == 1){
+        if(clavier->toucheBombeJ2 == 1 && jeu->listeDesJoueurs[1].humainOuIA == 0)
+            poserBombe(jeu, 1);
+        deplacerJoueurJ2(clavier, jeu, 1);
+    }
 
-    deplacerJoueurJ1(clavier, jeu, 0);
-    deplacerJoueurJ2(clavier, jeu, 1);
 
-    // Actions joueur + IA
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++)   // Actions joueur + IA
         exploserBombe(jeu, i);
 
-    // Actions IA
 
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++)   // Actions IA uniquement
     {
-        if(jeu->listeDesJoueurs[i].humainOuIA)
+        if(jeu->listeDesJoueurs[i].humainOuIA && jeu->listeDesJoueurs[i].enVie == 1)
         {
-            printf("\n%d est une IA", i);
             deplacerIA(i, jeu);
-
 
             if(ennemiDansAxe(i, jeu))
                 poserBombe(jeu, i);
@@ -103,7 +102,8 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier) //construction Ã
     tuerJoueur(jeu);
     checkVictoire(jeu);
 
-    if(clavier->toucheArriere == 1 || jeu->animations.defaite == 1 || jeu->animations.victoire == 1){
+    if(clavier->toucheArriere == 1 || jeu->animations.defaite == 1 || jeu->animations.victoire == 1)
+    {
         jeu->etat = EXTINCTION;
     }
 }
@@ -230,9 +230,9 @@ void afficherStructureJeu(StructJeu jeu)
 int deplacementPossible(int x, int y, Direction direction, StructJeu *jeu)
 {
     if((direction == HAUT && contenuCoordonnees(jeu, x, y - 1) == 0 && contenuCoordonnees(jeu, x + 29, y - 1) == 0)
-       || (direction == DROITE && contenuCoordonnees(jeu, x + 31, y) == 0 && contenuCoordonnees(jeu, x + 31, y + 29) == 0)
-       || (direction == BAS && contenuCoordonnees(jeu, x, y + 31) == 0 && contenuCoordonnees(jeu, x + 29, y + 31)== 0)
-       || (direction == GAUCHE && contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x - 1, y + 29) == 0))
+            || (direction == DROITE && contenuCoordonnees(jeu, x + 31, y) == 0 && contenuCoordonnees(jeu, x + 31, y + 29) == 0)
+            || (direction == BAS && contenuCoordonnees(jeu, x, y + 31) == 0 && contenuCoordonnees(jeu, x + 29, y + 31)== 0)
+            || (direction == GAUCHE && contenuCoordonnees(jeu, x - 1, y) == 0 && contenuCoordonnees(jeu, x - 1, y + 29) == 0))
         return 1;
     else
         return 0;
