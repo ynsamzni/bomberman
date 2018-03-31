@@ -10,15 +10,11 @@
 
 void initMenu(StructMenu *menu)
 {
-    menu->numeroFenetre = 2;
+    menu->numeroFenetre = 1;
     menu->lastNumeroFenetre = menu->numeroFenetre;
 
     menu->positionCurseurY = 0;
     menu->positionCurseurX = 0;
-
-
-
-
 
 
     menu->paramPartie[0] = 2; // 0 = Ordinateur / 1 = Vide / 2 = Humain
@@ -393,38 +389,50 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     SDL_Rect flecheGauche = {80, 135, 40, 40};
     SDL_Rect flecheDroite = {130 + 300 + 10, 135, 40, 40};
 
-    // Si l'utilisateur se déplace dans le menu
+    int dejaUnJoueurHumainSelectionne = 0;
 
+
+    //Permet de gérer le déplacement vertical dans le menu
     if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
-    {
         menu->positionCurseurY--;
-    }
-
     if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 3)
-    {
         menu->positionCurseurY++;
+
+    //Permet de regarder si un joueur humain est déjà séléctionné ou non
+    if(menu->paramPartie[1] == 2 || menu->paramPartie[2] == 2 || menu->paramPartie[3] == 2)
+        dejaUnJoueurHumainSelectionne = 1;
+
+    //Permet de gérer le déplacement horizontal dans le menu
+    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) ){
+        if( (menu->paramPartie[menu->positionCurseurY] == 0 ) && dejaUnJoueurHumainSelectionne == 1) //Si on arrive en bout de séléction ( 0 ) et que un joueur humain est déja selectionné alors on va directement en 1 (vide)
+            menu->paramPartie[menu->positionCurseurY] = 1;
+        else
+            menu->paramPartie[menu->positionCurseurY]--;
+    }
+    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) ){
+        if( (menu->paramPartie[menu->positionCurseurY] == 1 ) && dejaUnJoueurHumainSelectionne == 1) //Si on arrive en bout de séléction ( 1 ) et que un joueur humain est déja selectionné alors on va directement en 0 (ordinateur)
+            menu->paramPartie[menu->positionCurseurY] = 0;
+        else
+            menu->paramPartie[menu->positionCurseurY]++;
     }
 
-    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 0 )
-    {
-        menu->paramPartie[menu->positionCurseurY]--;
-    }
-    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier)&& menu->positionCurseurY != 0 && menu->paramPartie[menu->positionCurseurY] != 2 && menu->positionCurseurY != 2 && menu->positionCurseurY != 3 )
-    {
-        menu->paramPartie[menu->positionCurseurY]++;
-    }
+    //Remet le joueur au début des choix une fois arrivée au bout
+    if(menu->paramPartie[menu->positionCurseurY] > 2)
+        menu->paramPartie[menu->positionCurseurY] = 0;
+      if(menu->paramPartie[menu->positionCurseurY] < 0)
+        menu->paramPartie[menu->positionCurseurY] = 2;
+
 
     // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
     SDL_RenderClear(affichage->renderer);
 
-    // Copier les éléments du menu dans le renderer
     afficherTexte("PARAMETRAGE PARTIE", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 105, 30, affichage->renderer);
 
-    SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
 
 
     // Dessin des cases contenant les joueurs et remplissage PAR DEFAULT de celle-ci
+    SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
     for(int i = 0; i < 4; i++)
     {
         SDL_RenderDrawRect(affichage->renderer, &contourSelection);
