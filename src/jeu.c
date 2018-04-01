@@ -70,14 +70,13 @@ void initJeu(StructJeu *jeu)
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier){
 
-    if(jeu->listeDesJoueurs[0].enVie == 1)    // Actions joueurs uniquement
-    {
-        if(clavier->toucheBombeJ1 == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0)
+    if(jeu->listeDesJoueurs[0].enVie == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0){  // Actions joueurs uniquement
+        if(clavier->toucheBombeJ1 == 1)
             poserBombe(jeu, 0);
         deplacerJoueurJ1(clavier, jeu, 0);
     }
-    if(jeu->listeDesJoueurs[1].enVie == 1){
-        if(clavier->toucheBombeJ2 == 1 && jeu->listeDesJoueurs[1].humainOuIA == 0)
+    if(jeu->listeDesJoueurs[1].enVie == 1 && jeu->listeDesJoueurs[1].humainOuIA == 0){
+        if(clavier->toucheBombeJ2 == 1)
             poserBombe(jeu, 1);
         deplacerJoueurJ2(clavier, jeu, 1);
     }

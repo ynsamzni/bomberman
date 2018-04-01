@@ -460,9 +460,6 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheGauche, NULL, &flecheGauche);
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheDroite, NULL, &flecheDroite);
 
-
-
-
     afficherTexte("ENTREE pour lancer la partie", 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 140, 490, affichage->renderer);
 
     // Afficher le renderer
@@ -477,7 +474,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     }
     else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
     {
-        menu->numeroFenetre = 1;
+        menu->numeroFenetre = 3;
 
     }
     else if(clavier->toucheQuitter)
@@ -585,14 +582,13 @@ void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu)
 
     CompteJoueur cDefault = {"Test", 0, 0};
 
-    for(int i = 0; i < 4; i ++)
+    for(int i = 0; i < 4; i++)
     {
         if(menu->paramPartie[i] == 0)
             nbrJoueursIA++;
-        else if (menu->paramPartie[i] == 2)
+        if (menu->paramPartie[i] == 2)
             nbrJoueursHumains++;
     }
-
 
     for(int i = 0; i < nbrJoueursHumains; i++)
     {
