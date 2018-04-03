@@ -103,6 +103,15 @@ int main(int argc, char *argv[])
             jeu.etat = OFF;
             initMenu(&menu);
             menu.numeroFenetre = 4;
+
+            /** Méthode barbare pour faire en sorte que le profil sélectionné soit actualiser avec le nouveau nbr de victoires/défaites */
+            CompteJoueur tabComptes[NBR_MAX_COMPTES];
+            chargerComptes(&tabComptes);
+            for(int i = 0; i< NBR_MAX_COMPTES; i++){
+                if(strcmp(menu.profilSelectionne.nom, tabComptes[i].nom) == 0)
+                    menu.profilSelectionne = tabComptes[i];
+            }
+            /*********************************************************************************************************/
         }
     }
     while(clavier.toucheQuitter != 1);

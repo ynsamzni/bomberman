@@ -101,10 +101,9 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier){
     tuerJoueur(jeu);
     checkVictoire(jeu);
 
-    if(clavier->toucheArriere == 1 || jeu->animations.defaite == 1 || jeu->animations.victoire == 1)
-    {
+    if(clavier->toucheArriere == 1)
         jeu->etat = EXTINCTION;
-    }
+
 }
 
 
@@ -305,6 +304,7 @@ void checkVictoire(StructJeu *jeu)
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0) //2eme condition pour empecher de créer un joueur dans le fichier des comptes. Améliorations à venir
                 joueurNbrVictoireOuDefaitePlusUn(jeu, i, 0);
         }
+        jeu->etat = EXTINCTION;
     }
     else if(nbrHumains == 1 && nbrIA == 0)
     {
@@ -316,6 +316,7 @@ void checkVictoire(StructJeu *jeu)
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 0 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0)
                 joueurNbrVictoireOuDefaitePlusUn(jeu, i, 0);
         }
+        jeu->etat = EXTINCTION;
     }
 
 

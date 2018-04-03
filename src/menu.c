@@ -23,10 +23,8 @@ void initMenu(StructMenu *menu)
     for(int i = 2; i < 4; i++)
         menu->paramPartie[i] = 1;
 
-
     for(int i =0; i <8; i++)
         menu->tabNomDuJoueur[i] = 0;
-
 
 }
 
@@ -590,7 +588,7 @@ void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu)
             nbrJoueursHumains++;
     }
 
-    for(int i = 0; i < nbrJoueursHumains; i++)
+    for(int i = 0; i <= nbrJoueursHumains; i++)
     {
         if(i == 0)
             jeu->listeDesJoueurs[i].compte = menu->profilSelectionne;
