@@ -26,6 +26,8 @@ typedef struct
     int positionCurseurY;
     int positionCurseurX;
     CompteJoueur profilSelectionne;
+    int variableCouleur;
+    int tickAttente;
     int paramPartie[4];
     char tabNomDuJoueur[8];
 
@@ -38,7 +40,7 @@ typedef struct
 void initMenu(StructMenu *menu);
 void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer);
 
-
+void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
 void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
 void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
 void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu);
