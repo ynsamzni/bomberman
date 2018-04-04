@@ -171,6 +171,23 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
             if(jeu->listeDesJoueurs[i].direction == DROITE)
                 spriteDecoupe.y += 3*64;
 
+            // Déterminer la couleur du sprite
+            switch(i)
+            {
+                case 0:
+                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 255, 255);
+                    break;
+                case 1:
+                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 160, 255, 255);
+                    break;
+                case 2:
+                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 160, 255);
+                    break;
+                case 3:
+                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 255, 160);
+                    break;
+            }
+
             // Déterminer la case sur laquelle se trouve le joueur
             caseMap.x = jeu->listeDesJoueurs[i].coordonnes.x;
             caseMap.y = jeu->listeDesJoueurs[i].coordonnes.y;
