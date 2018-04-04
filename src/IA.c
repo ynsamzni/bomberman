@@ -42,21 +42,24 @@ void deplacerIA(int indiceJoueur, StructJeu *jeu)
     calculerCasesDangereuses(casesDangereuses, jeu);
 
     // Si un nouvel itinéraire doit être généré
-    if(itineraireDangereux(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses) || longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) == 0)
+    if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 == 0)
     {
-        // Calculer tous les itinéraires disponibles
-        nbTotalItineraire = calculerItineraires(indiceJoueur, itineraire, 0, 0, jeu);
+        if(itineraireDangereux(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses) || longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) == 0)
+        {
+            // Calculer tous les itinéraires disponibles
+            nbTotalItineraire = calculerItineraires(indiceJoueur, itineraire, 0, 0, jeu);
 
-        // Déterminer l'itinéraire à prendre
-        comparerItineraires(indiceJoueur, itineraire, nbTotalItineraire, jeu, casesDangereuses);
+            // Déterminer l'itinéraire à prendre
+            comparerItineraires(indiceJoueur, itineraire, nbTotalItineraire, jeu, casesDangereuses);
+        }
     }
-
     // Réaliser un déplacement
     suivreItineraire(indiceJoueur, jeu);
 
 
     /***** Debug *****/
-    printf("\nCOORDONNEES : %d/%d", jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
+
+    //printf("\nPOSITION : %d/%d", jeu->listeDesJoueurs[1].coordonnes.x, jeu->listeDesJoueurs[1].coordonnes.y);
 /*
     printf("\nItineraire :");
     for(int j=0; j< longueurItineraire(jeu->listeDesJoueurs[1].itineraireSuivi); j++)
@@ -95,16 +98,14 @@ int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int n
     int x, y, xInitial, yInitial;
     Direction direction = HAUT;
     Coordonnes nvllePosition;
-    int nbMaxItineraires = 50;
+    int cmptItinerairesDepartIdentique;
+
+    int nbMaxItinerairesDepartIdentique = 20;
+    int nbMaxDeplacements = 20;
 
     // Déterminer la position initiale
     xInitial = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
     yInitial = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
-
-    while(xInitial%30 != 0)
-        xInitial -= VITESSE_DES_JOUEURS;
-    while(yInitial%30 != 0)
-        yInitial -= VITESSE_DES_JOUEURS;
 
     // Déterminer la dernière position calculée de l'itinéraire
     if(nbDeplacement == 0)
@@ -117,6 +118,10 @@ int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int n
         x = itineraire[nbItineraire][nbDeplacement - 1].x;
         y = itineraire[nbItineraire][nbDeplacement - 1].y;
     }
+
+    // Stop si cela fait dépasser le nombre max de déplacements autorisés dans un même itinéraire
+    if(nbDeplacement > nbMaxDeplacements)
+        return nbItineraire;
 
     // Tester les déplacements : HAUT -> DROITE -> BAS -> GAUCHE
     for(int i=0; i<4; i++)
@@ -149,15 +154,23 @@ int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int n
            // Passer à un nouvel itineraire si un déplacement a déjà été effectué dans cette itération
             if(nbDeplacementIterationActuelle != 0)
             {
-                // Stop si cela fait dépasser le nombre max d'itinéraires autorisés
-                if(nbItineraire > nbMaxItineraires - 2)
-                    return nbItineraire;
-
-                nbItineraire++;
-                for(int i=0; i<=nbDeplacement; i++)
+                // Vérifier si la création d'un nouvel itinéraire ne fait pas dépasser le nombre max d'itinéraires autorisés avec un même point de départ
+                cmptItinerairesDepartIdentique = 0;
+                for(int i=0; i<nbItineraire; i++)
                 {
-                    itineraire[nbItineraire][i].x = itineraire[nbItineraire-1][i].x;
-                    itineraire[nbItineraire][i].y = itineraire[nbItineraire-1][i].y;
+                    if(itineraire[i][0].x == itineraire[nbItineraire][0].x && itineraire[i][0].y == itineraire[nbItineraire][0].y)
+                        cmptItinerairesDepartIdentique++;
+                }
+
+                // Si la création d'un nouvel itinéraire est autorisé
+                if(cmptItinerairesDepartIdentique < nbMaxItinerairesDepartIdentique)
+                {
+                    nbItineraire++;
+                    for(int i=0; i<=nbDeplacement; i++)
+                    {
+                        itineraire[nbItineraire][i].x = itineraire[nbItineraire-1][i].x;
+                        itineraire[nbItineraire][i].y = itineraire[nbItineraire-1][i].y;
+                    }
                 }
             }
 
@@ -184,8 +197,10 @@ void suivreItineraire(int indiceJoueur, StructJeu *jeu)
     // Si le joueur doit terminer un déplacement
     if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 != 0 || jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 != 0)
     {
+        // Marquer le joueur comme étant en déplacement
         jeu->listeDesJoueurs[indiceJoueur].deplacement = 1;
 
+        // Poursuivre le déplacement du joueur
         switch(jeu->listeDesJoueurs[indiceJoueur].direction)
         {
             case HAUT:
@@ -201,18 +216,22 @@ void suivreItineraire(int indiceJoueur, StructJeu *jeu)
                 jeu->listeDesJoueurs[indiceJoueur].coordonnes.x -= VITESSE_DES_JOUEURS;
                 break;
         }
+
+        // Si on atteint une position de l'itinéraire
+        if(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].x == jeu->listeDesJoueurs[indiceJoueur].coordonnes.x
+           && jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].y == jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)
+        {
+            // Supprimer la position de l'itinéraire
+            supprimerDeplacementItineraire(0, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi);
+
+            // Ne plus marquer le joueur comme étant en déplacement
+            jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
+        }
     }
     // Si le joueur doit commencer un nouveau déplacement
     else if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
     {
-        jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
-
-        // Si une position de l'itinéraire a été atteinte : la supprimer
-        if(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].x == jeu->listeDesJoueurs[indiceJoueur].coordonnes.x
-           && jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].y == jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)
-            supprimerDeplacementItineraire(0, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi);
-
-        // Passer au prochain déplacement de l'itinéraire
+        // Débuter le prochain déplacement de l'itinéraire
         if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + 30 == jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].y)
         {
             jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
@@ -245,16 +264,10 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
     int x = jeu->listeDesJoueurs[0].coordonnes.x;
     int y = jeu->listeDesJoueurs[0].coordonnes.y;
 
-    // Si le target se trouve sur deux cases
-    while(x%30 != 0)
-        x -= VITESSE_DES_JOUEURS;
-    while(y%30 != 0)
-        y -= VITESSE_DES_JOUEURS;
-
     // Si l'IA se trouve sur une case dangereuse : Trouver l'itinéraire qui mène le plus rapidement à une case non dangereuse
     if(coordonneesDangereuses(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y, casesDangereuses))
     {
-        // Analyser l'itinéraire en cours
+        // Analyser l'itinéraire en cours (détermine s'il est compatible avec la situation en cours)
         if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
             comparerItineraireEloignementDangerosite(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
 
@@ -269,9 +282,9 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
     // Si l'IA n'est pas en danger : Trouver l'itinéraire qui permet de se rapprocher le plus rapidement du target
     else
     {
-        // Analyser l'itinéraire en cours
+        // Analyser l'itinéraire en cours (détermine s'il est compatible avec la situation en cours)
         if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
-            comparerItineraireRapprochementTarget(x, y, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
+            comparerItineraireRapprochementTarget(x, y, jeu->listeDesJoueurs[1].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
 
         // Analyser l'ensemble des itinéraires calculés
         for(int i = 0; i < nbTotalItineraire; i++)
@@ -282,16 +295,28 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
     }
 
     // Si l'IA n'a aucun itinéraire à suivre
-/*
-    if(numeroMeilleurItineraire == -1)
+    if(numeroMeilleurItineraire == -1 && longueurMeilleurItineraire == -1 && nbTotalItineraire != 0)
     {
-        printf("\nAUCUN JOUEUR EN VUE");
+        // Déterminer le nombre d'itineraires non dangereux disponibles
+        int nbItinerairesNonDangereux = 0;
+        for(int i=0; i<nbTotalItineraire; i++)
+        {
+            if(!itineraireDangereux(itineraire[i], casesDangereuses))
+                nbItinerairesNonDangereux++;
+        }
 
-        // Choisir un itinéraire au hasard
-        numeroMeilleurItineraire = rand() % nbTotalItineraire;
-        longueurMeilleurItineraire = longueurItineraire(itineraire[numeroMeilleurItineraire]);
+        // S'il y'a au moins un itinéraire non dangereux de disponible
+        if(nbItinerairesNonDangereux != 0)
+        {
+            // Choisir un itinéraire non dangereux au hasard
+            do
+            {
+                numeroMeilleurItineraire = rand() % nbTotalItineraire;
+            }
+            while(itineraireDangereux(itineraire[numeroMeilleurItineraire], casesDangereuses));
+            longueurMeilleurItineraire = longueurItineraire(itineraire[numeroMeilleurItineraire]);
+        }
     }
-*/
 
     // Copier l'itinéraire dans le profil de l'IA
     if(numeroMeilleurItineraire != -1)
@@ -481,6 +506,82 @@ void calculerCasesDangereuses(Coordonnes casesDangereuses[148], StructJeu *jeu)
      modifierCoordonnees(&casesDangereuses[nbCasesDangereusesTrouvees], -1, -1);
 }
 
+int poseBombeDangereuse(int indiceJoueur, StructJeu *jeu)
+{
+    int resultat = 1;
+    int x, y;
+    int xInitial, yInitial;
+    Direction direction = HAUT;
+
+    // Déterminer les coordonnées du joueur
+    xInitial = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
+    yInitial = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
+
+    while(xInitial%30 != 0)
+    {
+        if(jeu->listeDesJoueurs[indiceJoueur].direction == DROITE)
+            xInitial -= VITESSE_DES_JOUEURS;
+        else
+            xInitial += VITESSE_DES_JOUEURS;
+    }
+    while(yInitial%30 != 0)
+    {
+        if(jeu->listeDesJoueurs[indiceJoueur].direction == HAUT)
+            yInitial += VITESSE_DES_JOUEURS;
+        else
+            yInitial -= VITESSE_DES_JOUEURS;
+    }
+
+    // Tester les 4 directions
+    for(int i=0; i<4; i++)
+    {
+        x = xInitial;
+        y = yInitial;
+
+        // Tester l'ensemble des déplacements possibles dans la direction en cours
+        while(deplacementPossible(x, y, direction + i, jeu))
+        {
+            switch(direction + i)
+            {
+                case HAUT:
+                    // Simuler le déplacement
+                    y -= 30;
+
+                    // Déterminer s'il est possible d'échapper au rayon d'action de la bombe
+                    if(deplacementPossible(x, y, DROITE, jeu) || deplacementPossible(x, y, GAUCHE, jeu))
+                        resultat = 0;
+                    break;
+                case DROITE:
+                    // Simuler le déplacement
+                    x += 30;
+
+                    // Déterminer s'il est possible d'échapper au rayon d'action de la bombe
+                    if(deplacementPossible(x, y, HAUT, jeu) || deplacementPossible(x, y, BAS, jeu))
+                        resultat = 0;
+                    break;
+                case BAS:
+                    // Simuler le déplacement
+                    y += 30;
+
+                    // Déterminer s'il est possible d'échapper au rayon d'action de la bombe
+                    if(deplacementPossible(x, y, DROITE, jeu) || deplacementPossible(x, y, GAUCHE, jeu))
+                        resultat = 0;
+                    break;
+                case GAUCHE:
+                    // Simuler le déplacement
+                    x -= 30;
+
+                    // Déterminer s'il est possible d'échapper au rayon d'action de la bombe
+                    if(deplacementPossible(x, y, HAUT, jeu) || deplacementPossible(x, y, BAS, jeu))
+                        resultat = 0;
+                    break;
+            }
+        }
+    }
+
+    return resultat;
+}
+
 int coordonneesDangereuses(int x, int y, Coordonnes casesDangereuses[148])
 {
     int i = 0;
@@ -539,20 +640,16 @@ int ennemiDansAxe(int indiceJoueur, StructJeu *jeu)
                 switch(direction + i)
                 {
                     case HAUT:
-                        x = x;
                         y -= VITESSE_DES_JOUEURS;
                         break;
                     case DROITE:
                         x += VITESSE_DES_JOUEURS;
-                        y = y;
                         break;
                     case BAS:
-                        x = x;
                         y += VITESSE_DES_JOUEURS;
                         break;
                     case GAUCHE:
                         x -= VITESSE_DES_JOUEURS;
-                        y = y;
                         break;
                 }
             }

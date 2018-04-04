@@ -68,9 +68,10 @@ void initJeu(StructJeu *jeu)
 
 
 
-void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier){
-
-    if(jeu->listeDesJoueurs[0].enVie == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0){  // Actions joueurs uniquement
+void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
+{
+    // Actions joueur uniquement
+    if(jeu->listeDesJoueurs[0].enVie == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0){
         if(clavier->toucheBombeJ1 == 1)
             poserBombe(jeu, 0);
         deplacerJoueurJ1(clavier, jeu, 0);
@@ -81,21 +82,23 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier){
         deplacerJoueurJ2(clavier, jeu, 1);
     }
 
-
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++)   // Actions joueur + IA
-        exploserBombe(jeu, i);
-
-
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++)   // Actions IA uniquement
+    // Actions IA uniquement
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
         if(jeu->listeDesJoueurs[i].humainOuIA && jeu->listeDesJoueurs[i].enVie == 1)
         {
             deplacerIA(i, jeu);
 
-            if(ennemiDansAxe(i, jeu))
-                poserBombe(jeu, i);
+            if(!poseBombeDangereuse(i, jeu)
+               && jeu->listeDesJoueurs[i].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[i].coordonnes.y%30 == 0
+               && (ennemiDansAxe(i, jeu) || rand() % 15 == 5))
+                    poserBombe(jeu, i);
         }
     }
+
+    // Actions joueur + IA
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+        exploserBombe(jeu, i);
 
     // Autres
     tuerJoueur(jeu);
@@ -103,7 +106,6 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier){
 
     if(clavier->toucheArriere == 1)
         jeu->etat = EXTINCTION;
-
 }
 
 

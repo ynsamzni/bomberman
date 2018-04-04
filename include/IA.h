@@ -21,6 +21,6 @@ int itineraireDangereux(Coordonnes itineraire[300], Coordonnes casesDangereuses[
 int ennemiDansAxe(int indiceJoueur, StructJeu *jeu);
 void modifierCoordonnees(Coordonnes *coordonneesAModifier, int x, int y);
 void copierCoordonnees(Coordonnes *coordonneesSrc, Coordonnes *coordonneesDest);
-
+int poseBombeDangereuse(int indiceJoueur, StructJeu *jeu);
 
 #endif // IA_H_INCLUDED
