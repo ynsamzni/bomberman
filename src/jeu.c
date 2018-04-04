@@ -70,35 +70,44 @@ void initJeu(StructJeu *jeu)
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 {
-    // Actions joueur uniquement
-    if(jeu->listeDesJoueurs[0].enVie == 1 && jeu->listeDesJoueurs[0].humainOuIA == 0){
-        if(clavier->toucheBombeJ1 == 1)
-            poserBombe(jeu, 0);
-        deplacerJoueurJ1(clavier, jeu, 0);
-    }
-    if(jeu->listeDesJoueurs[1].enVie == 1 && jeu->listeDesJoueurs[1].humainOuIA == 0){
-        if(clavier->toucheBombeJ2 == 1)
-            poserBombe(jeu, 1);
-        deplacerJoueurJ2(clavier, jeu, 1);
-    }
-
-    // Actions IA uniquement
+    // Déterminer si des joueurs ont des actions en attente d'exécution
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
-        if(jeu->listeDesJoueurs[i].humainOuIA && jeu->listeDesJoueurs[i].enVie == 1)
+        if(jeu->listeDesJoueurs[i].enVie)
         {
-            deplacerIA(i, jeu);
+            // Si humain
+            if(jeu->listeDesJoueurs[i].humainOuIA == 0)
+            {
+                // Si J1
+                if(i == 0)
+                {
+                    if(clavier->toucheBombeJ1)
+                        poserBombe(jeu, i);
+                    deplacerJoueurJ1(clavier, jeu, i);
+                }
+                // Si J2
+                else if(i == 1)
+                {
+                    if(clavier->toucheBombeJ2)
+                        poserBombe(jeu, i);
+                    deplacerJoueurJ2(clavier, jeu, i);
+                }
+            }
+            // Si IA
+            else
+            {
+                deplacerIA(i, jeu);
 
-            if(!poseBombeDangereuse(i, jeu)
-               && jeu->listeDesJoueurs[i].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[i].coordonnes.y%30 == 0
-               && (ennemiDansAxe(i, jeu) || rand() % 15 == 5))
+                if(!poseBombeDangereuse(i, jeu)
+                   && jeu->listeDesJoueurs[i].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[i].coordonnes.y%30 == 0
+                   && (ennemiDansAxe(i, jeu) || rand() % 15 == 5))
                     poserBombe(jeu, i);
+            }
         }
-    }
 
-    // Actions joueur + IA
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+        // Si humain ou IA
         exploserBombe(jeu, i);
+    }
 
     // Autres
     tuerJoueur(jeu);
