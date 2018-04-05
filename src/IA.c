@@ -197,9 +197,6 @@ void suivreItineraire(int indiceJoueur, StructJeu *jeu)
     // Si le joueur doit terminer un déplacement
     if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 != 0 || jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 != 0)
     {
-        // Marquer le joueur comme étant en déplacement
-        jeu->listeDesJoueurs[indiceJoueur].deplacement = 1;
-
         // Poursuivre le déplacement du joueur
         switch(jeu->listeDesJoueurs[indiceJoueur].direction)
         {
@@ -221,16 +218,20 @@ void suivreItineraire(int indiceJoueur, StructJeu *jeu)
         if(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].x == jeu->listeDesJoueurs[indiceJoueur].coordonnes.x
            && jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].y == jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)
         {
+            // Ne plus marquer le joueur comme étant en déplacement s'il a atteint la dernière position de l'itinéraire
+            if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) == 1)
+                jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
+
             // Supprimer la position de l'itinéraire
             supprimerDeplacementItineraire(0, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi);
-
-            // Ne plus marquer le joueur comme étant en déplacement
-            jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
         }
     }
     // Si le joueur doit commencer un nouveau déplacement
     else if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
     {
+        // Marquer le joueur comme étant en déplacement
+        jeu->listeDesJoueurs[indiceJoueur].deplacement = 1;
+
         // Débuter le prochain déplacement de l'itinéraire
         if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y + 30 == jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[0].y)
         {
