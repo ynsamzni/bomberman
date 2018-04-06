@@ -100,7 +100,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 
                 if(!poseBombeDangereuse(i, jeu)
                    && jeu->listeDesJoueurs[i].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[i].coordonnes.y%30 == 0
-                   && (ennemiDansAxe(i, jeu) || rand() % 15 == 5))
+                   && (ennemiProche(i, LONGUEUR_EXPLOSION_BOMBE, jeu) || rand() % 15 == 5))
                     poserBombe(jeu, i);
             }
         }
@@ -129,10 +129,9 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur)
         int X=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
         int Y=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
 
-        int longueurExplosion = 10;
         int hautDestructible=1, droiteDestructible=1, basDestructible=1, gaucheDestructible=1;
 
-        for(int cmpt=0; cmpt<longueurExplosion; cmpt++)
+        for(int cmpt=0; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
         {
             // Déterminer les directions dans lesquelles il ne doit plus avoir d'explosion
             if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] == 1)

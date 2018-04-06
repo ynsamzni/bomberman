@@ -14,7 +14,7 @@
 
 #define VITESSE_DES_JOUEURS 10
 
-
+#define LONGUEUR_EXPLOSION_BOMBE 3
 
 #define CHEMIN_D_ACCES_FICHIER_NIVEAU "assets/maps/map1.dat"
 #define CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS "assets/datas/comptes_joueurs.dat"

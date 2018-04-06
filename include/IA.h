@@ -18,7 +18,7 @@ void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itiner
 void calculerCasesDangereuses(Coordonnes casesDangereuses[148], StructJeu *jeu);
 int coordonneesDangereuses(int x, int y, Coordonnes casesDangereuses[148]);
 int itineraireDangereux(Coordonnes itineraire[300], Coordonnes casesDangereuses[148]);
-int ennemiDansAxe(int indiceJoueur, StructJeu *jeu);
+int ennemiProche(int indiceJoueur, int distanceMax, StructJeu *jeu);
 void modifierCoordonnees(Coordonnes *coordonneesAModifier, int x, int y);
 void copierCoordonnees(Coordonnes *coordonneesSrc, Coordonnes *coordonneesDest);
 int poseBombeDangereuse(int indiceJoueur, StructJeu *jeu);

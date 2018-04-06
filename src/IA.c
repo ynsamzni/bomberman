@@ -354,6 +354,7 @@ int comparerItineraireRapprochementTarget(int x, int y, Coordonnes itineraire[30
 {
     int resultat = 0;
     int nbDeplacement = 0, nbDeplacementDansAxe = 0, nbDeplacementHorsAxe = 0;
+    int longueurItineraire;
 
     // Si l'itinéraire ne comprend pas de cases dangereuses
     if(!itineraireDangereux(itineraire, casesDangereuses))
@@ -381,10 +382,16 @@ int comparerItineraireRapprochementTarget(int x, int y, Coordonnes itineraire[30
             // Déterminer le nombre de déplacements hors de l'axe du target
             nbDeplacementHorsAxe = nbDeplacement - nbDeplacementDansAxe;
 
+            // Déterminer la longueur de l'itinéraire permettant de se rapprocher assez pour poser une bombe
+            if(nbDeplacementDansAxe < LONGUEUR_EXPLOSION_BOMBE)
+                longueurItineraire = nbDeplacementHorsAxe + 1;
+            else
+                longueurItineraire = nbDeplacementHorsAxe + 1 + (nbDeplacementDansAxe - LONGUEUR_EXPLOSION_BOMBE);
+
             // S'il s'agit de l'itineraire le plus rapide
-            if(*longueurMeilleurItineraire == -1 || nbDeplacementDansAxe > *longueurMeilleurItineraire)
+            if(*longueurMeilleurItineraire == -1 || longueurItineraire < *longueurMeilleurItineraire)
             {
-                *longueurMeilleurItineraire = nbDeplacementHorsAxe + 1;
+                *longueurMeilleurItineraire = longueurItineraire;
                 resultat = 1;
             }
         }
@@ -441,7 +448,6 @@ void calculerCasesDangereuses(Coordonnes casesDangereuses[148], StructJeu *jeu)
 {
     int nbCasesDangereusesTrouvees = 0;
     int nbBombesPosees;
-    int longueurExplosion = 10;
     int X, Y;
     int hautDestructible, droiteDestructible, basDestructible, gaucheDestructible;
 
@@ -468,7 +474,7 @@ void calculerCasesDangereuses(Coordonnes casesDangereuses[148], StructJeu *jeu)
         basDestructible = 1;
         gaucheDestructible = 1;
 
-        for(int cmpt=0; cmpt<longueurExplosion; cmpt++)
+        for(int cmpt=0; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
         {
             // Déterminer les directions dans lesquelles il ne doit plus avoir d'explosion
             if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] == 1)
@@ -611,12 +617,14 @@ int itineraireDangereux(Coordonnes itineraire[300], Coordonnes casesDangereuses[
     return resultat;
 }
 
-int ennemiDansAxe(int indiceJoueur, StructJeu *jeu)
+int ennemiProche(int indiceJoueur, int distanceMax, StructJeu *jeu)
 {
     int x, y;
     int directionActuelleTestee;
-    int ennemiPresentDansAxe = 0;
+    int ennemiPresentDansAxe = 0, poserBombe = 0;
     Direction direction = HAUT;
+
+    int distanceEnnemi = -1;
 
     // Tester les 4 directions
     for(int i=0; i<4; i++)
@@ -633,7 +641,25 @@ int ennemiDansAxe(int indiceJoueur, StructJeu *jeu)
                 if(j != indiceJoueur)
                 {
                     if(jeu->listeDesJoueurs[j].coordonnes.x == x && jeu->listeDesJoueurs[j].coordonnes.y == y)
+                    {
                         ennemiPresentDansAxe = 1;
+
+                        // Déterminer la distance du joueur
+                        if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x == x)
+                        {
+                            if(y > jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)
+                                distanceEnnemi = (y - jeu->listeDesJoueurs[indiceJoueur].coordonnes.y) / 30;
+                            else
+                                distanceEnnemi = (jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - y) / 30;
+                        }
+                        else
+                        {
+                            if(x > jeu->listeDesJoueurs[indiceJoueur].coordonnes.x)
+                                distanceEnnemi = (x - jeu->listeDesJoueurs[indiceJoueur].coordonnes.x) / 30;
+                            else
+                                distanceEnnemi = (jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - x) / 30;
+                        }
+                    }
                 }
             }
             if(deplacementPossible(x, y, direction + i, jeu))
@@ -659,7 +685,10 @@ int ennemiDansAxe(int indiceJoueur, StructJeu *jeu)
         }
     }
 
-    return ennemiPresentDansAxe;
+    if(ennemiPresentDansAxe && distanceEnnemi <= distanceMax)
+        poserBombe = 1;
+
+    return poserBombe;
 }
 
 
