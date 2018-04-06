@@ -285,7 +285,7 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
     {
         // Analyser l'itinéraire en cours (détermine s'il est compatible avec la situation en cours)
         if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
-            comparerItineraireRapprochementTarget(x, y, jeu->listeDesJoueurs[1].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
+            comparerItineraireRapprochementTarget(x, y, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
 
         // Analyser l'ensemble des itinéraires calculés
         for(int i = 0; i < nbTotalItineraire; i++)
