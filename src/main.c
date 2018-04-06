@@ -9,6 +9,8 @@
 #include "../include/jeu.h"
 #include "../include/clavier.h"
 #include "../include/menu.h"
+#include "../include/audio.h"
+
 
 /****************Structure du jeu**********************
 
@@ -62,17 +64,25 @@ int main(int argc, char *argv[])
     StructMenu menu;
     StructAffichage affichage;
     StructTouchesClavier clavier;
+    StructAudio audio;
+
+    //TEST
+    SonSelectionne s = MUSIQUE;
+    //TEST
+
 
     int check = 0;
 
 
     srand(time(NULL));
 
-    initMenu(&menu); // NUMERO FENETRE => 1
+    initMenu(&menu);
     initAffichage(&affichage, "Bomberman");
     initClavier(&clavier);
+    initAudio(&audio);
     jeu.etat = OFF;
 
+    lireUnSon(&audio, MUSIQUE);
 
     do
     {
@@ -80,7 +90,7 @@ int main(int argc, char *argv[])
         recupererTouchesClavier(&clavier);
 
         if(jeu.etat == OFF)
-            gestionDuMenu(&menu, &jeu, &clavier, &affichage);
+            gestionDuMenu(&menu, &jeu, &clavier, &affichage, &audio);
 
         if(jeu.etat == LANCEMENT)
         {
@@ -91,7 +101,7 @@ int main(int argc, char *argv[])
         if(jeu.etat == ON)
         {
             SDL_Delay(40); //PERMET DE REGLER LA VITESSE DU JEU (Initialement dans clavier.c mais ralentissait le menu)
-            calculerJeu(&jeu, &clavier);
+            calculerJeu(&jeu, &clavier, &audio);
             afficherJeu(&affichage, &jeu);
             // Afficher les informations de debug
             system("clear");
@@ -118,9 +128,11 @@ int main(int argc, char *argv[])
 
     SDL_DestroyRenderer(affichage.renderer);//Permet de détruire le renderer
     SDL_DestroyWindow(affichage.window); //Permet de détruire la fenêtre crée
+
+    Mix_Quit();
     IMG_Quit();
     TTF_Quit();
-    SDL_Quit(); //Permet de quitter proprement la SDL
+    SDL_Quit();
 
 }
 

@@ -31,7 +31,7 @@ void initMenu(StructMenu *menu)
 }
 
 
-void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage)
+void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage, StructAudio *audio)
 {
     if(menu->numeroFenetre != menu->lastNumeroFenetre){ //réinitialise les curseurs lors du cght de fenetre
         menu->positionCurseurY = 0;
@@ -47,15 +47,15 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
         break;
     case 1:
         // Menu demandant de sélectionner un profil et/ou d'en créer un
-        afficherMenuSelectionProfil(affichage, clavier, jeu, menu);
+        afficherMenuSelectionProfil(affichage, clavier, jeu, menu, audio);
         break;
     case 2:
         // Menu de création de profil
-        afficherMenuCreationProfil(affichage, clavier, jeu, menu);
+        afficherMenuCreationProfil(affichage, clavier, jeu, menu, audio);
         break;
     case 3:
         // Menu "principal" (jouer + statistiques)
-        afficherMenuPrincipal(affichage, clavier, menu);
+        afficherMenuPrincipal(affichage, clavier, menu, audio);
         break;
     case 4:
         // Menu affichant les statistiques
@@ -63,7 +63,7 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
         break;
     case 5:
         // Menu permettant de paramétrer sa partie
-        afficherMenuParametragePartie(affichage, clavier, jeu, menu);
+        afficherMenuParametragePartie(affichage, clavier, jeu, menu, audio);
         break;
     case 6:
         jeu->etat = LANCEMENT;
@@ -109,7 +109,7 @@ void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavi
 
 /******************** MENU 1 : SELECTION PROFIL **********************/
 
-void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
+void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     int nbTotalProfils;
     CompteJoueur tabComptes[NBR_MAX_COMPTES];
@@ -117,10 +117,14 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     nbTotalProfils = chargerComptes(tabComptes);
 
     // Si l'utilisateur se déplace dans le menu
-    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != nbTotalProfils)
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != nbTotalProfils){
         menu->positionCurseurY++;
-    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
 
     // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
@@ -173,7 +177,7 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
 
 /******************** MENU 2 : CREATION PROFIL **********************/
 
-void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
+void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     char caractereActuel;
 
@@ -184,10 +188,14 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     SDL_Rect flecheBasse = {caseLettre.x + 5, caseLettre.y + caseLettre.h, 40, 30};
 
     // Si l'utilisateur se déplace dans le menu
-    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) && menu->positionCurseurX != 7 && menu->tabNomDuJoueur[menu->positionCurseurX] != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) && menu->positionCurseurX != 7 && menu->tabNomDuJoueur[menu->positionCurseurX] != 0){
         menu->positionCurseurX++;
-    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurX != 0)
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
+    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurX != 0){
         menu->positionCurseurX--;
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
 
     //Si l'utilisateur essaye de se déplacer alors que la case est vide
     if(clavier->toucheHaut == 1 && menu->tabNomDuJoueur[menu->positionCurseurX] == 0)
@@ -196,10 +204,14 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
         menu->tabNomDuJoueur[menu->positionCurseurX] = 66;
 
     //si l'utilisateur se déplace dans une lettre
-    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'A')
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'A'){
         menu->tabNomDuJoueur[menu->positionCurseurX]--; //décrémente le caractere ASCII de 1
-    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'Z')
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'Z'){
         menu->tabNomDuJoueur[menu->positionCurseurX]++;
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
 
     //gestion de la suppression d'une lettre
     if(cycleToucheClavierRealise(&clavier->toucheSupprimer, clavier) == 1 && menu->tabNomDuJoueur[menu->positionCurseurX + 1] == 0 && menu->positionCurseurX != -1){
@@ -272,15 +284,19 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
 
 /***** MENU 3 : MENU PRINCIPAL ************************************/
 
-void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu)
+void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu, StructAudio *audio)
 {
     char chaineBienvenue[40] = "";
 
     // Si l'utilisateur se déplace dans le menu
-    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 2)
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 2){
         menu->positionCurseurY++;
-    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
 
     // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
@@ -411,7 +427,7 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
 
 /******************** MENU 5 : MENU DE PARAMETRAGE DE LA PARTIE **********************/
 
-void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
+void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
 
     SDL_Rect contourSelection = {130, 130, 300, 50};
@@ -422,11 +438,15 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
 
 
     //Permet de gérer le déplacement vertical dans le menu
-    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
-    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 3)
-        menu->positionCurseurY++;
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
 
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 3){
+        menu->positionCurseurY++;
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
     //Permet de regarder si un joueur humain est déjà séléctionné ou non
     if(menu->paramPartie[1] == 2 || menu->paramPartie[2] == 2 || menu->paramPartie[3] == 2)
         dejaUnJoueurHumainSelectionne = 1;
@@ -437,12 +457,16 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
             menu->paramPartie[menu->positionCurseurY] = 1;
         else
             menu->paramPartie[menu->positionCurseurY]--;
+
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) ){
         if( (menu->paramPartie[menu->positionCurseurY] == 1 ) && dejaUnJoueurHumainSelectionne == 1) //Si on arrive en bout de séléction ( 1 ) et que un joueur humain est déja selectionné alors on va directement en 0 (ordinateur)
             menu->paramPartie[menu->positionCurseurY] = 0;
         else
             menu->paramPartie[menu->positionCurseurY]++;
+
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
 
     //Remet le joueur au début des choix une fois arrivée au bout

@@ -36,21 +36,22 @@
 			<Add library="SDL2" />
 			<Add library="SDL2_image" />
 			<Add library="SDL2_ttf" />
+			<Add library="SDL2_mixer" />
 		</Linker>
 		<Unit filename="include/IA.h" />
 		<Unit filename="include/affichage.h" />
+		<Unit filename="include/audio.h" />
 		<Unit filename="include/clavier.h" />
 		<Unit filename="include/constantes.h" />
 		<Unit filename="include/jeu.h" />
-<<<<<<< HEAD
-		<Unit filename="include/joueurHumain.h" />
-=======
 		<Unit filename="include/menu.h" />
->>>>>>> menu
 		<Unit filename="src/IA.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/affichage.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/audio.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/clavier.c">

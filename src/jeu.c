@@ -68,7 +68,7 @@ void initJeu(StructJeu *jeu)
 
 
 
-void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
+void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio)
 {
     // Déterminer si des joueurs ont des actions en attente d'exécution
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
@@ -106,7 +106,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
         }
 
         // Si humain ou IA
-        exploserBombe(jeu, i);
+        exploserBombe(jeu, i, audio);
     }
 
     // Autres
@@ -122,7 +122,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier)
 /*******************GESTION DE L'EXPLOSION DES BOMBES***********************************/
 /***************************************************************************************/
 
-void exploserBombe(StructJeu *jeu, int indiceJoueur)
+void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 {
     if( (SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1000) &&  (jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 1) )
     {

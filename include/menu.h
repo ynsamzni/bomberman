@@ -4,6 +4,7 @@
 
 #include "affichage.h"
 #include "jeu.h"
+#include "audio.h"
 
 /******GUIDE DU MENU*********
 
@@ -38,20 +39,21 @@ typedef struct
 
 
 void initMenu(StructMenu *menu);
-void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer);
+
+void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage, StructAudio *audio);
 
 void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
-void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
-void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
-void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu);
+void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
+void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
+void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu, StructAudio *audio);
 void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu);
-void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
+void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
 
 void enregistrerNouveauCompte(char nomCompte[]);
 int chargerComptes(CompteJoueur *tabComptes);
 void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu);
 
-void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage);
+void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer);
 
 
 #endif // AFFICHAGE_INCLUDED

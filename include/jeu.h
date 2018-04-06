@@ -6,6 +6,7 @@
 
 #include "constantes.h"
 #include "clavier.h"
+#include "audio.h"
 
 typedef struct{
     int x;
@@ -63,10 +64,10 @@ typedef struct{
 void initMap(StructJeu *jeu);
 void initTousLesJoueurs(StructJeu *jeu);
 void initJeu(StructJeu *jeu);
-void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier);
+void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio);
 
 
-void exploserBombe(StructJeu *jeu, int indiceJoueur);
+void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
 
 void afficherStructureJeu(StructJeu jeu);
 
