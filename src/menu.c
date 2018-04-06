@@ -592,6 +592,12 @@ void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char c
     // Déterminer les dimensions de la texture
     SDL_QueryTexture(texture, NULL, NULL, &textureW, &textureH);
 
+    // Déterminer les coordonnées de la texture si aucune n'ont pas été indiquées
+    if(positionX == -1)
+        positionX = (WIDTH / 2) - (textureW / 2);
+    if(positionY == -1)
+        positionY = (HEIGHT / 2) - (textureH / 2);
+
     // Créer le rectangle qui contiendra les coordonnées et dimensions de la texture
     SDL_Rect rectTexture = {positionX, positionY, textureW, textureH};
 
