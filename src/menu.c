@@ -93,11 +93,11 @@ void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavi
     SDL_RenderClear(affichage->renderer);
 
 
-    afficherTexte("* BOMBERMAN *", 50, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 75, 60, affichage->renderer);
+    afficherTexte("* BOMBERMAN *", 50, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 60, affichage->renderer);
 
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.bombe, NULL, &rectAffichage);
 
-    afficherTexte("ENTREE pour demarrer", 25, color, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 135, 450, affichage->renderer);
+    afficherTexte("ENTREE pour demarrer", 25, color, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 450, affichage->renderer);
 
     SDL_RenderPresent(affichage->renderer);
 
@@ -127,27 +127,27 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     SDL_RenderClear(affichage->renderer);
 
     // Copier les éléments du menu dans le renderer
-    afficherTexte("SELECTION DU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 65, 70, affichage->renderer);
+    afficherTexte("SELECTION DU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
     if(chargerComptes(&tabComptes) != -1) //ON VERIFIE QUE LE FICHIER DES PROFILS NEST PAS VIDE
     {
         for(int i=0; i<nbTotalProfils; i++)
         {
             if(menu->positionCurseurY == i)
-                afficherTexte(tabComptes[i].nom, 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 260, 170 + 50 * i, affichage->renderer);
+                afficherTexte(tabComptes[i].nom, 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 170 + 50 * i, affichage->renderer);
             else
-                afficherTexte(tabComptes[i].nom, 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 260, 170 + 50 * i, affichage->renderer);
+                afficherTexte(tabComptes[i].nom, 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 170 + 50 * i, affichage->renderer);
         }
 
         if(menu->positionCurseurY == nbTotalProfils )
-            afficherTexte("Nouveau profil", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 190, 170 + 50 * nbTotalProfils, affichage->renderer);
+            afficherTexte("Nouveau profil", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 170 + 50 * nbTotalProfils, affichage->renderer);
         else
-            afficherTexte("Nouveau profil", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 190, 170 + 50 * nbTotalProfils, affichage->renderer);
+            afficherTexte("Nouveau profil", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 170 + 50 * nbTotalProfils, affichage->renderer);
     }
     else
     {
-        afficherTexte("APPUYER SUR ENTREE POUR ", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 150,250, affichage->renderer);
-        afficherTexte("CREER UN NOUVEAU PROFIL", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 150,280, affichage->renderer);
+        afficherTexte("APPUYER SUR ENTREE POUR ", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1,250, affichage->renderer);
+        afficherTexte("CREER UN NOUVEAU PROFIL", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1,280, affichage->renderer);
     }
 
     // Afficher le renderer
@@ -217,7 +217,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     SDL_RenderClear(affichage->renderer);
 
     // Copier les éléments du menu dans le renderer
-    afficherTexte("NOUVEAU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 110, 70, affichage->renderer);
+    afficherTexte("NOUVEAU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
     SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
     for(int i=0; i<8; i++)
@@ -246,7 +246,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     }
 
 
-    afficherTexte("ENTREE pour continuer", 24, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 150, 380, affichage->renderer);
+    afficherTexte("ENTREE pour continuer", 24, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 380, affichage->renderer);
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
@@ -290,22 +290,22 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
 
     strcat(chaineBienvenue,"Bienvenue ");
     strcat(chaineBienvenue, menu->profilSelectionne.nom);
-    afficherTexte(chaineBienvenue, 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 150, 50, affichage->renderer);
+    afficherTexte(chaineBienvenue, 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 50, affichage->renderer);
 
     if(menu->positionCurseurY == 0)
-        afficherTexte("STATISTIQUES", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 180, 150, affichage->renderer);
+        afficherTexte("STATISTIQUES", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 150, affichage->renderer);
     else
-        afficherTexte("STATISTIQUES", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 180, 150, affichage->renderer);
+        afficherTexte("STATISTIQUES", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 150, affichage->renderer);
 
     if(menu->positionCurseurY == 1)
-        afficherTexte("LANCER UNE PARTIE", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 130, 200, affichage->renderer);
+        afficherTexte("LANCER UNE PARTIE", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 200, affichage->renderer);
     else
-        afficherTexte("LANCER UNE PARTIE", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 130, 200, affichage->renderer);
+        afficherTexte("LANCER UNE PARTIE", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 200, affichage->renderer);
 
     if(menu->positionCurseurY == 2)
-        afficherTexte("Quitter", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 240, 250, affichage->renderer);
+        afficherTexte("Quitter", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 250, affichage->renderer);
     else
-        afficherTexte("Quitter", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 240, 250, affichage->renderer);
+        afficherTexte("Quitter", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 250, affichage->renderer);
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
@@ -355,7 +355,7 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
     SDL_RenderClear(affichage->renderer);
 
 
-    afficherTexte("Statistiques", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 180, 50, affichage->renderer);
+    afficherTexte("Statistiques", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 50, affichage->renderer);
 
     if(nbrDeComptes < 10)
         tailleMaxListeAAfficher = nbrDeComptes;
@@ -393,7 +393,7 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
         i++;
     }
 
-    afficherTexte("Appuyer sur Echap pour returner au menu", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 90, i*50 + 250, affichage->renderer);
+    afficherTexte("Appuyer sur Echap pour returner au menu", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, i*50 + 250, affichage->renderer);
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
@@ -456,7 +456,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
     SDL_RenderClear(affichage->renderer);
 
-    afficherTexte("PARAMETRAGE PARTIE", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 105, 30, affichage->renderer);
+    afficherTexte("PARAMETRAGE PARTIE", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 30, affichage->renderer);
 
 
 
@@ -489,7 +489,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheGauche, NULL, &flecheGauche);
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheDroite, NULL, &flecheDroite);
 
-    afficherTexte("ENTREE pour lancer la partie", 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, 140, 490, affichage->renderer);
+    afficherTexte("ENTREE pour lancer la partie", 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 490, affichage->renderer);
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
