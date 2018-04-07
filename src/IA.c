@@ -298,16 +298,17 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
     // Si l'IA n'a aucun itinéraire à suivre
     if(numeroMeilleurItineraire == -1 && longueurMeilleurItineraire == -1 && nbTotalItineraire != 0)
     {
-        // Déterminer le nombre d'itineraires non dangereux disponibles
-        int nbItinerairesNonDangereux = 0;
-        for(int i=0; i<nbTotalItineraire; i++)
+        // Déterminer si au moins un itinéraire non dangereux est disponible
+        int itineraireNonDangereuxDisponible = 0, i = 0;
+        while(i < nbTotalItineraire && !itineraireNonDangereuxDisponible)
         {
             if(!itineraireDangereux(itineraire[i], casesDangereuses))
-                nbItinerairesNonDangereux++;
+                itineraireNonDangereuxDisponible = 1;
+            i++;
         }
 
         // S'il y'a au moins un itinéraire non dangereux de disponible
-        if(nbItinerairesNonDangereux != 0)
+        if(itineraireNonDangereuxDisponible)
         {
             // Choisir un itinéraire non dangereux au hasard
             do
