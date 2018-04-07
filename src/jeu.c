@@ -98,9 +98,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
             {
                 deplacerIA(i, jeu);
 
-                if(!poseBombeDangereuse(i, jeu)
-                   && jeu->listeDesJoueurs[i].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[i].coordonnes.y%30 == 0
-                   && (ennemiProche(i, LONGUEUR_EXPLOSION_BOMBE, jeu) || rand() % 15 == 5))
+                if(!poseBombeDangereuse(i, jeu) && (ennemiProche(i, LONGUEUR_EXPLOSION_BOMBE, jeu) || rand() % 15 == 5))
                     poserBombe(jeu, i);
             }
         }

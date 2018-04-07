@@ -528,16 +528,16 @@ int poseBombeDangereuse(int indiceJoueur, StructJeu *jeu)
     while(xInitial%30 != 0)
     {
         if(jeu->listeDesJoueurs[indiceJoueur].direction == DROITE)
-            xInitial -= VITESSE_DES_JOUEURS;
-        else
             xInitial += VITESSE_DES_JOUEURS;
+        else
+            xInitial -= VITESSE_DES_JOUEURS;
     }
     while(yInitial%30 != 0)
     {
         if(jeu->listeDesJoueurs[indiceJoueur].direction == HAUT)
-            yInitial += VITESSE_DES_JOUEURS;
-        else
             yInitial -= VITESSE_DES_JOUEURS;
+        else
+            yInitial += VITESSE_DES_JOUEURS;
     }
 
     // Tester les 4 directions
