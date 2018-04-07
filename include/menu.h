@@ -27,8 +27,6 @@ typedef struct
     int positionCurseurY;
     int positionCurseurX;
     CompteJoueur profilSelectionne;
-    int variableCouleur;
-    int tickAttente;
     int paramPartie[4];
     char tabNomDuJoueur[8];
 

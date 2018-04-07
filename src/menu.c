@@ -16,9 +16,6 @@ void initMenu(StructMenu *menu)
     menu->positionCurseurY = 0;
     menu->positionCurseurX = 0;
 
-    menu->variableCouleur = 0;
-    menu->tickAttente = 0;
-
     menu->paramPartie[0] = 2; // 0 = Ordinateur / 1 = Vide / 2 = Humain
     menu->paramPartie[1] = 0;
 
@@ -76,34 +73,30 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
 
 }
 
-/******************** MENU 0 : SELECTION PROFIL **********************/
-void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu){
+/******************** MENU 0 : MENU ACCUEIL **********************/
 
+void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
+{
     SDL_Rect rectAffichage = {150, 150, 250, 250};
-    SDL_Color color = {menu->variableCouleur, menu->variableCouleur, menu->variableCouleur, 0};
-    if(menu->tickAttente == 0)
-        menu->tickAttente = SDL_GetTicks();
-    else if(SDL_GetTicks() - menu->tickAttente > 100){
-                menu->variableCouleur+=20;
-                menu->tickAttente = 0;
-    }
+
+    int couleurTexteClignotant = (SDL_GetTicks() / 6) % 255; // Passe de 0 à 255 en incrémentant toutes les 6 ms
+    SDL_Color color = {couleurTexteClignotant, couleurTexteClignotant, couleurTexteClignotant, 0};
 
     // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
     SDL_RenderClear(affichage->renderer);
 
-
+    // Copier les éléments du menu dans le renderer
     afficherTexte("* BOMBERMAN *", 50, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 60, affichage->renderer);
-
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.bombe, NULL, &rectAffichage);
-
     afficherTexte("ENTREE pour demarrer", 25, color, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 450, affichage->renderer);
 
+    // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
 
+    // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
         menu->numeroFenetre = 1;
-
 }
 
 
