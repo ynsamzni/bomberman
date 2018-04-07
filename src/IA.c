@@ -261,16 +261,15 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
     int numeroMeilleurItineraire = -1;
     int longueurMeilleurItineraire = -1;
 
-    // Coordonnées de l'ennemi (A FAIRE : Déterminer coordonnées tout seul)
+    // Coordonnées de l'ennemi
     int x = jeu->listeDesJoueurs[0].coordonnes.x;
     int y = jeu->listeDesJoueurs[0].coordonnes.y;
 
     // Si l'IA se trouve sur une case dangereuse : Trouver l'itinéraire qui mène le plus rapidement à une case non dangereuse
     if(coordonneesDangereuses(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y, casesDangereuses))
     {
-        // Analyser l'itinéraire en cours (détermine s'il est compatible avec la situation en cours)
-        if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
-            comparerItineraireEloignementDangerosite(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
+        // Analyser l'itinéraire en cours
+        comparerItineraireEloignementDangerosite(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
 
         // Analyser l'ensemble des itinéraires calculés
         for(int i = 0; i < nbTotalItineraire; i++)
@@ -283,9 +282,8 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
     // Si l'IA n'est pas en danger : Trouver l'itinéraire qui permet de se rapprocher le plus rapidement du target
     else
     {
-        // Analyser l'itinéraire en cours (détermine s'il est compatible avec la situation en cours)
-        if(longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) != 0)
-            comparerItineraireRapprochementTarget(x, y, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
+        // Analyser l'itinéraire en cours
+        comparerItineraireRapprochementTarget(x, y, jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses, &longueurMeilleurItineraire);
 
         // Analyser l'ensemble des itinéraires calculés
         for(int i = 0; i < nbTotalItineraire; i++)
@@ -295,7 +293,7 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
         }
     }
 
-    // Si l'IA n'a aucun itinéraire à suivre
+    // Si l'IA n'a aucun itinéraire à suivre : Sélectionner aléatoirement un itinéraire non dangereux
     if(numeroMeilleurItineraire == -1 && longueurMeilleurItineraire == -1 && nbTotalItineraire != 0)
     {
         // Déterminer si au moins un itinéraire non dangereux est disponible
@@ -307,7 +305,7 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
             i++;
         }
 
-        // S'il y'a au moins un itinéraire non dangereux de disponible
+        // Si au moins un itinéraire non dangereux est disponible
         if(itineraireNonDangereuxDisponible)
         {
             // Choisir un itinéraire non dangereux au hasard
@@ -320,7 +318,7 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
         }
     }
 
-    // Copier l'itinéraire dans le profil de l'IA
+    // Copier le meilleur itinéraire trouvé dans le profil de l'IA
     if(numeroMeilleurItineraire != -1)
         copierItineraire(itineraire[numeroMeilleurItineraire], jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, longueurMeilleurItineraire);
     if(longueurMeilleurItineraire != -1)
