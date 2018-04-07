@@ -475,7 +475,7 @@ void calculerCasesDangereuses(Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXP
         basDestructible = 1;
         gaucheDestructible = 1;
 
-        for(int cmpt=0; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
+        for(int cmpt=1; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
         {
             // Déterminer les directions dans lesquelles il ne doit plus avoir d'explosion
             if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] == 1)
