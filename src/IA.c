@@ -35,7 +35,7 @@ void initIA(StructJeu *jeu)  //Gère l'apparition des IA
 void deplacerIA(int indiceJoueur, StructJeu *jeu)
 {
     Coordonnes itineraire[300][300];
-    Coordonnes casesDangereuses[148];
+    Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES];
     int nbTotalItineraire;
 
     if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 == 0)
@@ -256,7 +256,7 @@ void suivreItineraire(int indiceJoueur, StructJeu *jeu)
     }
 }
 
-void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbTotalItineraire, StructJeu *jeu, Coordonnes casesDangereuses[148])
+void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbTotalItineraire, StructJeu *jeu, Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES])
 {
     int numeroMeilleurItineraire = -1;
     int longueurMeilleurItineraire = -1;
@@ -327,7 +327,7 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
         modifierCoordonnees(&jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[longueurMeilleurItineraire], -1, -1);
 }
 
-int comparerItineraireEloignementDangerosite(Coordonnes itineraire[300], Coordonnes casesDangereuses[148], int *longueurMeilleurItineraire)
+int comparerItineraireEloignementDangerosite(Coordonnes itineraire[300], Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], int *longueurMeilleurItineraire)
 {
     int resultat = 0;
     int nbCasesDangereuses = 0;
@@ -351,7 +351,7 @@ int comparerItineraireEloignementDangerosite(Coordonnes itineraire[300], Coordon
     return resultat;
 }
 
-int comparerItineraireRapprochementTarget(int x, int y, Coordonnes itineraire[300], Coordonnes casesDangereuses[148], int *longueurMeilleurItineraire)
+int comparerItineraireRapprochementTarget(int x, int y, Coordonnes itineraire[300], Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], int *longueurMeilleurItineraire)
 {
     int resultat = 0;
     int nbDeplacement = 0, nbDeplacementDansAxe = 0, nbDeplacementHorsAxe = 0;
@@ -445,7 +445,7 @@ void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itiner
 
 /********** Traitement des dangers **********/
 
-void calculerCasesDangereuses(Coordonnes casesDangereuses[148], StructJeu *jeu)
+void calculerCasesDangereuses(Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], StructJeu *jeu)
 {
     int nbCasesDangereusesTrouvees = 0;
     int nbBombesPosees;
@@ -590,7 +590,7 @@ int poseBombeDangereuse(int indiceJoueur, StructJeu *jeu)
     return resultat;
 }
 
-int coordonneesDangereuses(int x, int y, Coordonnes casesDangereuses[148])
+int coordonneesDangereuses(int x, int y, Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES])
 {
     int i = 0;
     int resultat = 0;
@@ -605,7 +605,7 @@ int coordonneesDangereuses(int x, int y, Coordonnes casesDangereuses[148])
     return resultat;
 }
 
-int itineraireDangereux(Coordonnes itineraire[300], Coordonnes casesDangereuses[148])
+int itineraireDangereux(Coordonnes itineraire[300], Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES])
 {
     int resultat = 0;
 
