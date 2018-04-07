@@ -42,7 +42,6 @@ typedef struct{
     Direction direction;
     int deplacement;
     Coordonnes itineraireSuivi[100];
-    char nom[];
 }Joueur;
 
 typedef struct{

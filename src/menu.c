@@ -267,7 +267,6 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
-        strcpy(jeu->listeDesJoueurs[0].nom, menu->tabNomDuJoueur);
         enregistrerNouveauCompte(menu->tabNomDuJoueur);
         menu->numeroFenetre = 1;
 
