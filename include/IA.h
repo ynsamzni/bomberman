@@ -12,7 +12,7 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
 int comparerItineraireEloignementDangerosite(Coordonnes itineraire[300], Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], int *longueurMeilleurItineraire);
 int comparerItineraireRapprochementTarget(int x, int y, Coordonnes itineraire[300], Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], int *longueurMeilleurItineraire);
 int longueurItineraire(Coordonnes itineraire[300]);
-int rechercherItineraire(int x, int y, Coordonnes itineraire[300]);
+int rechercherDeplacementItineraire(int x, int y, Coordonnes itineraire[300]);
 void copierItineraire(Coordonnes itineraireSrc[300], Coordonnes itineraireDest[300]);
 void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itineraire[300]);
 void calculerCasesDangereuses(Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], StructJeu *jeu);

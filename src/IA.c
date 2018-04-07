@@ -149,7 +149,7 @@ int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int n
 
         // Déterminer si la position étudiée doit faire partie de l'itinéraire
         if(deplacementPossible(x, y, direction + i, jeu)
-           && (nbDeplacement == 0 || !rechercherItineraire(nvllePosition.x, nvllePosition.y, itineraire[nbItineraire])) && (nvllePosition.x != xInitial || nvllePosition.y != yInitial)) // Si on n'est pas déjà passé par cette case
+           && (nbDeplacement == 0 || !rechercherDeplacementItineraire(nvllePosition.x, nvllePosition.y, itineraire[nbItineraire])) && (nvllePosition.x != xInitial || nvllePosition.y != yInitial)) // Si on n'est pas déjà passé par cette case
         {
            // Passer à un nouvel itineraire si un déplacement a déjà été effectué dans cette itération
             if(nbDeplacementIterationActuelle != 0)
@@ -359,7 +359,7 @@ int comparerItineraireRapprochementTarget(int x, int y, Coordonnes itineraire[30
     if(!itineraireDangereux(itineraire, casesDangereuses))
     {
         // Si un itineraire comprend le target
-        if(rechercherItineraire(x, y, itineraire))
+        if(rechercherDeplacementItineraire(x, y, itineraire))
         {
             // Calculer le nombre de déplacements nécessaires pour accéder à la position du target
             while(itineraire[nbDeplacement].x != x || itineraire[nbDeplacement].y != y)
@@ -409,7 +409,13 @@ int longueurItineraire(Coordonnes itineraire[300])
     return longueur;
 }
 
-int rechercherItineraire(int x, int y, Coordonnes itineraire[300])
+void copierItineraire(Coordonnes itineraireSrc[300], Coordonnes itineraireDest[300])
+{
+    for(int i=0; i<longueurItineraire(itineraireSrc); i++)
+        copierCoordonnees(&itineraireSrc[i], &itineraireDest[i]);
+}
+
+int rechercherDeplacementItineraire(int x, int y, Coordonnes itineraire[300])
 {
     int resultat = 0;
 
@@ -420,12 +426,6 @@ int rechercherItineraire(int x, int y, Coordonnes itineraire[300])
     }
 
     return resultat; // Renvoyer la position
-}
-
-void copierItineraire(Coordonnes itineraireSrc[300], Coordonnes itineraireDest[300])
-{
-    for(int i=0; i<longueurItineraire(itineraireSrc); i++)
-        copierCoordonnees(&itineraireSrc[i], &itineraireDest[i]);
 }
 
 void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itineraire[300])
