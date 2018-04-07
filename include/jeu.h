@@ -68,6 +68,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
 
 
 void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
+void poserBombe(StructJeu *jeu, int indiceJoueur);
 
 void afficherStructureJeu(StructJeu jeu);
 

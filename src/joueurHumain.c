@@ -18,40 +18,6 @@ void initJoueursHumains(StructJeu *jeu){
 
 }
 
-void poserBombe(StructJeu *jeu, int indiceJoueur)
-{
-    // Si le joueur a une bombe d'active
-    if(jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose == 0)
-    {
-        int coordonneesJoueurX = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
-        int coordonneesJoueurY = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
-
-
-        jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = SDL_GetTicks();
-
-        //Tentative d'a2mélioration de la pose de bombe
-
-
-        if(jeu->listeDesJoueurs[indiceJoueur].direction == HAUT)
-            coordonneesJoueurY = coordonneesJoueurY + 25;
-        if(jeu->listeDesJoueurs[indiceJoueur].direction == GAUCHE)
-            coordonneesJoueurX = coordonneesJoueurX + 25;
-
-        // Poser la bombe à la position du joueur
-        jeu->mapJeu[renvoitCaseMatrice(coordonneesJoueurX)][renvoitCaseMatrice(coordonneesJoueurY)] = 3;
-
-        // Enregistrer les coordonnées de la bombe posée
-        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x = renvoitCaseMatrice(coordonneesJoueurX);
-        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y = renvoitCaseMatrice(coordonneesJoueurY);
-
-        // Marquer la bombe comme posée
-        jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 1;
-
-    }
-
-}
-
-
 void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur) //Gère le déplacement du J1
 {
     int x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
