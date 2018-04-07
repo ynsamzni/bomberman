@@ -38,12 +38,12 @@ void deplacerIA(int indiceJoueur, StructJeu *jeu)
     Coordonnes casesDangereuses[148];
     int nbTotalItineraire;
 
-    // Calculer les cases dangereuses
-    calculerCasesDangereuses(casesDangereuses, jeu);
-
-    // Si un nouvel itinéraire doit être généré
     if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 == 0)
     {
+        // Calculer les cases dangereuses
+        calculerCasesDangereuses(casesDangereuses, jeu);
+
+        // Si un nouvel itinéraire doit être généré
         if(itineraireDangereux(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, casesDangereuses) || longueurItineraire(jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi) == 0)
         {
             // Calculer tous les itinéraires disponibles
