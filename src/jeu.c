@@ -124,35 +124,39 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
 
 void poserBombe(StructJeu *jeu, int indiceJoueur)
 {
-    // Si le joueur a une bombe d'active
-    if(jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose == 0)
+    int caseBombeX, caseBombeY;
+
+    // Si le joueur n'a aucune bombe de posée à son actif
+    if(jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 0)
     {
-        int coordonneesJoueurX = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
-        int coordonneesJoueurY = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
+        // Déterminer la case sur laquelle va être posée la bombe
+        caseBombeX = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
+        caseBombeY = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
 
+        if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 != 0 || jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 != 0)
+        {
+            switch(jeu->listeDesJoueurs[indiceJoueur].direction)
+            {
+                case DROITE:
+                    caseBombeX++;
+                    break;
+                case BAS:
+                    caseBombeY++;
+                    break;
+            }
+        }
 
+        // Poser la bombe
+        jeu->mapJeu[caseBombeX][caseBombeY] = 3;
+
+        // Démarrer le timer d'explosion de la bombe
         jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = SDL_GetTicks();
 
-        //Tentative d'a2mélioration de la pose de bombe
-
-
-        if(jeu->listeDesJoueurs[indiceJoueur].direction == HAUT)
-            coordonneesJoueurY = coordonneesJoueurY + 25;
-        if(jeu->listeDesJoueurs[indiceJoueur].direction == GAUCHE)
-            coordonneesJoueurX = coordonneesJoueurX + 25;
-
-        // Poser la bombe à la position du joueur
-        jeu->mapJeu[renvoitCaseMatrice(coordonneesJoueurX)][renvoitCaseMatrice(coordonneesJoueurY)] = 3;
-
-        // Enregistrer les coordonnées de la bombe posée
-        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x = renvoitCaseMatrice(coordonneesJoueurX);
-        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y = renvoitCaseMatrice(coordonneesJoueurY);
-
-        // Marquer la bombe comme posée
+        // Lier la bombe au joueur qui l'a posé
+        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x = caseBombeX;
+        jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y = caseBombeY;
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 1;
-
     }
-
 }
 
 void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
