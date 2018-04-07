@@ -77,7 +77,11 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
 
 void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
 {
-    SDL_Rect rectAffichage = {150, 150, 250, 250};
+    SDL_Rect rectAffichage;
+    rectAffichage.w = 250;
+    rectAffichage.h = 250;
+    rectAffichage.x = WIDTH / 2 - rectAffichage.w / 2;
+    rectAffichage.y = 150;
 
     int couleurTexteClignotant = (SDL_GetTicks() / 6) % 255; // Passe de 0 à 255 en incrémentant toutes les 6 ms
     SDL_Color color = {couleurTexteClignotant, couleurTexteClignotant, couleurTexteClignotant, 0};
@@ -173,9 +177,15 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
 void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     char caractereActuel;
+    int nbLettres = 8;
 
     // Coordonnées initiales des éléments du menu
-    SDL_Rect caseLettre = {70, 210, 55, 50};
+    SDL_Rect caseLettre;
+    caseLettre.w = 55;
+    caseLettre.h = 50;
+    caseLettre.x = WIDTH / 2 - (caseLettre.w / 2) * nbLettres;
+    caseLettre.y = 210;
+
     SDL_Rect lettre = {caseLettre.x + 5, caseLettre.y - 5, 0, 0};
     SDL_Rect flecheHaute = {caseLettre.x + 5, caseLettre.y - 30, 40, 30};
     SDL_Rect flecheBasse = {caseLettre.x + 5, caseLettre.y + caseLettre.h, 40, 30};
@@ -225,7 +235,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     afficherTexte("NOUVEAU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
     SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
-    for(int i=0; i<8; i++)
+    for(int i=0; i<nbLettres; i++)
     {
         // Cases contenant les lettres du nom
         SDL_RenderDrawRect(affichage->renderer, &caseLettre);
@@ -421,10 +431,23 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
 
 void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
+    SDL_Rect contourSelection;
+    contourSelection.w = 300;
+    contourSelection.h = 50;
+    contourSelection.x = WIDTH / 2 - contourSelection.w / 2;
+    contourSelection.y = 130;
 
-    SDL_Rect contourSelection = {130, 130, 300, 50};
-    SDL_Rect flecheGauche = {80, 135, 40, 40};
-    SDL_Rect flecheDroite = {130 + 300 + 10, 135, 40, 40};
+    SDL_Rect flecheGauche;
+    flecheGauche.w = 40;
+    flecheGauche.h = 40;
+    flecheGauche.x = contourSelection.x - flecheGauche.w - 10;
+    flecheGauche.y = contourSelection.y + 5;
+
+    SDL_Rect flecheDroite;
+    flecheDroite.w = 40;
+    flecheDroite.h = 40;
+    flecheDroite.x = contourSelection.x + contourSelection.w + 10;
+    flecheDroite.y = contourSelection.y + 5;
 
     int dejaUnJoueurHumainSelectionne = 0;
 
@@ -483,15 +506,15 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
         SDL_RenderDrawRect(affichage->renderer, &contourSelection);
 
         if(i == 0)
-            afficherTexte(menu->profilSelectionne.nom, 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, contourSelection.x + 90, contourSelection.y + 5, affichage->renderer);
+            afficherTexte(menu->profilSelectionne.nom, 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, contourSelection.y + 5, affichage->renderer);
         else
         {
             if(menu->paramPartie[i] == 0)
-                afficherTexte("Ordinateur", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, contourSelection.x + 60, contourSelection.y + 5, affichage->renderer);
+                afficherTexte("Ordinateur", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, contourSelection.y + 5, affichage->renderer);
             else if(menu->paramPartie[i] == 1)
-                afficherTexte("Vide", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, contourSelection.x + 100, contourSelection.y + 5, affichage->renderer);
+                afficherTexte("Vide", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, contourSelection.y + 5, affichage->renderer);
             else if(menu->paramPartie[i] == 2)
-                afficherTexte("Humain", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, contourSelection.x + 100, contourSelection.y + 5, affichage->renderer);
+                afficherTexte("Humain", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, contourSelection.y + 5, affichage->renderer);
         }
 
         contourSelection.y += 80;
