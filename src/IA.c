@@ -320,7 +320,7 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
 
     // Copier le meilleur itinéraire trouvé dans le profil de l'IA
     if(numeroMeilleurItineraire != -1)
-        copierItineraire(itineraire[numeroMeilleurItineraire], jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi, longueurMeilleurItineraire);
+        copierItineraire(itineraire[numeroMeilleurItineraire], jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi);
     if(longueurMeilleurItineraire != -1)
         modifierCoordonnees(&jeu->listeDesJoueurs[indiceJoueur].itineraireSuivi[longueurMeilleurItineraire], -1, -1);
 }
@@ -422,12 +422,10 @@ int rechercherItineraire(int x, int y, Coordonnes itineraire[300])
     return resultat; // Renvoyer la position
 }
 
-void copierItineraire(Coordonnes itineraireSrc[300], Coordonnes itineraireDest[300], int longueurACopier)
+void copierItineraire(Coordonnes itineraireSrc[300], Coordonnes itineraireDest[300])
 {
-    for(int i=0; i<longueurACopier; i++)
+    for(int i=0; i<longueurItineraire(itineraireSrc); i++)
         copierCoordonnees(&itineraireSrc[i], &itineraireDest[i]);
-
-    modifierCoordonnees(&itineraireDest[longueurACopier], -1, -1);
 }
 
 void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itineraire[300])
