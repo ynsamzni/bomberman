@@ -316,7 +316,13 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
             while(itineraireDangereux(itineraire[numeroMeilleurItineraire], casesDangereuses));
             longueurMeilleurItineraire = longueurItineraire(itineraire[numeroMeilleurItineraire]);
         }
+
+        // Marquer l'IA comme étant en mode aléatoire
+        jeu->listeDesJoueurs[indiceJoueur].modeAleatoire = 1;
     }
+    else
+        // Ne plus marquer l'IA comme étant en mode aléatoire
+        jeu->listeDesJoueurs[indiceJoueur].modeAleatoire = 0;
 
     // Copier le meilleur itinéraire trouvé dans le profil de l'IA
     if(numeroMeilleurItineraire != -1)

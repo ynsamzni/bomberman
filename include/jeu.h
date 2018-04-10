@@ -41,6 +41,7 @@ typedef struct{
     Bombe bombe;
     Direction direction;
     int deplacement;
+    int modeAleatoire;
     Coordonnes itineraireSuivi[100];
 }Joueur;
 
