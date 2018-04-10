@@ -418,14 +418,16 @@ void copierItineraire(Coordonnes itineraireSrc[300], Coordonnes itineraireDest[3
 int rechercherDeplacementItineraire(int x, int y, Coordonnes itineraire[300])
 {
     int resultat = 0;
+    int i = 0;
 
-    for(int i=0; i<longueurItineraire(itineraire); i++)
+    while(i < longueurItineraire(itineraire) && resultat == 0)
     {
         if(itineraire[i].x == x && itineraire[i].y == y)
-            resultat = i + 1;
+            resultat = 1;
+        i++;
     }
 
-    return resultat; // Renvoyer la position
+    return resultat;
 }
 
 void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itineraire[300])
