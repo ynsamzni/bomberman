@@ -40,6 +40,9 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     surfaceTmp = IMG_Load("assets/img/bombe.png");
     (*structTextures).bombe = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
+    surfaceTmp = IMG_Load("assets/img/etincelle.gif");
+    (*structTextures).etincelle = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+
     surfaceTmp = IMG_Load("assets/img/explosion.png");
     (*structTextures).explosion = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 

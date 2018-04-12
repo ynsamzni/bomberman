@@ -82,14 +82,14 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
                 if(i == 0)
                 {
                     if(clavier->toucheBombeJ1)
-                        poserBombe(jeu, i);
+                        poserBombe(jeu, i, audio);
                     deplacerJoueurJ1(clavier, jeu, i);
                 }
                 // Si J2
                 else if(i == 1)
                 {
                     if(clavier->toucheBombeJ2)
-                        poserBombe(jeu, i);
+                        poserBombe(jeu, i, audio);
                     deplacerJoueurJ2(clavier, jeu, i);
                 }
             }
@@ -101,7 +101,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
                 if(!poseBombeDangereuse(i, jeu) // Si une bombe peut être posée avec possibilité de s'en échapper
                    && (ennemiProche(i, LONGUEUR_EXPLOSION_BOMBE, jeu) // Si ennemi proche
                    || (jeu->listeDesJoueurs[i].modeAleatoire && rand() % 15 == 5))) // Si effectue des actions de manière aléatoire
-                    poserBombe(jeu, i);
+                    poserBombe(jeu, i, audio);
             }
         }
 
@@ -110,8 +110,8 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
     }
 
     // Autres
-    tuerJoueur(jeu);
-    checkVictoire(jeu);
+    tuerJoueur(jeu, audio);
+    checkVictoire(jeu, audio);
 
     if(clavier->toucheArriere == 1)
         jeu->etat = EXTINCTION;
@@ -122,7 +122,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
 /*******************GESTION DE L'EXPLOSION DES BOMBES***********************************/
 /***************************************************************************************/
 
-void poserBombe(StructJeu *jeu, int indiceJoueur)
+void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 {
     int caseBombeX, caseBombeY;
 
@@ -132,6 +132,7 @@ void poserBombe(StructJeu *jeu, int indiceJoueur)
         // Déterminer la case sur laquelle va être posée la bombe
         caseBombeX = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
         caseBombeY = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
+
 
         if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 != 0 || jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 != 0)
         {
@@ -148,6 +149,7 @@ void poserBombe(StructJeu *jeu, int indiceJoueur)
 
         // Poser la bombe
         jeu->mapJeu[caseBombeX][caseBombeY] = 3;
+        lireUnSon(audio, SON_POSE_BOMBE);
 
         // Démarrer le timer d'explosion de la bombe
         jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = SDL_GetTicks();
@@ -167,6 +169,8 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
         int Y=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
 
         int hautDestructible=1, droiteDestructible=1, basDestructible=1, gaucheDestructible=1;
+
+        lireUnSon(audio, SON_EXPLOSION_BOMBE);
 
         for(int cmpt=0; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
         {
@@ -189,6 +193,7 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
                 jeu->mapJeu[X][Y+cmpt] = 4;
             if(gaucheDestructible == 1)
                 jeu->mapJeu[X-cmpt][Y] = 4;
+
         }
 
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
@@ -318,19 +323,20 @@ int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3
 
 
 
-void tuerJoueur(StructJeu *jeu)
+void tuerJoueur(StructJeu *jeu, StructAudio *audio)
 {
     for(int indiceJoueur = 0; indiceJoueur < jeu->nbrDeJoueurs; indiceJoueur++)
     {
-        if(contenuCoordonnees(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4)
+        if(contenuCoordonnees(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4 && jeu->listeDesJoueurs[indiceJoueur].enVie != 0 )
         {
             jeu->listeDesJoueurs[indiceJoueur].enVie = 0;
+            lireUnSon(audio, SON_MORT_PERSONNAGE);
         }
     }
 
 }
 
-void checkVictoire(StructJeu *jeu)
+void checkVictoire(StructJeu *jeu, StructAudio *audio)
 {
     int nbrIA = 0; //pour une raison qui m'échappe, la syntaxe int nbrIA, nbrHumains = 0; me renvoyait n'importe quoi comme valeur pour les variables
     int nbrHumains = 0;
@@ -346,6 +352,7 @@ void checkVictoire(StructJeu *jeu)
     if(nbrHumains == 0)
     {
         jeu->animations.defaite = 1;
+        lireUnSon(audio, SON_DEFAITE);
         for(int i = 0; i < jeu->nbrDeJoueurs; i++)
         {
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0) //2eme condition pour empecher de créer un joueur dans le fichier des comptes. Améliorations à venir
@@ -356,6 +363,7 @@ void checkVictoire(StructJeu *jeu)
     else if(nbrHumains == 1 && nbrIA == 0)
     {
         jeu->animations.victoire = 1;
+        lireUnSon(audio, SON_VICTOIRE);
         for(int i = 0; i < jeu->nbrDeJoueurs; i++)
         {
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0)

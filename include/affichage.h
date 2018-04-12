@@ -21,6 +21,7 @@ typedef struct{
     SDL_Texture *murIndestructible;
     SDL_Texture *murDestructible;
     SDL_Texture *bombe;
+    SDL_Texture *etincelle;
     SDL_Texture *explosion;
     SDL_Texture *victoire;
     SDL_Texture *defaite;

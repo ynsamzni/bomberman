@@ -93,6 +93,11 @@ void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavi
     // Copier les éléments du menu dans le renderer
     afficherTexte("* BOMBERMAN *", 50, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 60, affichage->renderer);
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.bombe, NULL, &rectAffichage);
+    rectAffichage.w = 60;
+    rectAffichage.h = 60;
+    rectAffichage.x = 297;
+    rectAffichage.y = 132;
+    SDL_RenderCopy(affichage->renderer, affichage->structTextures.etincelle, NULL, &rectAffichage);
     afficherTexte("ENTREE pour demarrer", 25, color, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 450, affichage->renderer);
 
     // Afficher le renderer

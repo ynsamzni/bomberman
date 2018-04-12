@@ -68,7 +68,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
 
 
 void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
-void poserBombe(StructJeu *jeu, int indiceJoueur);
+void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
 
 void afficherStructureJeu(StructJeu jeu);
 
@@ -77,8 +77,8 @@ int deplacementPossible(int x, int y, Direction direction, StructJeu *jeu);
 int contenuCoordonnees(StructJeu *jeu, int y, int x);
 int renvoitCaseMatrice(int coordonne);
 int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3, int probaVal3, int val4, int probaVal4);
-void tuerJoueur(StructJeu *jeu);
-void checkVictoire(StructJeu *jeu);
+void tuerJoueur(StructJeu *jeu, StructAudio *audio);
+void checkVictoire(StructJeu *jeu, StructAudio *audio);
 void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int victoireOuDefaite);
 
 
