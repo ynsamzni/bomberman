@@ -44,6 +44,7 @@
 		<Unit filename="include/clavier.h" />
 		<Unit filename="include/constantes.h" />
 		<Unit filename="include/jeu.h" />
+		<Unit filename="include/joueurHumain.h" />
 		<Unit filename="include/menu.h" />
 		<Unit filename="src/IA.c">
 			<Option compilerVar="CC" />
