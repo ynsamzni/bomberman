@@ -28,7 +28,7 @@ typedef struct
     int positionCurseurX;
     CompteJoueur profilSelectionne;
     int paramPartie[4];
-    char tabNomDuJoueur[8];
+    char tabNomDuJoueur[LONGUEUR_MAX_NOM_JOUEUR];
 
 } StructMenu;
 

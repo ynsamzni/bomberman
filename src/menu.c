@@ -8,6 +8,7 @@
 
 #include "../include/menu.h"
 
+
 void initMenu(StructMenu *menu)
 {
     menu->numeroFenetre = 0;
@@ -22,9 +23,8 @@ void initMenu(StructMenu *menu)
     for(int i = 2; i < 4; i++)
         menu->paramPartie[i] = 1;
 
-    for(int i =0; i <8; i++)
-        menu->tabNomDuJoueur[i] = 0;
-
+    menu->tabNomDuJoueur[0] = 'A';
+    menu->tabNomDuJoueur[1] = '\0';
 }
 
 
@@ -182,65 +182,76 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
 void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     char caractereActuel;
-    int nbLettres = 8;
+    SDL_Rect caseLettre, lettre, flecheHaute, flecheBasse;
 
-    // Coordonnées initiales des éléments du menu
-    SDL_Rect caseLettre;
-    caseLettre.w = 55;
-    caseLettre.h = 50;
-    caseLettre.x = WIDTH / 2 - (caseLettre.w / 2) * nbLettres;
-    caseLettre.y = 210;
+    // Si l'utilisateur appuie sur une touche : Effectuer l'action associée
+    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) && menu->positionCurseurX + 1 < LONGUEUR_MAX_NOM_JOUEUR)
+    {
+        // Si une nouvelle lettre doit être ajoutée
+        if(menu->positionCurseurX == strlen(menu->tabNomDuJoueur) - 1)
+        {
+            menu->tabNomDuJoueur[strlen(menu->tabNomDuJoueur)] = 'A';
+            menu->tabNomDuJoueur[strlen(menu->tabNomDuJoueur) + 1] = '\0';
+        }
 
-    SDL_Rect lettre = {caseLettre.x + 5, caseLettre.y - 5, 0, 0};
-    SDL_Rect flecheHaute = {caseLettre.x + 5, caseLettre.y - 30, 40, 30};
-    SDL_Rect flecheBasse = {caseLettre.x + 5, caseLettre.y + caseLettre.h, 40, 30};
-
-    // Si l'utilisateur se déplace dans le menu
-    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) && menu->positionCurseurX != 7 && menu->tabNomDuJoueur[menu->positionCurseurX] != 0){
         menu->positionCurseurX++;
         lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurX != 0){
+    else if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurX != 0)
+    {
         menu->positionCurseurX--;
         lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-
-    //Si l'utilisateur essaye de se déplacer alors que la case est vide
-    if(clavier->toucheHaut == 1 && menu->tabNomDuJoueur[menu->positionCurseurX] == 0)
-        menu->tabNomDuJoueur[menu->positionCurseurX] = 65;
-    if(clavier->toucheBas == 1 && menu->tabNomDuJoueur[menu->positionCurseurX] == 0)
-        menu->tabNomDuJoueur[menu->positionCurseurX] = 66;
-
-    //si l'utilisateur se déplace dans une lettre
-    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'A'){
-        menu->tabNomDuJoueur[menu->positionCurseurX]--; //décrémente le caractere ASCII de 1
+    else if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'A')
+    {
+        menu->tabNomDuJoueur[menu->positionCurseurX]--; // Décrémente le caractere ASCII de 1
         lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'Z'){
+    else if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'Z')
+    {
         menu->tabNomDuJoueur[menu->positionCurseurX]++;
         lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-
-    //gestion de la suppression d'une lettre
-    if(cycleToucheClavierRealise(&clavier->toucheSupprimer, clavier) == 1 && menu->tabNomDuJoueur[menu->positionCurseurX + 1] == 0 && menu->positionCurseurX != -1){
-        menu->tabNomDuJoueur[menu->positionCurseurX] = 0;
-        if(menu->positionCurseurX != 0) //empeche de sortir de la zone de saisie en supprimant
+    else if(cycleToucheClavierRealise(&clavier->toucheSupprimer, clavier) && menu->positionCurseurX != 0)
+    {
+        // Si la dernière lettre est sélectionnée
+        if(menu->positionCurseurX == strlen(menu->tabNomDuJoueur) - 1)
+        {
+            menu->tabNomDuJoueur[menu->positionCurseurX] = '\0';
             menu->positionCurseurX--;
+        }
     }
 
+    // Déterminer les coordonnées initiales des éléments du menu
+    caseLettre.w = 55;
+    flecheHaute.w = 40;
+    flecheBasse.w = 40;
 
+    caseLettre.h = 50;
+    flecheHaute.h = 30;
+    flecheBasse.h = 30;
 
+    caseLettre.x = WIDTH / 2 - (caseLettre.w / 2) * strlen(menu->tabNomDuJoueur);
+    lettre.x = caseLettre.x + 5;
+    flecheHaute.x = caseLettre.x + 5;
+    flecheBasse.x = caseLettre.x + 5;
 
+    caseLettre.y = 210;
+    lettre.y = caseLettre.y - 5;
+    flecheHaute.y = caseLettre.y - 30;
+    flecheBasse.y = caseLettre.y + caseLettre.h;
 
     // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
     SDL_RenderClear(affichage->renderer);
 
+    // Définir la couleur utilisée pour les opérations de dessin
+    SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
+
     // Copier les éléments du menu dans le renderer
     afficherTexte("NOUVEAU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
-    SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
-    for(int i=0; i<nbLettres; i++)
+    for(int i=0; i<strlen(menu->tabNomDuJoueur); i++)
     {
         // Cases contenant les lettres du nom
         SDL_RenderDrawRect(affichage->renderer, &caseLettre);
@@ -265,28 +276,29 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
         flecheBasse.x += caseLettre.w;
     }
 
+    if(menu->positionCurseurX == strlen(menu->tabNomDuJoueur) - 1)
+    {
+        if(strlen(menu->tabNomDuJoueur) != 1)
+            afficherTexte("RETOUR ARRIERE : Supprimer la derniere lettre", 18, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 340, affichage->renderer);
+        if(strlen(menu->tabNomDuJoueur) != LONGUEUR_MAX_NOM_JOUEUR)
+            afficherTexte("DROITE : Ajouter une lettre", 18, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 360, affichage->renderer);
+    }
 
-    afficherTexte("ENTREE pour continuer", 24, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 380, affichage->renderer);
+    afficherTexte("ENTREE pour continuer", 24, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 430, affichage->renderer);
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
-
 
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
         enregistrerNouveauCompte(menu->tabNomDuJoueur);
         menu->numeroFenetre = 1;
-
     }
     else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
-    {
         menu->numeroFenetre = 1;
-    }
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = -1;
-
-
 }
 
 /***** MENU 3 : MENU PRINCIPAL ************************************/
