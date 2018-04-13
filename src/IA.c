@@ -624,76 +624,95 @@ int itineraireDangereux(Coordonnes itineraire[300], Coordonnes casesDangereuses[
 
 int ennemiProche(int indiceJoueur, int distanceMax, StructJeu *jeu)
 {
-    int x, y;
-    int directionActuelleTestee;
-    int ennemiPresentDansAxe = 0, poserBombe = 0;
-    Direction direction = HAUT;
+    int resultat = 0;
 
-    int distanceEnnemi = -1;
+    int xJoueur = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
+    int yJoueur = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
 
-    // Tester les 4 directions
-    for(int i=0; i<4; i++)
+    int xEnnemi;
+    int yEnnemi;
+
+    int xSimulee;
+    int ySimulee;
+
+    int distance;
+    Direction direction;
+
+    int indiceEnnemi = 0;
+    while(indiceEnnemi < jeu->nbrDeJoueurs && resultat == 0)
     {
-        x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
-        y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
-        directionActuelleTestee = 0;
-
-        // Tester l'ensemble des déplacements possibles dans la direction en cours
-        while(!directionActuelleTestee)
+        // S'il s'agit de l'indice d'un ennemi
+        if(indiceEnnemi != indiceJoueur)
         {
-            for(int j=0; j<jeu->nbrDeJoueurs; j++)
-            {
-                if(j != indiceJoueur)
-                {
-                    if(jeu->listeDesJoueurs[j].coordonnes.x == x && jeu->listeDesJoueurs[j].coordonnes.y == y)
-                    {
-                        ennemiPresentDansAxe = 1;
+            xEnnemi = jeu->listeDesJoueurs[indiceEnnemi].coordonnes.x;
+            yEnnemi = jeu->listeDesJoueurs[indiceEnnemi].coordonnes.y;
 
-                        // Déterminer la distance du joueur
-                        if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x == x)
+            // Si un ennemi se trouve sur le même axe
+            if(xEnnemi == xJoueur || yEnnemi == yJoueur)
+            {
+                // Déterminer la distance qui sépare le joueur de l'ennemi
+                if(xEnnemi == xJoueur)
+                {
+                    if(yEnnemi > yJoueur)
+                    {
+                        distance = renvoitCaseMatrice(yEnnemi) - renvoitCaseMatrice(yJoueur);
+                        direction = BAS;
+                    }
+                    else
+                    {
+                        distance = renvoitCaseMatrice(yJoueur) - renvoitCaseMatrice(yEnnemi);
+                        direction = HAUT;
+                    }
+                }
+                else if(yEnnemi == yJoueur)
+                {
+                    if(xEnnemi > xJoueur)
+                    {
+                        distance = renvoitCaseMatrice(xEnnemi) - renvoitCaseMatrice(xJoueur);
+                        direction = DROITE;
+                    }
+                    else
+                    {
+                        distance = renvoitCaseMatrice(xJoueur) - renvoitCaseMatrice(xEnnemi);
+                        direction = GAUCHE;
+                    }
+                }
+
+                // Si l'ennemi est proche
+                if(distance <= distanceMax)
+                {
+                    // Déterminer si aucun obstacle ne se trouve entre le joueur et l'ennemi
+                    xSimulee = xJoueur;
+                    ySimulee = yJoueur;
+
+                    while(contenuCoordonnees(jeu, xSimulee, ySimulee) == 0 && resultat == 0)
+                    {
+                        if(xSimulee == xEnnemi && ySimulee == yEnnemi)
+                            resultat = 1;
+
+                        switch(direction)
                         {
-                            if(y > jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)
-                                distanceEnnemi = (y - jeu->listeDesJoueurs[indiceJoueur].coordonnes.y) / 30;
-                            else
-                                distanceEnnemi = (jeu->listeDesJoueurs[indiceJoueur].coordonnes.y - y) / 30;
-                        }
-                        else
-                        {
-                            if(x > jeu->listeDesJoueurs[indiceJoueur].coordonnes.x)
-                                distanceEnnemi = (x - jeu->listeDesJoueurs[indiceJoueur].coordonnes.x) / 30;
-                            else
-                                distanceEnnemi = (jeu->listeDesJoueurs[indiceJoueur].coordonnes.x - x) / 30;
+                            case HAUT:
+                                ySimulee -= VITESSE_DES_JOUEURS;
+                                break;
+                            case BAS:
+                                ySimulee += VITESSE_DES_JOUEURS;
+                                break;
+                            case DROITE:
+                                xSimulee += VITESSE_DES_JOUEURS;
+                                break;
+                            case GAUCHE:
+                                xSimulee -= VITESSE_DES_JOUEURS;
+                                break;
                         }
                     }
                 }
             }
-            if(deplacementPossible(x, y, direction + i, jeu))
-            {
-                switch(direction + i)
-                {
-                    case HAUT:
-                        y -= VITESSE_DES_JOUEURS;
-                        break;
-                    case DROITE:
-                        x += VITESSE_DES_JOUEURS;
-                        break;
-                    case BAS:
-                        y += VITESSE_DES_JOUEURS;
-                        break;
-                    case GAUCHE:
-                        x -= VITESSE_DES_JOUEURS;
-                        break;
-                }
-            }
-            else
-                directionActuelleTestee = 1;
         }
+        indiceEnnemi++;
     }
 
-    if(ennemiPresentDansAxe && distanceEnnemi <= distanceMax)
-        poserBombe = 1;
-
-    return poserBombe;
+    return resultat;
 }
 
 
