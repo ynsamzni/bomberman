@@ -136,15 +136,10 @@ void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 
         if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 != 0 || jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 != 0)
         {
-            switch(jeu->listeDesJoueurs[indiceJoueur].direction)
-            {
-                case DROITE:
-                    caseBombeX++;
-                    break;
-                case BAS:
-                    caseBombeY++;
-                    break;
-            }
+            if(jeu->listeDesJoueurs[indiceJoueur].direction == DROITE)
+                caseBombeX++;
+            else if(jeu->listeDesJoueurs[indiceJoueur].direction == BAS)
+                caseBombeY++;
         }
 
         // Poser la bombe
