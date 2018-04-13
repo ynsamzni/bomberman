@@ -18,7 +18,7 @@
 #define NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES (LONGUEUR_EXPLOSION_BOMBE * 4 + 1) * 4
 
 #define CHEMIN_D_ACCES_FICHIER_NIVEAU "assets/maps/map1.dat"
-#define CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS "assets/datas/comptes_joueurs.dat"
+#define CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS "saves/comptes_joueurs.dat"
 #define CHEMIN_POLICE_ECRITURE_MONTSERRAT "assets/fonts/montserrat_regular.ttf"
 #define CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD "assets/fonts/montserrat_bold.ttf"
 #define CHEMIN_POLICE_ECRITURE_VERDANA "assets/fonts/verdana.ttf"
