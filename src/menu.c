@@ -8,6 +8,11 @@
 
 #include "../include/menu.h"
 
+/** Lors du paramétrage de la partie -> fenetre 6
+                                     -> declenche le case 6 dans gestion menu -> déclenche jeu->etat = LANCEMENT
+                                     -> dans le main on ne va plus dans le menu alors
+    */
+
 
 void initMenu(StructMenu *menu)
 {
@@ -33,6 +38,8 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
     if(menu->numeroFenetre != menu->lastNumeroFenetre){ //réinitialise les curseurs lors du cght de fenetre
         menu->positionCurseurY = 0;
         menu->positionCurseurX = 0;
+        if(menu->numeroFenetre == 3) //Cas spécifique du menu principal
+            menu->positionCurseurY = 1;
         menu->lastNumeroFenetre = menu->numeroFenetre;
     }
 
@@ -65,12 +72,14 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
     case 6:
         jeu->etat = LANCEMENT;
         break;
+    case 7:
+        //Menu pause, un peu particulier car afficher par dessus le jeu
+        afficherMenuPause(affichage, clavier, jeu, menu, audio);
+        break;
     case -1:
         clavier->toucheQuitter = 1;
         break;
     }
-
-
 }
 
 /******************** MENU 0 : MENU ACCUEIL **********************/
@@ -560,13 +569,79 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
     {
         menu->numeroFenetre = 3;
-
     }
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = -1;
 
 
 }
+
+/******************** MENU 7 : MENU PAUSE **********************/
+
+void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
+{
+    SDL_Rect rectAffichageFond;
+    rectAffichageFond.w = 400;
+    rectAffichageFond.h = 400;
+    rectAffichageFond.x = WIDTH / 2 - rectAffichageFond.w / 2;
+    rectAffichageFond.y = 100;
+
+    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
+    SDL_RenderFillRect(affichage->renderer, &rectAffichageFond);
+
+    SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
+    SDL_RenderDrawRect(affichage->renderer, &rectAffichageFond);
+
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
+        menu->positionCurseurY--;
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
+     if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 1){
+        menu->positionCurseurY++;
+        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+    }
+
+
+    afficherTexte("* PAUSE *", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 150, affichage->renderer);
+
+    if(menu->positionCurseurY == 0)
+        afficherTexte("Redemarrer la partie", 25, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 300, affichage->renderer);
+    else
+        afficherTexte("Redemarrer la partie", 25, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 300, affichage->renderer);
+
+    if(menu->positionCurseurY == 1)
+        afficherTexte("Quitter la partie", 25, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 350, affichage->renderer);
+    else
+        afficherTexte("Quitter la partie", 25, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 350, affichage->renderer);
+
+
+
+
+    // Afficher le renderer
+    SDL_RenderPresent(affichage->renderer);
+
+
+    if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
+    {
+        switch(menu->positionCurseurY)
+        {
+        case 0:
+            jeu->etat = LANCEMENT; //Le case 6 dans le menu correspond à jeu->LANCEMENT
+            break;
+        case 1:
+            jeu->etat = EXTINCTION;
+            break;
+        }
+    }
+    else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
+    {
+        jeu->etat = ON;
+    }
+
+
+}
+
+
 
 
 

@@ -113,8 +113,8 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
     tuerJoueur(jeu, audio);
     checkVictoire(jeu, audio);
 
-    if(clavier->toucheArriere == 1)
-        jeu->etat = EXTINCTION;
+    if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
+        jeu->etat = PAUSE;
 }
 
 

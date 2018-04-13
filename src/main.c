@@ -66,13 +66,6 @@ int main(int argc, char *argv[])
     StructTouchesClavier clavier;
     StructAudio audio;
 
-    //TEST
-    SonSelectionne s = MUSIQUE;
-    //TEST
-
-
-    int check = 0;
-
 
     srand(time(NULL));
 
@@ -89,7 +82,7 @@ int main(int argc, char *argv[])
 
         recupererTouchesClavier(&clavier);
 
-        if(jeu.etat == OFF)
+        if(jeu.etat == OFF || jeu.etat == PAUSE)
             gestionDuMenu(&menu, &jeu, &clavier, &affichage, &audio);
 
         if(jeu.etat == LANCEMENT)
@@ -108,6 +101,12 @@ int main(int argc, char *argv[])
             afficherStructureJeu(jeu);
             //***********************************
         }
+
+          if(jeu.etat == PAUSE)
+        {
+            menu.numeroFenetre = 7;
+        }
+
 
         if(jeu.etat == EXTINCTION){
             jeu.etat = OFF;

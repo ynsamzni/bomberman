@@ -47,6 +47,8 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
 void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu);
 void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
 
+void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
+
 void enregistrerNouveauCompte(char nomCompte[]);
 int chargerComptes(CompteJoueur *tabComptes);
 void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu);
