@@ -145,7 +145,7 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     // Copier les éléments du menu dans le renderer
     afficherTexte("SELECTION DU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
-    if(chargerComptes(&tabComptes) != -1) //ON VERIFIE QUE LE FICHIER DES PROFILS NEST PAS VIDE
+    if(chargerComptes(tabComptes) != -1) //ON VERIFIE QUE LE FICHIER DES PROFILS NEST PAS VIDE
     {
         for(int i=0; i<nbTotalProfils; i++)
         {
