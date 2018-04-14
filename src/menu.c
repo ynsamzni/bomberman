@@ -38,8 +38,14 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
     if(menu->numeroFenetre != menu->lastNumeroFenetre){ //réinitialise les curseurs lors du cght de fenetre
         menu->positionCurseurY = 0;
         menu->positionCurseurX = 0;
+
         if(menu->numeroFenetre == 3) //Cas spécifique du menu principal
             menu->positionCurseurY = 1;
+        if(menu->numeroFenetre == 2){
+            menu->tabNomDuJoueur[0] = 'A';
+            menu->tabNomDuJoueur[1] = '\0';
+        } //Cas spécifique du menu de création de profil
+
         menu->lastNumeroFenetre = menu->numeroFenetre;
     }
 
