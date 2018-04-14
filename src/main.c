@@ -12,50 +12,6 @@
 #include "../include/audio.h"
 
 
-/****************Structure du jeu**********************
-
-StructJeu
-=> map
-=> coordonnées du joueur1
-=> coordonnées du joueur2, joueur3, joueur4
-=> coordonnées des bombes (tableau ?)
-
-StructAffichage
-=> la fenetre
-=> le renderer
-=> les textures
-
-StructAudio
-=> les différents sons utilisés
-
-StructTouchesClaviers
-=> touches pressées par le joueur
-
-
-InitAffichage(StructAffichage);    => initialise l'affichage et charge les textures
-InitClavier(StructTouchesClavier) => initialise les touches
-InitAudio(StructAudio); => initialise l'audio en chargeant les sons dans la structure
-InitJeu(StructJeu);          => initialise les variables du jeu, notamment en fonction du nombre de joueur, etc.. et charge la map
-
-
-do{
-
-AfficherJeu(StructAffichage, StructJeu);  => Dessinne le jeu
-JouerAudio(StructJeu, StructAudio); => Assure la gestion de l'audio
-RecupererTouchesClavier(StructTouchesClavier);    => Récupère les positions
-CalculerJeu(StructTouchesClavier, StructJeu );  => Calcul les positions des joueurs, etc..
-
-
-}while
-
-
-
-***************************************************/
-
-void fonctionTestMenu(StructJeu *jeu);
-
-
-
 
 int main(int argc, char *argv[])
 {

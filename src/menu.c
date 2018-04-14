@@ -171,6 +171,7 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
+        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
         if(menu->positionCurseurY != nbTotalProfils && nbTotalProfils != -1)
         {
 
@@ -301,6 +302,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
+        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
         enregistrerNouveauCompte(menu->tabNomDuJoueur);
         menu->numeroFenetre = 1;
     }
@@ -357,6 +359,7 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
+        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
         switch(menu->positionCurseurY)
         {
         case 0:
@@ -563,6 +566,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
+        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
         initLeJeuUneDeuxiemeFois(jeu, menu);
         menu->numeroFenetre = 6;
     }
@@ -623,6 +627,7 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
 
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
+        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
         switch(menu->positionCurseurY)
         {
         case 0:
@@ -666,14 +671,10 @@ void enregistrerNouveauCompte(char nomCompte[])
 
     fic = fopen (CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "a");
     if(fic == NULL)
-    {
         printf("[ECRITURE] Impossible d'accéder à la liste des joueurs\n");
-    }
     else
-    {
         fwrite(&c, sizeof(c), 1, fic);
-        printf("Ecriture réussit !");
-    }
+
     fclose(fic);
 }
 
@@ -690,7 +691,6 @@ int chargerComptes(CompteJoueur *tabComptes)
     if(fic == NULL)
     {
         printf("Impossible d'accéder à la liste des joueurs\n");
-        // fclose(fic); crée une erreur lorsque le fichier n'existe pas sinon
         return -1;
     }
     else
@@ -701,8 +701,6 @@ int chargerComptes(CompteJoueur *tabComptes)
             tabComptes[nbrDeComptes] = compte;
             nbrDeComptes++;
         }
-
-        printf("Lecture réussit ! Il y a  %d profils enregistrés !\n", nbrDeComptes);
         fclose(fic);
         return nbrDeComptes;
     }
