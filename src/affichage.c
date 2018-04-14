@@ -150,18 +150,18 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
             // Déterminer la couleur du sprite
             switch(i)
             {
-                case 0:
-                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 255, 255);
-                    break;
-                case 1:
-                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 0,100,255); //BLEU
-                    break;
-                case 2:
-                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 0, 255, 100); //VERT
-                    break;
-                case 3:
-                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 70, 0); //ROUGE
-                    break;
+            case 0:
+                SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 255, 255);
+                break;
+            case 1:
+                SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 0,100,255); //BLEU
+                break;
+            case 2:
+                SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 0, 255, 100); //VERT
+                break;
+            case 3:
+                SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 70, 0); //ROUGE
+                break;
             }
 
             // Déterminer la case sur laquelle se trouve le joueur
@@ -180,27 +180,25 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
     if(jeu->animations.defaite == 1)
         animationDefaite(affichage);
 
+
     // Actualiser l'affichage
     SDL_RenderPresent(affichage->renderer);
+
 }
 
 
 
-//Permet d'afficher le fillon de la victoire
+
 void animationVictoire(StructAffichage *affichage)
 {
-    SDL_Rect rectAffichage = {0, 0, 600, 600}; // Case utilisée pour remplir la map
-    SDL_RenderCopy(affichage->renderer, affichage->structTextures.victoire, NULL, &rectAffichage);
-    SDL_RenderPresent(affichage->renderer);
+    afficherTexte("VICTOIRE !", 80, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
 }
 
 
-//Permet d'afficher le loser de la défaite
+
 void animationDefaite(StructAffichage *affichage)
 {
-    SDL_Rect rectAffichage = {0, 0, 600, 600}; // Case utilisée pour remplir la map
-    SDL_RenderCopy(affichage->renderer, affichage->structTextures.defaite, NULL, &rectAffichage);
-    SDL_RenderPresent(affichage->renderer);
+    afficherTexte("DEFAITE !", 80, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
 }
 
 

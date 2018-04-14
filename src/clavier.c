@@ -43,130 +43,130 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
         {
             switch(event.key.keysym.sym)
             {
-                case SDLK_UP:
-                    clavier->toucheHautJ1 = 1;
-                    clavier->toucheHaut = 1;
-                    break;
+            case SDLK_UP:
+                clavier->toucheHautJ1 = 1;
+                clavier->toucheHaut = 1;
+                break;
 
-                case SDLK_DOWN:
-                    clavier->toucheBasJ1 = 1;
-                    clavier->toucheBas = 1;
-                    break;
+            case SDLK_DOWN:
+                clavier->toucheBasJ1 = 1;
+                clavier->toucheBas = 1;
+                break;
 
-                case SDLK_RIGHT:
-                    clavier->toucheDroiteJ1 = 1;
-                    clavier->toucheDroite = 1;
-                    break;
+            case SDLK_RIGHT:
+                clavier->toucheDroiteJ1 = 1;
+                clavier->toucheDroite = 1;
+                break;
 
-                case SDLK_LEFT:
-                    clavier->toucheGaucheJ1 = 1;
-                    clavier->toucheGauche = 1;
-                    break;
+            case SDLK_LEFT:
+                clavier->toucheGaucheJ1 = 1;
+                clavier->toucheGauche = 1;
+                break;
 
-                case SDLK_SPACE:
-                    clavier->toucheBombeJ1 = 1;
-                    break;
+            case SDLK_SPACE:
+                clavier->toucheBombeJ1 = 1;
+                break;
 
-                case SDLK_z:
-                    clavier->toucheHautJ2 = 1;
-                    break;
+            case SDLK_z:
+                clavier->toucheHautJ2 = 1;
+                break;
 
-                case SDLK_s:
-                    clavier->toucheBasJ2 = 1;
-                    break;
+            case SDLK_s:
+                clavier->toucheBasJ2 = 1;
+                break;
 
-                case SDLK_d:
-                    clavier->toucheDroiteJ2= 1;
-                    break;
+            case SDLK_d:
+                clavier->toucheDroiteJ2= 1;
+                break;
 
-                case SDLK_q:
-                    clavier->toucheGaucheJ2 = 1;
-                    break;
+            case SDLK_q:
+                clavier->toucheGaucheJ2 = 1;
+                break;
 
-                case SDLK_LCTRL:
-                    clavier->toucheBombeJ2 = 1;
-                    break;
+            case SDLK_LCTRL:
+                clavier->toucheBombeJ2 = 1;
+                break;
 
-                case SDLK_RETURN:
-                    clavier->toucheAction = 1;
-                    break;
+            case SDLK_RETURN:
+                clavier->toucheAction = 1;
+                break;
 
-                 case SDLK_BACKSPACE:
-                    clavier->toucheSupprimer  = 1;
-                    break;
+            case SDLK_BACKSPACE:
+                clavier->toucheSupprimer  = 1;
+                break;
 
-                case SDLK_ESCAPE:
-                    clavier->toucheArriere = 1;
-                    break;
+            case SDLK_ESCAPE:
+                clavier->toucheArriere = 1;
+                break;
 
-                case SDLK_p:
-                    clavier->toucheQuitter = 1;
-                    break;
+            case SDLK_p:
+                clavier->toucheQuitter = 1;
+                break;
             }
         }
         if(event.type == SDL_KEYUP)
         {
             switch(event.key.keysym.sym)
             {
-                case SDLK_UP:
-                    clavier->toucheHautJ1 = 0;
-                    clavier->toucheHaut = 0;
-                    break;
+            case SDLK_UP:
+                clavier->toucheHautJ1 = 0;
+                clavier->toucheHaut = 0;
+                break;
 
-                case SDLK_DOWN:
-                    clavier->toucheBasJ1 = 0;
-                    clavier->toucheBas = 0;
-                    break;
+            case SDLK_DOWN:
+                clavier->toucheBasJ1 = 0;
+                clavier->toucheBas = 0;
+                break;
 
-                case SDLK_RIGHT:
-                    clavier->toucheDroiteJ1 = 0;
-                    clavier->toucheDroite = 0;
-                    break;
+            case SDLK_RIGHT:
+                clavier->toucheDroiteJ1 = 0;
+                clavier->toucheDroite = 0;
+                break;
 
-                case SDLK_LEFT:
-                    clavier->toucheGaucheJ1 = 0;
-                    clavier->toucheGauche = 0;
-                    break;
+            case SDLK_LEFT:
+                clavier->toucheGaucheJ1 = 0;
+                clavier->toucheGauche = 0;
+                break;
 
-                case SDLK_SPACE:
-                    clavier->toucheBombeJ1 = 0;
-                    break;
+            case SDLK_SPACE:
+                clavier->toucheBombeJ1 = 0;
+                break;
 
-                case SDLK_z:
-                    clavier->toucheHautJ2 = 0;
-                    break;
+            case SDLK_z:
+                clavier->toucheHautJ2 = 0;
+                break;
 
-                case SDLK_s:
-                    clavier->toucheBasJ2 = 0;
-                    break;
+            case SDLK_s:
+                clavier->toucheBasJ2 = 0;
+                break;
 
-                case SDLK_d:
-                    clavier->toucheDroiteJ2 = 0;
-                    break;
+            case SDLK_d:
+                clavier->toucheDroiteJ2 = 0;
+                break;
 
-                case SDLK_q:
-                    clavier->toucheGaucheJ2 = 0;
-                    break;
+            case SDLK_q:
+                clavier->toucheGaucheJ2 = 0;
+                break;
 
-                case SDLK_LCTRL:
-                    clavier->toucheBombeJ2 = 0;
-                    break;
+            case SDLK_LCTRL:
+                clavier->toucheBombeJ2 = 0;
+                break;
 
-                case SDLK_RETURN:
-                    clavier->toucheAction = 0;
-                    break;
+            case SDLK_RETURN:
+                clavier->toucheAction = 0;
+                break;
 
-                 case SDLK_BACKSPACE:
-                    clavier->toucheSupprimer  = 0;
-                    break;
+            case SDLK_BACKSPACE:
+                clavier->toucheSupprimer  = 0;
+                break;
 
-                case SDLK_ESCAPE:
-                    clavier->toucheArriere = 0;
-                    break;
+            case SDLK_ESCAPE:
+                clavier->toucheArriere = 0;
+                break;
 
-                case SDLK_p:
-                    clavier->toucheQuitter = 0;
-                    break;
+            case SDLK_p:
+                clavier->toucheQuitter = 0;
+                break;
             }
         }
     }

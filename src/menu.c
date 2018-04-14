@@ -616,14 +616,14 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
     afficherTexte("* PAUSE *", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 150, affichage->renderer);
 
     if(menu->positionCurseurY == 0)
-        afficherTexte("Redemarrer la partie", 25, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 300, affichage->renderer);
+        afficherTexte("Redemarrer la partie", 25, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 275, affichage->renderer);
     else
-        afficherTexte("Redemarrer la partie", 25, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 300, affichage->renderer);
+        afficherTexte("Redemarrer la partie", 25, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 275, affichage->renderer);
 
     if(menu->positionCurseurY == 1)
-        afficherTexte("Quitter la partie", 25, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 350, affichage->renderer);
+        afficherTexte("Quitter la partie", 25, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 325, affichage->renderer);
     else
-        afficherTexte("Quitter la partie", 25, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 350, affichage->renderer);
+        afficherTexte("Quitter la partie", 25, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 325, affichage->renderer);
 
 
 

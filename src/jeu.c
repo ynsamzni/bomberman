@@ -70,6 +70,11 @@ void initJeu(StructJeu *jeu)
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio)
 {
+
+     // Autres
+    tuerJoueur(jeu, audio);
+    checkVictoire(jeu, audio);
+
     // Déterminer si des joueurs ont des actions en attente d'exécution
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
@@ -109,9 +114,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
         exploserBombe(jeu, i, audio);
     }
 
-    // Autres
-    tuerJoueur(jeu, audio);
-    checkVictoire(jeu, audio);
+
 
     if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
         jeu->etat = PAUSE;
