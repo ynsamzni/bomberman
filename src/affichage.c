@@ -154,13 +154,13 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
                     SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 255, 255);
                     break;
                 case 1:
-                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 160, 255, 255);
+                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 0,100,255); //BLEU
                     break;
                 case 2:
-                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 160, 255);
+                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 0, 255, 100); //VERT
                     break;
                 case 3:
-                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 255, 160);
+                    SDL_SetTextureColorMod(affichage->structTextures.feuilleSprites, 255, 70, 0); //ROUGE
                     break;
             }
 

@@ -246,6 +246,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
         {
             menu->tabNomDuJoueur[menu->positionCurseurX] = '\0';
             menu->positionCurseurX--;
+            lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
         }
     }
 

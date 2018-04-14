@@ -83,7 +83,7 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
                     clavier->toucheGaucheJ2 = 1;
                     break;
 
-                case SDLK_v:
+                case SDLK_LCTRL:
                     clavier->toucheBombeJ2 = 1;
                     break;
 
@@ -148,7 +148,7 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
                     clavier->toucheGaucheJ2 = 0;
                     break;
 
-                case SDLK_v:
+                case SDLK_LCTRL:
                     clavier->toucheBombeJ2 = 0;
                     break;
 
