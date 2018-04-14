@@ -137,39 +137,4 @@ int main(int argc, char *argv[])
 
 
 
-void fonctionTestMenu(StructJeu *jeu)  //Fonction permettant de tester les différents paramètres de jeu pouvant être sélectionnés par le joueur dans le menu
-{
-    //!!! Cette fonction décide aussi quels joueurs sont humains et quels joueurs sont des IA
-
-    int nbrJoueursHumains;
-    int nbrJoueursIA;
-    printf("*********MENU BOMBERMAN*********\n\n");
-    printf("nbr de joueurs humains : ");
-    scanf("%d", &nbrJoueursHumains);
-    printf("nbr de joueurs IA : ");
-    scanf("%d", &nbrJoueursIA);
-    printf("\n");
-
-    for(int i = 0; i < nbrJoueursHumains; i++)
-    {
-        printf("***Saisie J%d***\n", i+1);
-        jeu->listeDesJoueurs[i].humainOuIA = 0;
-        printf("Nom : ");
-        __fpurge(stdin);
-        fgets(jeu->listeDesJoueurs[i].compte.nom, 25, stdin);
-        printf("nbr de victoire : ");
-        scanf("%d", &jeu->listeDesJoueurs[i].compte.nbrVictoires);
-        printf("nbr défaites : ");
-        scanf("%d", &jeu->listeDesJoueurs[i].compte.nbrDefaites);
-        printf("\n");
-    }
-    for(int i = nbrJoueursHumains; i < nbrJoueursHumains + nbrJoueursIA; i++)
-        jeu->listeDesJoueurs[i].humainOuIA = 1;
-
-    jeu->nbrDeJoueurs = nbrJoueursHumains + nbrJoueursIA;
-
-
-
-
-}
 

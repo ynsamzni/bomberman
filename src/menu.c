@@ -629,7 +629,9 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
             jeu->etat = LANCEMENT; //Le case 6 dans le menu correspond à jeu->LANCEMENT
             break;
         case 1:
-            jeu->etat = EXTINCTION;
+            jeu->etat = OFF;
+            initMenu(menu);
+            menu->numeroFenetre = 3;
             break;
         }
     }
