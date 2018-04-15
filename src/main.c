@@ -63,9 +63,11 @@ int main(int argc, char *argv[])
         }
 
 
-        if(jeu.etat == EXTINCTION){
-
-            while(cycleToucheClavierRealise(&clavier.toucheAction, &clavier) != 1){ //Permet de figer le jeu sur la derniere action (celle ayant tuée un joueur)
+        if(jeu.etat == EXTINCTION)
+        {
+            // Figer le jeu sur la derniere action en fin de partie
+            while(cycleToucheClavierRealise(&clavier.toucheAction, &clavier) != 1 && !clavier.toucheQuitter)
+            {
                 recupererEtatTouchesClavier(&clavier);
             }
 
