@@ -4,94 +4,97 @@
 #include "../include/joueurHumain.h"
 
 
-void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur) //Gère le déplacement du J1
+void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur)
 {
-    int x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
-    int y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
+    int x, y;
 
-    if(clavier->toucheHautJ1 == 1)
+    // Si le joueur est en cours de déplacement
+    if(clavier->toucheHautJ1 || clavier->toucheBasJ1 || clavier->toucheGaucheJ1 || clavier->toucheDroiteJ1)
     {
-        jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-        printf("Appui Haut\n");
-        if(deplacementPossible(x, y, HAUT, jeu))
-            y = y - VITESSE_DES_JOUEURS;
-    }
+        x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
+        y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
 
-    if(clavier->toucheBasJ1 == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-        printf("Appui Bas\n");
-        if(deplacementPossible(x, y, BAS, jeu))
-            y = y + VITESSE_DES_JOUEURS;
-    }
+        if(clavier->toucheHautJ1)
+        {
+            printf("Appui Haut J1\n");
+            jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
+            if(deplacementPossible(x, y, HAUT, jeu))
+                y -= VITESSE_DES_JOUEURS;
+        }
+        if(clavier->toucheBasJ1)
+        {
+            printf("Appui Bas J1\n");
+            jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
+            if(deplacementPossible(x, y, BAS, jeu))
+                y += VITESSE_DES_JOUEURS;
+        }
+        if(clavier->toucheDroiteJ1)
+        {
+            printf("Appui Droite J1\n");
+            jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
+            if(deplacementPossible(x, y, DROITE, jeu))
+                x += VITESSE_DES_JOUEURS;
+        }
+        if(clavier->toucheGaucheJ1)
+        {
+            printf("Appui Gauche J1\n");
+            jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
+            if(deplacementPossible(x, y, GAUCHE, jeu))
+                x -= VITESSE_DES_JOUEURS;
+        }
 
-    if(clavier->toucheDroiteJ1 == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-        printf("Appui Droite\n");
-        if(deplacementPossible(x, y, DROITE, jeu))
-            x = x + VITESSE_DES_JOUEURS;
-    }
-
-    if(clavier->toucheGaucheJ1 == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-        printf("Appui Gauche\n");
-        if(deplacementPossible(x, y, GAUCHE, jeu))
-            x = x - VITESSE_DES_JOUEURS;
-    }
-
-    if(clavier->toucheHautJ1 == 0 && clavier->toucheBasJ1 == 0 && clavier->toucheGaucheJ1 == 0 && clavier->toucheDroiteJ1 == 0)
-        jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
-    else
         jeu->listeDesJoueurs[indiceJoueur].deplacement = 1;
-
-    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x =  x ;
-    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
+        jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = x;
+        jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
+    }
+    else
+        jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
 }
 
-void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur) //Gère le déplacement du J1
+void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur)
 {
-    int x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
-    int y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
+    int x;
+    int y;
 
-    if(clavier->toucheHautJ2 == 1)
+    // Si le joueur est en cours de déplacement
+    if(clavier->toucheHautJ2 || clavier->toucheBasJ2 || clavier->toucheGaucheJ2 || clavier->toucheDroiteJ2)
     {
-        jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
-        printf("Appui Haut\n");
-        if(deplacementPossible(x, y, HAUT, jeu))
-            y = y - VITESSE_DES_JOUEURS;
-    }
+        x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
+        y = jeu->listeDesJoueurs[indiceJoueur].coordonnes.y;
 
-    if(clavier->toucheBasJ2 == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
-        printf("Appui Bas\n");
-        if(deplacementPossible(x, y, BAS, jeu))
-            y = y + VITESSE_DES_JOUEURS;
-    }
+        if(clavier->toucheHautJ2)
+        {
+            printf("Appui Haut J2\n");
+            jeu->listeDesJoueurs[indiceJoueur].direction = HAUT;
+            if(deplacementPossible(x, y, HAUT, jeu))
+                y -= VITESSE_DES_JOUEURS;
+        }
+        if(clavier->toucheBasJ2)
+        {
+            printf("Appui Bas J2\n");
+            jeu->listeDesJoueurs[indiceJoueur].direction = BAS;
+            if(deplacementPossible(x, y, BAS, jeu))
+                y += VITESSE_DES_JOUEURS;
+        }
+        if(clavier->toucheDroiteJ2)
+        {
+            printf("Appui Droite J2\n");
+            jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
+            if(deplacementPossible(x, y, DROITE, jeu))
+                x += VITESSE_DES_JOUEURS;
+        }
+        if(clavier->toucheGaucheJ2)
+        {
+            printf("Appui Gauche J2\n");
+            jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
+            if(deplacementPossible(x, y, GAUCHE, jeu))
+                x -= VITESSE_DES_JOUEURS;
+        }
 
-    if(clavier->toucheDroiteJ2 == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = DROITE;
-        printf("Appui Droite\n");
-        if(deplacementPossible(x, y, DROITE, jeu))
-            x = x + VITESSE_DES_JOUEURS;
-    }
-
-    if(clavier->toucheGaucheJ2 == 1)
-    {
-        jeu->listeDesJoueurs[indiceJoueur].direction = GAUCHE;
-        printf("Appui Gauche\n");
-        if(deplacementPossible(x, y, GAUCHE, jeu))
-            x = x - VITESSE_DES_JOUEURS;
-    }
-
-    if(clavier->toucheHautJ2 == 0 && clavier->toucheBasJ2 == 0 && clavier->toucheGaucheJ2 == 0 && clavier->toucheDroiteJ2 == 0)
-        jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
-    else
         jeu->listeDesJoueurs[indiceJoueur].deplacement = 1;
-
-    jeu->listeDesJoueurs[indiceJoueur].coordonnes.x =  x ;
-    jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
+        jeu->listeDesJoueurs[indiceJoueur].coordonnes.x = x;
+        jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
+    }
+    else
+        jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
 }
