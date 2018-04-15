@@ -209,10 +209,16 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
     }
 
     // Afficher le message de victoire / défaite en fin de partie
-    if(jeu->animations.victoire == 1)
+    if(jeu->animations.victoire)
+    {
         afficherTexte("VICTOIRE !", 80, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
-    if(jeu->animations.defaite == 1)
+        afficherTexte("Appuyez sur ENTREE", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 280, affichage->renderer);
+    }
+    else if(jeu->animations.defaite)
+    {
         afficherTexte("DEFAITE !", 80, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
+        afficherTexte("Appuyez sur ENTREE", 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 280, affichage->renderer);
+    }
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
