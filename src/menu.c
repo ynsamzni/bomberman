@@ -91,14 +91,20 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
 
 void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
 {
-    SDL_Rect rectAffichage;
-    rectAffichage.w = 250;
-    rectAffichage.h = 250;
-    rectAffichage.x = WIDTH / 2 - rectAffichage.w / 2;
-    rectAffichage.y = 150;
-
     int couleurTexteClignotant = (SDL_GetTicks() / 6) % 255; // Passe de 0 à 255 en incrémentant toutes les 6 ms
     SDL_Color color = {couleurTexteClignotant, couleurTexteClignotant, couleurTexteClignotant, 0};
+
+    SDL_Rect rectBombe;
+    rectBombe.w = 250;
+    rectBombe.h = 250;
+    rectBombe.x = WIDTH / 2 - rectBombe.w / 2;
+    rectBombe.y = 150;
+
+    SDL_Rect rectEtincelle;
+    rectEtincelle.w = 60;
+    rectEtincelle.h = 60;
+    rectEtincelle.x = 297;
+    rectEtincelle.y = 132;
 
     // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
@@ -106,12 +112,8 @@ void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavi
 
     // Copier les éléments du menu dans le renderer
     afficherTexte("* BOMBERMAN *", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
-    SDL_RenderCopy(affichage->renderer, affichage->structTextures.bombe, NULL, &rectAffichage);
-    rectAffichage.w = 60;
-    rectAffichage.h = 60;
-    rectAffichage.x = 297;
-    rectAffichage.y = 132;
-    SDL_RenderCopy(affichage->renderer, affichage->structTextures.etincelle, NULL, &rectAffichage);
+    SDL_RenderCopy(affichage->renderer, affichage->structTextures.bombe, NULL, &rectBombe);
+    SDL_RenderCopy(affichage->renderer, affichage->structTextures.etincelle, NULL, &rectEtincelle);
     afficherTexte("ENTREE pour demarrer", 20, color, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 450, affichage->renderer);
 
     // Afficher le renderer
@@ -127,17 +129,17 @@ void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavi
 
 void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
-    int nbTotalProfils;
     CompteJoueur tabComptes[NBR_MAX_COMPTES];
-
-    nbTotalProfils = chargerComptes(tabComptes);
+    int nbTotalProfils = chargerComptes(tabComptes);
 
     // Si l'utilisateur se déplace dans le menu
-    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != nbTotalProfils){
+    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != nbTotalProfils)
+    {
         menu->positionCurseurY++;
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
+    else if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
+    {
         menu->positionCurseurY--;
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
@@ -149,7 +151,7 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     // Copier les éléments du menu dans le renderer
     afficherTexte("SELECTION DU PROFIL", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
-    if(chargerComptes(tabComptes) != -1) //ON VERIFIE QUE LE FICHIER DES PROFILS NEST PAS VIDE
+    if(chargerComptes(tabComptes) != -1)
     {
         for(int i=0; i<nbTotalProfils; i++)
         {
@@ -179,7 +181,6 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
         lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
         if(menu->positionCurseurY != nbTotalProfils && nbTotalProfils != -1)
         {
-
             menu->profilSelectionne = tabComptes[menu->positionCurseurY];
             menu->numeroFenetre = 3;
         }
@@ -324,14 +325,15 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
 
 void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu, StructAudio *audio)
 {
-    char chaineBienvenue[40] = "";
+    char chaineBienvenue[40] = "BIEVENUE ";
+    strcat(chaineBienvenue, menu->profilSelectionne.nom);
 
     // Si l'utilisateur se déplace dans le menu
     if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 2){
         menu->positionCurseurY++;
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
+    else if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
@@ -341,9 +343,6 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
     SDL_RenderClear(affichage->renderer);
 
     // Copier les éléments du menu dans le renderer
-
-    strcat(chaineBienvenue,"BIENVENUE ");
-    strcat(chaineBienvenue, menu->profilSelectionne.nom);
     afficherTexte(chaineBienvenue, 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
     if(menu->positionCurseurY == 0)
@@ -374,17 +373,15 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
             menu->numeroFenetre = 4; //Statistiques
             break;
         case 1:
-            menu->numeroFenetre = 5; //Lancer une partie
+            menu->numeroFenetre = 5; // Lancer une partie
             break;
         case 2:
-            menu->numeroFenetre = -1; //Quitter
+            menu->numeroFenetre = -1; // Quitter
             break;
         }
     }
     else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
-    {
         menu->numeroFenetre = 1;
-    }
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = 0;
 }
@@ -395,34 +392,27 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
 void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu)
 {
     CompteJoueur tabComptes[NBR_MAX_COMPTES];
-    int nbrDeComptes;
+    int nbrDeComptes = chargerComptes(tabComptes);
     int tailleMaxListeAAfficher;
     char chaine[15];
     int nbrMaxVictoire;
-    CompteJoueur c;
+    CompteJoueur compteTmp;
     int i = 0;
     int indiceJoueurAvecMaxVictoire;
 
-    nbrDeComptes = chargerComptes(tabComptes);
-
-    // Afficher le fond
-    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
-    SDL_RenderClear(affichage->renderer);
-
-
-    afficherTexte("STATISTIQUES", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
-
+    // Déterminer la taille du classement
     if(nbrDeComptes < 10)
         tailleMaxListeAAfficher = nbrDeComptes;
     else
         tailleMaxListeAAfficher = 10;
 
-
-    for(int cmpt = 0; cmpt < tailleMaxListeAAfficher; cmpt++)
+    // Organiser les comptes par nombre de victoires décroissant
+    for(int cmpt=0; cmpt<tailleMaxListeAAfficher; cmpt++)
     {
         nbrMaxVictoire = 0;
         indiceJoueurAvecMaxVictoire = 0;
-        for(int j = cmpt; j<nbrDeComptes ; j++)
+
+        for(int j=cmpt; j<nbrDeComptes; j++)
         {
             if(tabComptes[j].nbrVictoires >= nbrMaxVictoire)
             {
@@ -430,21 +420,28 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
                 indiceJoueurAvecMaxVictoire = j;
             }
         }
-        c = tabComptes[cmpt];
+        compteTmp = tabComptes[cmpt];
         tabComptes[cmpt] = tabComptes[indiceJoueurAvecMaxVictoire];
-        tabComptes[indiceJoueurAvecMaxVictoire] = c;
+        tabComptes[indiceJoueurAvecMaxVictoire] = compteTmp;
     }
+
+    // Afficher le fond
+    SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
+    SDL_RenderClear(affichage->renderer);
+
+    // Copier les éléments du menu dans le renderer
+    afficherTexte("STATISTIQUES", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
     while(i < tailleMaxListeAAfficher)
     {
-
-        sprintf(chaine, "Victoires : %d", tabComptes[i].nbrVictoires);
         afficherTexte(tabComptes[i].nom, 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 80, (i+1)*50 + 120, affichage->renderer);
 
+        sprintf(chaine, "Victoires : %d", tabComptes[i].nbrVictoires);
         afficherTexte(chaine, 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 250, (i+1)*50 + 120, affichage->renderer);
-        sprintf(chaine, "Defaites : %d", tabComptes[i].nbrDefaites);
 
+        sprintf(chaine, "Defaites : %d", tabComptes[i].nbrDefaites);
         afficherTexte(chaine, 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, 400, (i+1)*50 + 120, affichage->renderer);
+
         i++;
     }
 
@@ -453,11 +450,9 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
 
-
+    // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
-    {
         menu->numeroFenetre = 3;
-    }
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = 0;
 }
@@ -485,34 +480,38 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     flecheDroite.x = contourSelection.x + contourSelection.w + 10;
     flecheDroite.y = contourSelection.y + 5;
 
-    int dejaUnJoueurHumainSelectionne = 0;
+    int nbJoueursHumainsSelectionnes = 0;
 
+    // Déterminer le nombre de joueurs humains déjà sélectionnés
+    for(int i=0; i<4; i++)
+    {
+        if(menu->paramPartie[i] == 2)
+            nbJoueursHumainsSelectionnes++;
+    }
 
-    //Permet de gérer le déplacement vertical dans le menu
+    // Si l'utilisateur se déplace dans le menu
     if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-
-    if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 3){
+    else if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 3){
         menu->positionCurseurY++;
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-    //Permet de regarder si un joueur humain est déjà séléctionné ou non
-    if(menu->paramPartie[1] == 2 || menu->paramPartie[2] == 2 || menu->paramPartie[3] == 2)
-        dejaUnJoueurHumainSelectionne = 1;
-
-    //Permet de gérer le déplacement horizontal dans le menu
-    if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) ){
-        if( (menu->paramPartie[menu->positionCurseurY] == 0 ) && dejaUnJoueurHumainSelectionne == 1) //Si on arrive en bout de séléction ( 0 ) et que un joueur humain est déja selectionné alors on va directement en 1 (vide)
+    else if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier))
+    {
+        // Sauter le choix 'Humain' si 2 sont déja selectionnés
+        if(menu->paramPartie[menu->positionCurseurY] == 0 && nbJoueursHumainsSelectionnes == 2)
             menu->paramPartie[menu->positionCurseurY] = 1;
         else
             menu->paramPartie[menu->positionCurseurY]--;
 
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-    if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) ){
-        if( (menu->paramPartie[menu->positionCurseurY] == 1 ) && dejaUnJoueurHumainSelectionne == 1) //Si on arrive en bout de séléction ( 1 ) et que un joueur humain est déja selectionné alors on va directement en 0 (ordinateur)
+    else if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) )
+    {
+        // Sauter le choix 'Humain' si 2 sont déja selectionnés
+        if(menu->paramPartie[menu->positionCurseurY] == 1 && nbJoueursHumainsSelectionnes == 2)
             menu->paramPartie[menu->positionCurseurY] = 0;
         else
             menu->paramPartie[menu->positionCurseurY]++;
@@ -520,27 +519,28 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
 
-    //Remet le joueur au début des choix une fois arrivée au bout
+    // Passer au premier/dernier choix si le joueur a effectué un tour complet de choix
     if(menu->paramPartie[menu->positionCurseurY] > 2)
         menu->paramPartie[menu->positionCurseurY] = 0;
-      if(menu->paramPartie[menu->positionCurseurY] < 0)
+    else if(menu->paramPartie[menu->positionCurseurY] < 0)
         menu->paramPartie[menu->positionCurseurY] = 2;
-
 
     // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
     SDL_RenderClear(affichage->renderer);
 
+    // Définir la couleur utilisée pour les opérations de dessin
+    SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
+
+    // Copier les éléments du menu dans le renderer
     afficherTexte("PARAMETRAGE PARTIE", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 70, affichage->renderer);
 
-
-
-    // Dessin des cases contenant les joueurs et remplissage PAR DEFAULT de celle-ci
-    SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
     for(int i = 0; i < 4; i++)
     {
+        // Cases contenant le type de joueur
         SDL_RenderDrawRect(affichage->renderer, &contourSelection);
 
+        // Type de joueur
         if(i == 0)
             afficherTexte(menu->profilSelectionne.nom, 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, contourSelection.y + 5, affichage->renderer);
         else
@@ -553,22 +553,22 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
                 afficherTexte("Humain", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, contourSelection.y + 5, affichage->renderer);
         }
 
+        // Passer aux coordonnées de la prochaine case
         contourSelection.y += 80;
     }
 
-
-    flecheGauche.y = flecheGauche.y + 80*menu->positionCurseurY;
-    flecheDroite.y = flecheDroite.y + 80*menu->positionCurseurY;
-
-    // Dessin flèches
+    // Flèche gauche
+    flecheGauche.y = flecheGauche.y + 80 * menu->positionCurseurY;
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheGauche, NULL, &flecheGauche);
+
+    // Flèche droite
+    flecheDroite.y = flecheDroite.y + 80 * menu->positionCurseurY;
     SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheDroite, NULL, &flecheDroite);
 
     afficherTexte("ENTREE pour lancer la partie", 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 510, affichage->renderer);
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
-
 
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
@@ -578,9 +578,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
         menu->numeroFenetre = 6;
     }
     else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
-    {
         menu->numeroFenetre = 3;
-    }
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = -1;
 }
@@ -590,28 +588,33 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
 
 void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
-    SDL_Rect rectAffichageFond;
-    rectAffichageFond.w = 400;
-    rectAffichageFond.h = 400;
-    rectAffichageFond.x = WIDTH / 2 - rectAffichageFond.w / 2;
-    rectAffichageFond.y = 100;
+    SDL_Rect rectFond;
+    rectFond.w = 400;
+    rectFond.h = 400;
+    rectFond.x = WIDTH / 2 - rectFond.w / 2;
+    rectFond.y = 100;
 
+    // Afficher le fond
     SDL_SetRenderDrawColor(affichage->renderer, 110, 120, 150, 255);
-    SDL_RenderFillRect(affichage->renderer, &rectAffichageFond);
+    SDL_RenderFillRect(affichage->renderer, &rectFond);
 
+    // Afficher les contours
     SDL_SetRenderDrawColor(affichage->renderer, 0, 0, 0, 255);
-    SDL_RenderDrawRect(affichage->renderer, &rectAffichageFond);
+    SDL_RenderDrawRect(affichage->renderer, &rectFond);
 
-    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
+    // Si l'utilisateur se déplace dans le menu
+    if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0)
+    {
         menu->positionCurseurY--;
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-     if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 1){
+    else if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 1)
+    {
         menu->positionCurseurY++;
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
 
-
+    // Copier les éléments du menu dans le renderer
     afficherTexte("* PAUSE *", 40, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 150, affichage->renderer);
 
     if(menu->positionCurseurY == 0)
@@ -624,20 +627,17 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
     else
         afficherTexte("Quitter la partie", 25, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 325, affichage->renderer);
 
-
-
-
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
 
-
+    // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
         lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
         switch(menu->positionCurseurY)
         {
         case 0:
-            jeu->etat = LANCEMENT; //Le case 6 dans le menu correspond à jeu->LANCEMENT
+            jeu->etat = LANCEMENT;
             break;
         case 1:
             jeu->etat = OFF;
@@ -646,9 +646,7 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
         }
     }
     else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
-    {
         jeu->etat = ON;
-    }
 }
 
 
