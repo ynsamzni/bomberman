@@ -162,53 +162,77 @@ void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 
 void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 {
+    int X = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
+    int Y = jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
+    int hautExplosion, droiteExplosion, basExplosion, gaucheExplosion;
+
     // Si une bombe doit exploser
-    if( (SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1000) &&  (jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 1) )
+    if(jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 1 && SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1000)
     {
-        // Déterminer les coordonnées de la bombe
-        int X=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
-        int Y=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
+        // Supposer que toutes les directions sont destructibles
+        hautExplosion=1;
+        droiteExplosion=1;
+        basExplosion=1;
+        gaucheExplosion=1;
 
-        int hautDestructible=1, droiteDestructible=1, basDestructible=1, gaucheDestructible=1;
-
-        // Déterminer quelles cases doivent exploser
+        // Parcourir toutes les cases qui sont susceptibles d'exploser
         for(int cmpt=0; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
         {
             // Déterminer les directions dans lesquelles il ne doit plus avoir d'explosion
             if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] == 1)
-                hautDestructible=0;
+                hautExplosion=0;
             if(X+cmpt >= 20 || jeu->mapJeu[X+cmpt][Y] == 1)
-                droiteDestructible=0;
+                droiteExplosion=0;
             if(Y+cmpt >= 20 || jeu->mapJeu[X][Y+cmpt] == 1)
-                basDestructible=0;
+                basExplosion=0;
             if(X-cmpt < 0 || jeu->mapJeu[X-cmpt][Y] == 1)
-                gaucheDestructible=0;
+                gaucheExplosion=0;
 
             // Exploser dans les directions autorisées
-            if(hautDestructible == 1)
+            if(hautExplosion == 1)
                 jeu->mapJeu[X][Y-cmpt] = 4;
-            if(droiteDestructible == 1)
+            if(droiteExplosion == 1)
                 jeu->mapJeu[X+cmpt][Y] = 4;
-            if(basDestructible == 1)
+            if(basExplosion == 1)
                 jeu->mapJeu[X][Y+cmpt] = 4;
-            if(gaucheDestructible == 1)
+            if(gaucheExplosion == 1)
                 jeu->mapJeu[X-cmpt][Y] = 4;
-
         }
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
         lireUnSon(audio, SON_EXPLOSION_BOMBE);
     }
 
-    // Si une bombe doit mettre fin à son explosion
-    else if((SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1500 ) &&  (jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 2) )
+    // Si l'explosion d'une bombe doit prendre fin
+    else if(jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 2 && SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1500)
     {
-        for(int i = 0; i < 20; i++)
+        // Supposer que toutes les directions sont en cours d'explosion
+        hautExplosion=1;
+        droiteExplosion=1;
+        basExplosion=1;
+        gaucheExplosion=1;
+
+        // Parcourir toutes les cases qui sont susceptibles d'être en cours d'explosion
+        for(int cmpt=0; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
         {
-            for(int j = 0; j<20; j++)
-            {
-                if(jeu->mapJeu[i][j] == 4)
-                    jeu->mapJeu[i][j] = 0;
-            }
+            // Déterminer les directions dans lesquelles il n'y a pas d'explosion
+            if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] != 4)
+                hautExplosion=0;
+            if(X+cmpt >= 20 || jeu->mapJeu[X+cmpt][Y] != 4)
+                droiteExplosion=0;
+            if(Y+cmpt >= 20 || jeu->mapJeu[X][Y+cmpt] != 4)
+                basExplosion=0;
+            if(X-cmpt < 0 || jeu->mapJeu[X-cmpt][Y] != 4)
+                gaucheExplosion=0;
+
+            // Mettre fin aux explosions
+            if(hautExplosion == 1)
+                jeu->mapJeu[X][Y-cmpt] = 0;
+            if(droiteExplosion == 1)
+                jeu->mapJeu[X+cmpt][Y] = 0;
+            if(basExplosion == 1)
+                jeu->mapJeu[X][Y+cmpt] = 0;
+            if(gaucheExplosion == 1)
+                jeu->mapJeu[X-cmpt][Y] = 0;
         }
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 0;
         jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = 0;
