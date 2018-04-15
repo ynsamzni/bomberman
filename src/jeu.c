@@ -405,44 +405,35 @@ void actualiserEtatJeu(StructJeu *jeu, StructAudio *audio, StructTouchesClavier 
 
 void actualiserStatistiquesJoueur(StructJeu *jeu, int indiceJoueur, int victoireOuDefaite)
 {
+    CompteJoueur contenuFichier; // Pour stocker temporairement les comptes lus dans le fichier
     FILE* fic;
-    CompteJoueur c;
-    int a = 0;
-    int i = 0;
 
-
-    fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "rb");
+    fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "rb+");
 
     if(fic == NULL)
         printf("[LECTURE] Erreur d'accès au fichier ! \n");
     else
     {
-        while(fread(&c, sizeof(CompteJoueur),1,fic) && !feof(fic))
+        // Lire le fichier
+        while(fread(&contenuFichier, sizeof(CompteJoueur), 1, fic) && !feof(fic))
         {
-            if(strcmp(jeu->listeDesJoueurs[indiceJoueur].compte.nom, c.nom) == 0)
-                a = 1;
-            if(a != 1)
-                i++;
+            // S'il s'agit du compte à modifier
+            if(strcmp(jeu->listeDesJoueurs[indiceJoueur].compte.nom, contenuFichier.nom) == 0)
+            {
+                // Positionner le pointeur de fichier au début du contenu à écraser
+                fseek(fic, -sizeof(CompteJoueur), SEEK_CUR);
+
+                // Effectuer les modifications dans le fichier
+                if(victoireOuDefaite == 1)
+                    contenuFichier.nbrVictoires++;
+                else if(victoireOuDefaite == 0)
+                    contenuFichier.nbrDefaites++;
+                fwrite(&contenuFichier, sizeof(CompteJoueur), 1, fic);
+
+                // Positionner le pointeur de fichier à la fin du fichier (le contenu étant modifié, il est inutile de continuer)
+                fseek(fic, 0, SEEK_END);
+            }
         }
+        fclose(fic);
     }
-    fclose(fic);
-
-    c = jeu->listeDesJoueurs[indiceJoueur].compte;
-    if(victoireOuDefaite == 1)
-        c.nbrVictoires++;
-    if(victoireOuDefaite == 0)
-        c.nbrDefaites++;
-
-    fic = fopen(CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "r+");
-
-    if(fic == NULL)
-        printf("[ECRITURE] Erreur d'accès au fichier ! \n");
-    else
-    {
-        printf("Retour de fseek : %d \n", fseek(fic, sizeof(CompteJoueur)*i, SEEK_SET));
-
-        fwrite(&c, sizeof(c), 1, fic);
-    }
-
-    fclose(fic);
 }
