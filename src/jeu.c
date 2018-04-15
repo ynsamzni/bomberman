@@ -6,8 +6,6 @@
 #include "../include/joueurHumain.h"
 
 
-
-
 void initMap(StructJeu *jeu)
 {
     printf("Chargement de map.dat\n");
@@ -32,7 +30,6 @@ void initMap(StructJeu *jeu)
 
         fclose(fic);
         printf("Lecture du fichier et chargement de la map réussit\n");
-
     }
 }
 
@@ -55,7 +52,6 @@ void initTousLesJoueurs(StructJeu *jeu) //Initialisation par défault des joueur
 
 void initJeu(StructJeu *jeu)
 {
-
     initMap(jeu);
     initTousLesJoueurs(jeu);
     initJoueursHumains(jeu);
@@ -63,14 +59,10 @@ void initJeu(StructJeu *jeu)
 
     jeu->animations.victoire = 0;
     jeu->animations.defaite = 0;
-
 }
-
-
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio)
 {
-
      // Autres
     tuerJoueur(jeu, audio);
     checkVictoire(jeu, audio);
@@ -213,19 +205,12 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 }
 
 
-
-
-
-
 /*********************************************************************************/
 /**********************AFFICHER LA STRUCTURE**************************************/
 /*********************************************************************************/
 
-
 void afficherStructureJeu(StructJeu jeu)
 {
-
-
     printf("Nombre de joueurs = %d \n", jeu.nbrDeJoueurs);
     for(int i = 0; i < jeu.nbrDeJoueurs; i++)
     {
@@ -270,10 +255,10 @@ void afficherStructureJeu(StructJeu jeu)
     }
 }
 
+
 /*********************************************************************************/
 /*****************FONCTIONS POUR SIMPLIFIER LE CODE*******************************/
 /*********************************************************************************/
-
 
 int deplacementPossible(int x, int y, Direction direction, StructJeu *jeu)
 {
@@ -316,10 +301,7 @@ int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3
     // Si la probabilité de val4 est atteinte
     else
         return val4;
-
 }
-
-
 
 void tuerJoueur(StructJeu *jeu, StructAudio *audio)
 {
@@ -331,7 +313,6 @@ void tuerJoueur(StructJeu *jeu, StructAudio *audio)
             lireUnSon(audio, SON_MORT_PERSONNAGE);
         }
     }
-
 }
 
 void checkVictoire(StructJeu *jeu, StructAudio *audio)
@@ -371,8 +352,6 @@ void checkVictoire(StructJeu *jeu, StructAudio *audio)
         }
         jeu->etat = EXTINCTION;
     }
-
-
 }
 
 void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int victoireOuDefaite)
@@ -417,7 +396,4 @@ void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int vict
     }
 
     fclose(fic);
-
 }
-
-

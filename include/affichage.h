@@ -10,13 +10,12 @@
 #include "clavier.h"
 
 
-
-typedef struct{
+typedef struct {
 	SDL_Color blanc;
 	SDL_Color noir;
-}StructCouleur;
+} StructCouleur;
 
-typedef struct{
+typedef struct {
     SDL_Texture *feuilleSprites;
     SDL_Texture *murIndestructible;
     SDL_Texture *murDestructible;
@@ -31,28 +30,21 @@ typedef struct{
     SDL_Texture *flecheDroite;
     SDL_Texture *flecheGaucheBlanche;
     SDL_Texture *flecheDroiteBlanche;
-}StructTextures;
+} StructTextures;
 
-
-typedef struct{
+typedef struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
     StructTextures structTextures;
     StructCouleur structCouleur;
-}StructAffichage;
-
-
+} StructAffichage;
 
 void initAffichage(StructAffichage *affichage, char nomFenetre[]);
 void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer);
 void chargementCouleurs(StructCouleur *structCouleur);
-
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu);
-
-
 void animationVictoire(StructAffichage *affichage);
 void animationDefaite(StructAffichage *affichage);
-
 
 
 #endif // AFFICHAGE_INCLUDED

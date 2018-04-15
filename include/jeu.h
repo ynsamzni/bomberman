@@ -8,32 +8,33 @@
 #include "clavier.h"
 #include "audio.h"
 
-typedef struct{
+
+typedef struct {
     int x;
     int y;
-}Coordonnes;
+} Coordonnes;
 
-typedef enum{
+typedef enum {
     ON, OFF, LANCEMENT, EXTINCTION, PAUSE
-}EtatJeu;
+} EtatJeu;
 
-typedef struct{
+typedef struct {
     Coordonnes coordonnesBombe;
     int tickDePose;
     int etatBombe;
-}Bombe;
+} Bombe;
 
-typedef enum{
+typedef enum {
     HAUT, BAS, DROITE, GAUCHE
-}Direction;
+} Direction;
 
-typedef struct{
+typedef struct {
     char nom[TAILLE_MAX_NOM_COMPTE];
     int nbrVictoires;
     int nbrDefaites;
-}CompteJoueur;
+} CompteJoueur;
 
-typedef struct{
+typedef struct {
     int humainOuIA;
     CompteJoueur compte;
     int enVie;
@@ -43,36 +44,29 @@ typedef struct{
     int deplacement;
     int modeAleatoire;
     Coordonnes itineraireSuivi[100];
-}Joueur;
+} Joueur;
 
-typedef struct{
+typedef struct {
     int victoire;
     int defaite;
 
-}Animations;
+} Animations;
 
-
-typedef struct{
+typedef struct {
     EtatJeu etat;
     int mapJeu[NBR_DE_CASES_HORIZONTALES][NBR_DE_CASES_VERTICALES];
     int nbrDeJoueurs;
     Joueur listeDesJoueurs[4];
     Animations animations;
-}StructJeu;
-
+} StructJeu;
 
 void initMap(StructJeu *jeu);
 void initTousLesJoueurs(StructJeu *jeu);
 void initJeu(StructJeu *jeu);
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio);
-
-
 void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
 void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
-
 void afficherStructureJeu(StructJeu jeu);
-
-
 int deplacementPossible(int x, int y, Direction direction, StructJeu *jeu);
 int contenuCoordonnees(StructJeu *jeu, int y, int x);
 int renvoitCaseMatrice(int coordonne);

@@ -2,16 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../include/menu.h"
 #include "../include/affichage.h"
 #include "../include/clavier.h"
 
 
-#include "../include/menu.h"
-
 /** Lors du paramétrage de la partie -> fenetre 6
                                      -> declenche le case 6 dans gestion menu -> déclenche jeu->etat = LANCEMENT
                                      -> dans le main on ne va plus dans le menu alors
-    */
+**/
 
 
 void initMenu(StructMenu *menu)
@@ -31,7 +30,6 @@ void initMenu(StructMenu *menu)
     menu->tabNomDuJoueur[0] = 'A';
     menu->tabNomDuJoueur[1] = '\0';
 }
-
 
 void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage, StructAudio *audio)
 {
@@ -87,6 +85,7 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
         break;
     }
 }
+
 
 /******************** MENU 0 : MENU ACCUEIL **********************/
 
@@ -192,6 +191,7 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = -1;
 }
+
 
 /******************** MENU 2 : CREATION PROFIL **********************/
 
@@ -319,6 +319,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
         menu->numeroFenetre = -1;
 }
 
+
 /***** MENU 3 : MENU PRINCIPAL ************************************/
 
 void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu, StructAudio *audio)
@@ -386,11 +387,11 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
     }
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = 0;
-
-
 }
 
+
 /******************** MENU 4 : MENU STATISTIQUES **********************/
+
 void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu)
 {
     CompteJoueur tabComptes[NBR_MAX_COMPTES];
@@ -459,7 +460,6 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
     }
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = 0;
-
 }
 
 
@@ -583,9 +583,8 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     }
     else if(clavier->toucheQuitter)
         menu->numeroFenetre = -1;
-
-
 }
+
 
 /******************** MENU 7 : MENU PAUSE **********************/
 
@@ -651,24 +650,15 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
     {
         jeu->etat = ON;
     }
-
-
 }
-
-
-
-
-
 
 
 /*************************************************************/
 /*************FONCTIONS POUR SIMPLIFIER LE CODE **************/
 /*************************************************************/
 
-
 void enregistrerNouveauCompte(char nomCompte[])
 {
-
     FILE *fic;
     CompteJoueur c;
 
@@ -684,8 +674,6 @@ void enregistrerNouveauCompte(char nomCompte[])
 
     fclose(fic);
 }
-
-
 
 int chargerComptes(CompteJoueur *tabComptes)
 {
@@ -711,7 +699,6 @@ int chargerComptes(CompteJoueur *tabComptes)
         fclose(fic);
         return nbrDeComptes;
     }
-
 }
 
 void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu)
@@ -743,8 +730,4 @@ void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu)
         jeu->listeDesJoueurs[i].humainOuIA = 1;
 
     jeu->nbrDeJoueurs = nbrJoueursHumains + nbrJoueursIA;
-
 }
-
-
-

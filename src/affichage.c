@@ -2,9 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 #include "../include/affichage.h"
-
 
 
 void initAffichage(StructAffichage *affichage, char nomFenetre[])
@@ -22,7 +20,6 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[])
     chargementTextures(&affichage->structTextures, affichage->renderer);
     chargementCouleurs(&affichage->structCouleur);
 }
-
 
 void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
 {
@@ -125,7 +122,6 @@ void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char c
 
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
 {
-
     SDL_Rect caseMap = {0, 0, 30, 30}; // Case utilisée pour remplir la map
     SDL_Rect spriteDecoupe;
     SDL_Rect spriteInitial = {15, 13, 35, 50};  // Coordonnées du sprite initial dans la feuille de sprites
@@ -216,23 +212,14 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
 
     // Actualiser l'affichage
     SDL_RenderPresent(affichage->renderer);
-
 }
-
-
-
 
 void animationVictoire(StructAffichage *affichage)
 {
     afficherTexte("VICTOIRE !", 80, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
 }
 
-
-
 void animationDefaite(StructAffichage *affichage)
 {
     afficherTexte("DEFAITE !", 80, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
 }
-
-
-

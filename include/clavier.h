@@ -6,8 +6,8 @@
 
 #include "constantes.h"
 
-typedef struct{
 
+typedef struct {
     //Touches joueur 1
     int toucheHautJ1;
     int toucheBasJ1;
@@ -31,13 +31,12 @@ typedef struct{
     int toucheSupprimer;
     int toucheArriere;
     int toucheQuitter;
-
-
-}StructTouchesClavier;
+} StructTouchesClavier;
 
 void initClavier(StructTouchesClavier *clavier);
 void recupererTouchesClavier(StructTouchesClavier *clavier);
 void afficherLaStructureDeTouches(StructTouchesClavier clavier);
 int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier);
+
 
 #endif // CLAVIER_H_INCLUDED

@@ -1,10 +1,10 @@
 #ifndef MENU_INCLUDED
 #define MENU_INCLUDED
 
-
 #include "affichage.h"
 #include "jeu.h"
 #include "audio.h"
+
 
 /******GUIDE DU MENU*********
 
@@ -19,9 +19,7 @@ Menu 6 : Le jeu
 ****************************/
 
 
-
-typedef struct
-{
+typedef struct {
     int numeroFenetre;
     int lastNumeroFenetre; //enregistre la fenêtre précédente et permet ainsi de savoir que l'on à changé pour pouvoir réinitialiser les curseurs
     int positionCurseurY;
@@ -29,32 +27,21 @@ typedef struct
     CompteJoueur profilSelectionne;
     int paramPartie[4];
     char tabNomDuJoueur[8];
-
 } StructMenu;
 
-
-
-
-
 void initMenu(StructMenu *menu);
-
 void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage, StructAudio *audio);
-
 void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu);
 void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
 void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
 void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu, StructAudio *audio);
 void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu);
 void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
-
 void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
-
 void enregistrerNouveauCompte(char nomCompte[]);
 int chargerComptes(CompteJoueur *tabComptes);
 void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu);
-
 void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer);
 
 
 #endif // AFFICHAGE_INCLUDED
-

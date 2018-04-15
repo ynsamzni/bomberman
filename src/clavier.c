@@ -30,7 +30,6 @@ void initClavier(StructTouchesClavier *clavier)
     clavier->toucheSupprimer = 0;
     clavier->toucheArriere = 0;
     clavier->toucheQuitter = 0;
-
 }
 
 void recupererTouchesClavier(StructTouchesClavier *clavier)
@@ -174,10 +173,8 @@ void recupererTouchesClavier(StructTouchesClavier *clavier)
         clavier->toucheQuitter = 1;
 }
 
-
 int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier)
 {
-
     if(*etatToucheClavier == 1 )
     {
         while(*etatToucheClavier == 1)
@@ -188,11 +185,8 @@ int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clav
         return 0;
 }
 
-
 void afficherLaStructureDeTouches(StructTouchesClavier clavier)
 {
-
-
     printf("Valeur toucheHautJ1 :  %d\n", clavier.toucheHautJ1);
     printf("Valeur toucheBasJ1 :  %d\n", clavier.toucheBasJ1);
     printf("Valeur toucheDroiteJ1 :  %d\n", clavier.toucheDroiteJ1);
@@ -214,5 +208,4 @@ void afficherLaStructureDeTouches(StructTouchesClavier clavier)
     printf("Valeur toucheQuitter:  %d\n", clavier.toucheQuitter);
 
     system("clear");
-
 }

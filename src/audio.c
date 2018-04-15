@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "../include/audio.h"
 
 
@@ -13,7 +14,6 @@ void initAudio(StructAudio *audio)
     chargerFichiersAudio(audio);
 
     Mix_VolumeMusic(60);
-
 }
 
 void chargerFichiersAudio(StructAudio *audio)
@@ -59,8 +59,8 @@ void chargerFichiersAudio(StructAudio *audio)
         printf( "Failed to load son menu son Defaite SDL_mixer Error: %s\n", Mix_GetError() );
 }
 
-void lireUnSon(StructAudio *audio, SonSelectionne sonSelectionne){
-
+void lireUnSon(StructAudio *audio, SonSelectionne sonSelectionne)
+{
     if(sonSelectionne == MUSIQUE)
         Mix_PlayMusic(audio->musiqueDuJeu, -1 ); //Pour une musique
 
@@ -84,7 +84,4 @@ void lireUnSon(StructAudio *audio, SonSelectionne sonSelectionne){
 
     if(sonSelectionne == SON_DEFAITE)
         Mix_PlayChannel(-1, audio->sonDefaite, 0); //Pour un son
-
 }
-
-

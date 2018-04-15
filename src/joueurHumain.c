@@ -4,7 +4,8 @@
 #include "../include/joueurHumain.h"
 
 
-void initJoueursHumains(StructJeu *jeu){
+void initJoueursHumains(StructJeu *jeu)
+{
     int a = 0;
     for(int i = 0; i < jeu->nbrDeJoueurs; i++){
         if(jeu->listeDesJoueurs[i].humainOuIA == 0 && a == 0)
@@ -15,7 +16,6 @@ void initJoueursHumains(StructJeu *jeu){
             jeu->listeDesJoueurs[i].coordonnes.y = HEIGHT - 30;
         }
     }
-
 }
 
 void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur) //Gère le déplacement du J1
@@ -64,8 +64,6 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
 }
 
-
-
 void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur) //Gère le déplacement du J1
 {
     int x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;
@@ -111,4 +109,3 @@ void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
     jeu->listeDesJoueurs[indiceJoueur].coordonnes.x =  x ;
     jeu->listeDesJoueurs[indiceJoueur].coordonnes.y = y;
 }
-

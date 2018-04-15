@@ -3,6 +3,7 @@
 
 #include "../include/IA.h"
 
+
 void initIA(StructJeu *jeu)  //Gère l'apparition des IA
 {
     if(jeu->nbrDeJoueurs >= 2 && jeu->listeDesJoueurs[1].humainOuIA == 1)                                      //En bas à droite

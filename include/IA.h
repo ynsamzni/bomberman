@@ -4,6 +4,7 @@
 #include "jeu.h"
 #include "constantes.h"
 
+
 void initIA(StructJeu *jeu);
 void deplacerIA(int indiceJoueur, StructJeu *jeu);
 int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbItineraire, int nbDeplacement, StructJeu *jeu);
@@ -22,5 +23,6 @@ int ennemiProche(int indiceJoueur, int distanceMax, StructJeu *jeu);
 void modifierCoordonnees(Coordonnes *coordonneesAModifier, int x, int y);
 void copierCoordonnees(Coordonnes *coordonneesSrc, Coordonnes *coordonneesDest);
 int poseBombeDangereuse(int indiceJoueur, StructJeu *jeu);
+
 
 #endif // IA_H_INCLUDED

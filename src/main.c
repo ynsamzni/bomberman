@@ -12,7 +12,6 @@
 #include "../include/audio.h"
 
 
-
 int main(int argc, char *argv[])
 {
     //Déclaration des 4 structures principales du jeu
@@ -93,9 +92,4 @@ int main(int argc, char *argv[])
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
-
 }
-
-
-
-
