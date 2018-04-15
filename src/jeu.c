@@ -91,12 +91,6 @@ void initJeu(StructJeu *jeu)
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio)
 {
-    // Déterminer si des joueurs ont été tués
-    tuerJoueur(jeu, audio);
-
-    // Déterminer si un joueur a gagné la partie
-    checkVictoire(jeu, audio);
-
     // Déterminer si des joueurs ont des actions en attente d'exécution
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
@@ -136,10 +130,8 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
         exploserBombe(jeu, i, audio);
     }
 
-
-    // Déterminer si le jeu doit être mis en pause
-    if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
-        jeu->etat = PAUSE;
+    // Déterminer si le jeu doit changer d'état
+    actualiserEtatJeu(jeu, audio, clavier);
 }
 
 
@@ -220,6 +212,16 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
         }
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
         lireAudio(audio, SON_EXPLOSION_BOMBE);
+
+        // Tuer les joueurs qui se trouvent dans l'explosion de la bombe
+        for(int indiceJoueur = 0; indiceJoueur < jeu->nbrDeJoueurs; indiceJoueur++)
+        {
+            if(contenuCoordonnees(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4 && jeu->listeDesJoueurs[indiceJoueur].enVie != 0 )
+            {
+                jeu->listeDesJoueurs[indiceJoueur].enVie = 0;
+                lireAudio(audio, SON_MORT_PERSONNAGE);
+            }
+        }
     }
 
     // Si l'explosion d'une bombe doit prendre fin
@@ -358,34 +360,19 @@ int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3
         return val4;
 }
 
-void tuerJoueur(StructJeu *jeu, StructAudio *audio)
+void actualiserEtatJeu(StructJeu *jeu, StructAudio *audio, StructTouchesClavier *clavier)
 {
-    // Parcourir tous les joueurs
-    for(int indiceJoueur = 0; indiceJoueur < jeu->nbrDeJoueurs; indiceJoueur++)
-    {
-        // Si un joueur en vie se trouve dans l'explosion d'une bombe
-        if(contenuCoordonnees(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4 && jeu->listeDesJoueurs[indiceJoueur].enVie != 0 )
-        {
-            // Tuer le joueur
-            jeu->listeDesJoueurs[indiceJoueur].enVie = 0;
-            lireAudio(audio, SON_MORT_PERSONNAGE);
-        }
-    }
-}
-
-void checkVictoire(StructJeu *jeu, StructAudio *audio)
-{
-    int nbrIA = 0; //pour une raison qui m'échappe, la syntaxe int nbrIA, nbrHumains = 0; me renvoyait n'importe quoi comme valeur pour les variables
+    int nbrIA = 0;
     int nbrHumains = 0;
 
+    // Déterminer si le jeu doit être mis en EXTINCTION
     for(int i = 0; i < jeu->nbrDeJoueurs ; i ++)
     {
-        if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1)
+        if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie)
             nbrHumains++;
-        if(jeu->listeDesJoueurs[i].humainOuIA == 1 && jeu->listeDesJoueurs[i].enVie == 1)
+        else if(jeu->listeDesJoueurs[i].humainOuIA == 1 && jeu->listeDesJoueurs[i].enVie)
             nbrIA++;
     }
-
     if(nbrHumains == 0)
     {
         jeu->animations.defaite = 1;
@@ -393,7 +380,7 @@ void checkVictoire(StructJeu *jeu, StructAudio *audio)
         for(int i = 0; i < jeu->nbrDeJoueurs; i++)
         {
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0) //2eme condition pour empecher de créer un joueur dans le fichier des comptes. Améliorations à venir
-                joueurNbrVictoireOuDefaitePlusUn(jeu, i, 0);
+                actualiserStatistiquesJoueur(jeu, i, 0);
         }
         jeu->etat = EXTINCTION;
     }
@@ -404,15 +391,19 @@ void checkVictoire(StructJeu *jeu, StructAudio *audio)
         for(int i = 0; i < jeu->nbrDeJoueurs; i++)
         {
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0)
-                joueurNbrVictoireOuDefaitePlusUn(jeu, i, 1);
+                actualiserStatistiquesJoueur(jeu, i, 1);
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 0 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0)
-                joueurNbrVictoireOuDefaitePlusUn(jeu, i, 0);
+                actualiserStatistiquesJoueur(jeu, i, 0);
         }
         jeu->etat = EXTINCTION;
     }
+
+    // Déterminer si le jeu doit être mis en PAUSE
+    if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
+        jeu->etat = PAUSE;
 }
 
-void joueurNbrVictoireOuDefaitePlusUn(StructJeu *jeu, int indiceJoueur, int victoireOuDefaite)
+void actualiserStatistiquesJoueur(StructJeu *jeu, int indiceJoueur, int victoireOuDefaite)
 {
     FILE* fic;
     CompteJoueur c;
