@@ -43,8 +43,6 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[]);
 void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer);
 void chargementCouleurs(StructCouleur *structCouleur);
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu);
-void animationVictoire(StructAffichage *affichage);
-void animationDefaite(StructAffichage *affichage);
 
 
 #endif // AFFICHAGE_INCLUDED

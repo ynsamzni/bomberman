@@ -208,23 +208,12 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
         }
     }
 
-
     // Afficher le message de victoire / défaite en fin de partie
     if(jeu->animations.victoire == 1)
-        animationVictoire(affichage);
+        afficherTexte("VICTOIRE !", 80, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
     if(jeu->animations.defaite == 1)
-        animationDefaite(affichage);
+        afficherTexte("DEFAITE !", 80, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
-}
-
-void animationVictoire(StructAffichage *affichage)
-{
-    afficherTexte("VICTOIRE !", 80, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
-}
-
-void animationDefaite(StructAffichage *affichage)
-{
-    afficherTexte("DEFAITE !", 80, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
 }
