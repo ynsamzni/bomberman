@@ -4,10 +4,11 @@
 #include "../include/IA.h"
 
 
-void initIA(StructJeu *jeu)  //Gère l'apparition des IA
+void initIA(StructJeu *jeu)
 {
-    if(jeu->nbrDeJoueurs >= 2 && jeu->listeDesJoueurs[1].humainOuIA == 1)                                      //En bas à droite
+    if(jeu->nbrDeJoueurs >= 2 && jeu->listeDesJoueurs[1].humainOuIA == 1)
     {
+        // Initialiser le joueur en bas à droite de la map
         jeu->listeDesJoueurs[1].coordonnes.x = WIDTH - 30;
         jeu->listeDesJoueurs[1].coordonnes.y = HEIGHT - 30;
         jeu->listeDesJoueurs[1].direction = HAUT;
@@ -15,8 +16,9 @@ void initIA(StructJeu *jeu)  //Gère l'apparition des IA
         jeu->listeDesJoueurs[1].itineraireSuivi[0].y = -1;
     }
 
-    if(jeu->nbrDeJoueurs >= 3 && jeu->listeDesJoueurs[2].humainOuIA == 1)                                  //En haut à droite
+    if(jeu->nbrDeJoueurs >= 3 && jeu->listeDesJoueurs[2].humainOuIA == 1)
     {
+        // Initialiser le joueur en haut à droite de la map
         jeu->listeDesJoueurs[2].coordonnes.x = WIDTH - 30;
         jeu->listeDesJoueurs[2].coordonnes.y = 0;
         jeu->listeDesJoueurs[2].direction = GAUCHE;
@@ -25,7 +27,8 @@ void initIA(StructJeu *jeu)  //Gère l'apparition des IA
     }
     if(jeu->nbrDeJoueurs >= 4 && jeu->listeDesJoueurs[3].humainOuIA == 1)
     {
-        jeu->listeDesJoueurs[3].coordonnes.x = 0;    //En bas à gauche
+        // Initialiser le joueur en bas à gauche de la map
+        jeu->listeDesJoueurs[3].coordonnes.x = 0;
         jeu->listeDesJoueurs[3].coordonnes.y = HEIGHT - 30;
         jeu->listeDesJoueurs[3].direction = HAUT;
         jeu->listeDesJoueurs[3].itineraireSuivi[0].x = -1;
@@ -39,6 +42,7 @@ void deplacerIA(int indiceJoueur, StructJeu *jeu)
     Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES];
     int nbTotalItineraire;
 
+    // Si l'IA ne se trouve pas au milieu d'un déplacement
     if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 == 0 && jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 == 0)
     {
         // Calculer les cases dangereuses

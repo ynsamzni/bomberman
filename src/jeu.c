@@ -8,12 +8,15 @@
 
 void initMap(StructJeu *jeu)
 {
-    printf("Chargement de map.dat\n");
     FILE *fic;
+
+    printf("Chargement de map.dat\n");
     fic = fopen (CHEMIN_D_ACCES_FICHIER_NIVEAU, "r");
+
     if(fic == NULL)
     {
         printf("Echec ouverture fichier !\n");
+
         // Générer une nouvelle map de manière aléatoire
         for(int i=0; i<NBR_DE_CASES_HORIZONTALES; i++)
         {
@@ -22,18 +25,15 @@ void initMap(StructJeu *jeu)
                                                     1, 26,
                                                     2, 34, 3, 0);
         }
-
     }
     else
     {
         fread(&(jeu->mapJeu), sizeof(jeu->mapJeu), 1, fic);
-
         fclose(fic);
-        printf("Lecture du fichier et chargement de la map réussit\n");
     }
 }
 
-void initTousLesJoueurs(StructJeu *jeu) //Initialisation par défault des joueurs qu'ils soient IA ou Humain
+void initTousLesJoueurs(StructJeu *jeu)
 {
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
@@ -52,19 +52,29 @@ void initTousLesJoueurs(StructJeu *jeu) //Initialisation par défault des joueur
 
 void initJeu(StructJeu *jeu)
 {
+    // Initialiser la map
     initMap(jeu);
+
+    // Initialiser les données des joueurs
     initTousLesJoueurs(jeu);
+
+    // Initialiser les coordonnées des joueurs humains
     initJoueursHumains(jeu);
+
+    // Initialiser les coordonnées des IA
     initIA(jeu);
 
+    // Initialiser l'animation de victoire / défaite qui apparaît en fin de partie
     jeu->animations.victoire = 0;
     jeu->animations.defaite = 0;
 }
 
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio)
 {
-     // Autres
+    // Déterminer si des joueurs ont été tués
     tuerJoueur(jeu, audio);
+
+    // Déterminer si un joueur a gagné la partie
     checkVictoire(jeu, audio);
 
     // Déterminer si des joueurs ont des actions en attente d'exécution
@@ -107,7 +117,7 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
     }
 
 
-
+    // Déterminer si le jeu doit être mis en pause
     if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
         jeu->etat = PAUSE;
 }
@@ -127,7 +137,6 @@ void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
         // Déterminer la case sur laquelle va être posée la bombe
         caseBombeX = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
         caseBombeY = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
-
 
         if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 != 0 || jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 != 0)
         {
@@ -153,15 +162,16 @@ void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 
 void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 {
+    // Si une bombe doit exploser
     if( (SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1000) &&  (jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 1) )
     {
+        // Déterminer les coordonnées de la bombe
         int X=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.x;
         int Y=jeu->listeDesJoueurs[indiceJoueur].bombe.coordonnesBombe.y;
 
         int hautDestructible=1, droiteDestructible=1, basDestructible=1, gaucheDestructible=1;
 
-        lireUnSon(audio, SON_EXPLOSION_BOMBE);
-
+        // Déterminer quelles cases doivent exploser
         for(int cmpt=0; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
         {
             // Déterminer les directions dans lesquelles il ne doit plus avoir d'explosion
@@ -185,10 +195,11 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
                 jeu->mapJeu[X-cmpt][Y] = 4;
 
         }
-
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
+        lireUnSon(audio, SON_EXPLOSION_BOMBE);
     }
 
+    // Si une bombe doit mettre fin à son explosion
     else if((SDL_GetTicks() - jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose > 1500 ) &&  (jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 2) )
     {
         for(int i = 0; i < 20; i++)
@@ -305,10 +316,13 @@ int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3
 
 void tuerJoueur(StructJeu *jeu, StructAudio *audio)
 {
+    // Parcourir tous les joueurs
     for(int indiceJoueur = 0; indiceJoueur < jeu->nbrDeJoueurs; indiceJoueur++)
     {
+        // Si un joueur en vie se trouve dans l'explosion d'une bombe
         if(contenuCoordonnees(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4 && jeu->listeDesJoueurs[indiceJoueur].enVie != 0 )
         {
+            // Tuer le joueur
             jeu->listeDesJoueurs[indiceJoueur].enVie = 0;
             lireUnSon(audio, SON_MORT_PERSONNAGE);
         }

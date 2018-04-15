@@ -8,7 +8,7 @@
 void initClavier(StructTouchesClavier *clavier)
 {
     //Touches J1
-    clavier->toucheHautJ1 = 0; //perfectible avec un clavier = {0, 0, 0, 0, 0, 0} ?
+    clavier->toucheHautJ1 = 0;
     clavier->toucheBasJ1 = 0;
     clavier->toucheDroiteJ1 = 0;
     clavier->toucheGaucheJ1 = 0;
@@ -22,7 +22,7 @@ void initClavier(StructTouchesClavier *clavier)
     clavier->toucheBombeJ2 = 0;
 
     //Touches menu
-    clavier->toucheHaut = 0; //perfectible avec un clavier = {0, 0, 0, 0, 0, 0} ?
+    clavier->toucheHaut = 0;
     clavier->toucheBas = 0;
     clavier->toucheDroite = 0;
     clavier->toucheGauche = 0;

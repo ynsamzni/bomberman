@@ -7,29 +7,33 @@
 
 void initAffichage(StructAffichage *affichage, char nomFenetre[])
 {
-    SDL_Init(SDL_INIT_VIDEO); //Initialise le système de gestion de rendu
+    // Initialiser les bibliothèques de rendu
+    SDL_Init(SDL_INIT_VIDEO);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
 
-    affichage->window = SDL_CreateWindow(nomFenetre, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN); //Création d'une fenêtre
+    // Créer une fenêtre
+    affichage->window = SDL_CreateWindow(nomFenetre, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     SDL_SetWindowIcon(affichage->window, IMG_Load("assets/img/icon.png"));
-    SDL_RaiseWindow(affichage->window); //Permet de placer la fenêtre au dessus de toutes les autres
+    SDL_RaiseWindow(affichage->window);
 
-    affichage->renderer = SDL_CreateRenderer(affichage->window, -1, SDL_RENDERER_ACCELERATED); //Renderer, permettant de de "dessiner" dans la fenêtre
+    // Créer un renderer
+    affichage->renderer = SDL_CreateRenderer(affichage->window, -1, SDL_RENDERER_ACCELERATED);
 
+    // Charger les textures et couleurs
     chargementTextures(&affichage->structTextures, affichage->renderer);
     chargementCouleurs(&affichage->structCouleur);
 }
 
 void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
 {
-    SDL_Surface *surfaceTmp = NULL;
+    SDL_Surface *surfaceTmp = NULL; // Créer une surface temporaire
 
-    surfaceTmp = IMG_Load("assets/img/feuille_sprite.png");
-    (*structTextures).feuilleSprites = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+    surfaceTmp = IMG_Load("assets/img/feuille_sprite.png"); // Charger une image dans la surface temporaire
+    (*structTextures).feuilleSprites = SDL_CreateTextureFromSurface(renderer, surfaceTmp); // Créer une texture à partir de la surface temporaire
 
-    surfaceTmp = IMG_Load("assets/img/mur_indestructible.bmp"); //On charge une image sans la surface
-    (*structTextures).murIndestructible = SDL_CreateTextureFromSurface(renderer, surfaceTmp); //On met la surface dans une texture
+    surfaceTmp = IMG_Load("assets/img/mur_indestructible.bmp");
+    (*structTextures).murIndestructible = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
     surfaceTmp = IMG_Load("assets/img/mur_destructible.png");
     (*structTextures).murDestructible = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
@@ -67,15 +71,17 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     surfaceTmp = IMG_Load("assets/img/fleche_droite_blanche.png");
     (*structTextures).flecheDroiteBlanche = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    SDL_FreeSurface(surfaceTmp); //On peut donc "détruire" la surface
+    SDL_FreeSurface(surfaceTmp); // Détruire la surface temporaire
 }
 
 void chargementCouleurs(StructCouleur *structCouleur)
 {
+    // Blanc
     structCouleur->blanc.r = 255;
     structCouleur->blanc.g = 255;
     structCouleur->blanc.b = 255;
 
+    // Noir
     structCouleur->noir.r = 0;
     structCouleur->noir.g = 0;
     structCouleur->noir.b = 0;
@@ -97,7 +103,7 @@ void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char c
     // Déterminer les dimensions de la texture
     SDL_QueryTexture(texture, NULL, NULL, &textureW, &textureH);
 
-    // Déterminer les coordonnées de la texture si aucune n'ont pas été indiquées
+    // Déterminer les coordonnées de la texture si aucune n'ont été indiquées
     if(positionX == -1)
         positionX = (WIDTH / 2) - (textureW / 2);
     if(positionY == -1)
@@ -106,7 +112,7 @@ void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char c
     // Créer le rectangle qui contiendra les coordonnées et dimensions de la texture
     SDL_Rect rectTexture = {positionX, positionY, textureW, textureH};
 
-    // Afficher le texte
+    // Copier le texte dans le renderer
     SDL_RenderCopy(renderer, texture, NULL, &rectTexture);
 
     // Libérer de la RAM
@@ -123,8 +129,8 @@ void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char c
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
 {
     SDL_Rect caseMap = {0, 0, 30, 30}; // Case utilisée pour remplir la map
-    SDL_Rect spriteDecoupe;
     SDL_Rect spriteInitial = {15, 13, 35, 50};  // Coordonnées du sprite initial dans la feuille de sprites
+    SDL_Rect spriteDecoupe; // Coordonnées du sprite à afficher
     int nbTotalFrames = 9; // Nombre de sprites sur une même ligne de la feuille de sprites
     int dureeParFrame = 100;
     int frame;
@@ -197,20 +203,19 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
             caseMap.x = jeu->listeDesJoueurs[i].coordonnes.x;
             caseMap.y = jeu->listeDesJoueurs[i].coordonnes.y;
 
-            // Afficher le sprite mis à jour
+            // Copier le sprite mis à jour dans le renderer
             SDL_RenderCopy(affichage->renderer, affichage->structTextures.feuilleSprites, &spriteDecoupe, &caseMap);
         }
     }
 
 
-    //Gestion des animations
+    // Afficher le message de victoire / défaite en fin de partie
     if(jeu->animations.victoire == 1)
         animationVictoire(affichage);
     if(jeu->animations.defaite == 1)
         animationDefaite(affichage);
 
-
-    // Actualiser l'affichage
+    // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
 }
 
