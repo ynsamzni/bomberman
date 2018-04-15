@@ -40,7 +40,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
 void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
 void enregistrerNouveauCompte(char nomCompte[]);
 int chargerComptes(CompteJoueur *tabComptes);
-void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu);
+void appliquerParametragePartie(StructJeu *jeu, StructMenu *menu);
 void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer);
 
 

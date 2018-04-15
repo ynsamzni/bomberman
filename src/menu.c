@@ -574,7 +574,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
         lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
-        initLeJeuUneDeuxiemeFois(jeu, menu);
+        appliquerParametragePartie(jeu, menu);
         menu->numeroFenetre = 6;
     }
     else if(cycleToucheClavierRealise(&clavier->toucheArriere, clavier))
@@ -678,12 +678,12 @@ void enregistrerNouveauCompte(char nomCompte[])
 
 int chargerComptes(CompteJoueur *tabComptes)
 {
-
     CompteJoueur compte;
     int nbrDeComptes = 0;
-
     FILE *fic;
+
     fic = fopen (CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "r");
+
     if(fic == NULL)
     {
         printf("Impossible d'accéder à la liste des joueurs\n");
@@ -691,7 +691,6 @@ int chargerComptes(CompteJoueur *tabComptes)
     }
     else
     {
-
         while(fread(&compte, sizeof(compte), 1, fic) && !feof(fic))
         {
             tabComptes[nbrDeComptes] = compte;
@@ -702,33 +701,38 @@ int chargerComptes(CompteJoueur *tabComptes)
     }
 }
 
-void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu)
+void appliquerParametragePartie(StructJeu *jeu, StructMenu *menu)
 {
     int nbrJoueursHumains = 0;
     int nbrJoueursIA = 0;
 
-    CompteJoueur cDefault = {"Test", 0, 0};
+    CompteJoueur compteTemporaire = {"Test", 0, 0}; // Compte temporaire pour les joueurs "invités" qui ne possèdent pas de compte
 
-    for(int i = 0; i < 4; i++)
+    // Déterminer le nombre de joueurs dans la partie
+    for(int i=0; i<4; i++)
     {
         if(menu->paramPartie[i] == 0)
             nbrJoueursIA++;
-        if (menu->paramPartie[i] == 2)
+        else if (menu->paramPartie[i] == 2)
             nbrJoueursHumains++;
     }
+    jeu->nbrDeJoueurs = nbrJoueursHumains + nbrJoueursIA;
 
-    for(int i = 0; i <= nbrJoueursHumains; i++)
+    // Traiter les joueurs humains
+    for(int i=0; i<=nbrJoueursHumains; i++)
     {
+        // Lier chacun des joueurs humain à un numéro
+        jeu->listeDesJoueurs[i].humainOuIA = 0;
+
+        // Lier chacun des joueurs humain à un compte
         if(i == 0)
             jeu->listeDesJoueurs[i].compte = menu->profilSelectionne;
         else
-            jeu->listeDesJoueurs[i].compte = cDefault;
-
-        jeu->listeDesJoueurs[i].humainOuIA = 0;
+            jeu->listeDesJoueurs[i].compte = compteTemporaire;
     }
 
-    for(int i = nbrJoueursHumains; i < nbrJoueursHumains + nbrJoueursIA; i++)
+    // Traiter les IA
+    for(int i = nbrJoueursHumains; i < jeu->nbrDeJoueurs; i++)
+        // Lier chacune des IA à un numéro
         jeu->listeDesJoueurs[i].humainOuIA = 1;
-
-    jeu->nbrDeJoueurs = nbrJoueursHumains + nbrJoueursIA;
 }
