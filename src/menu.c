@@ -714,40 +714,6 @@ int chargerComptes(CompteJoueur *tabComptes)
 
 }
 
-void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer)
-{
-    int textureW, textureH;
-
-    // Charger le fichier comportant la police d'écriture
-    TTF_Font *policeEcriture = TTF_OpenFont(cheminPoliceEcriture, tailleTexte);
-
-    // Ecrire le texte dans une surface
-    SDL_Surface *surface = TTF_RenderText_Blended(policeEcriture, texte, couleurTexte);
-
-    // Créer une texture à partir de la surface
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-    // Déterminer les dimensions de la texture
-    SDL_QueryTexture(texture, NULL, NULL, &textureW, &textureH);
-
-    // Déterminer les coordonnées de la texture si aucune n'ont pas été indiquées
-    if(positionX == -1)
-        positionX = (WIDTH / 2) - (textureW / 2);
-    if(positionY == -1)
-        positionY = (HEIGHT / 2) - (textureH / 2);
-
-    // Créer le rectangle qui contiendra les coordonnées et dimensions de la texture
-    SDL_Rect rectTexture = {positionX, positionY, textureW, textureH};
-
-    // Afficher le texte
-    SDL_RenderCopy(renderer, texture, NULL, &rectTexture);
-
-    // Libérer de la RAM
-    SDL_FreeSurface(surface);
-    TTF_CloseFont(policeEcriture);
-    SDL_DestroyTexture(texture);
-}
-
 void initLeJeuUneDeuxiemeFois(StructJeu *jeu, StructMenu *menu)
 {
     int nbrJoueursHumains = 0;
