@@ -1,5 +1,5 @@
-#ifndef AUDIO_H_INCLUDED
-#define AUDIO_H_INCLUDED
+#ifndef AUDIO_H
+#define AUDIO_H
 
 #include <SDL2/SDL.h>
 #include <SDL_mixer.h>
@@ -25,4 +25,4 @@ void chargerAudio(StructAudio *audio);
 void lireAudio(StructAudio *audio, SonSelectionne sonSelectionne);
 
 
-#endif // AUDIO_H_INCLUDED
+#endif // AUDIO_H

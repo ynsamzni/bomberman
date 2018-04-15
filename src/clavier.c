@@ -5,23 +5,23 @@
 #include "../include/clavier.h"
 
 
-void initClavier(StructTouchesClavier *clavier)
+void initClavier(StructClavier *clavier)
 {
-    //Touches J1
+    // Touches J1
     clavier->toucheHautJ1 = 0;
     clavier->toucheBasJ1 = 0;
     clavier->toucheDroiteJ1 = 0;
     clavier->toucheGaucheJ1 = 0;
     clavier->toucheBombeJ1 = 0;
 
-    //Touches J2
+    // Touches J2
     clavier->toucheHautJ2 = 0;
     clavier->toucheBasJ2 = 0;
     clavier->toucheDroiteJ2 = 0;
     clavier->toucheGaucheJ2 = 0;
     clavier->toucheBombeJ2 = 0;
 
-    //Touches menu
+    // Touches menu
     clavier->toucheHaut = 0;
     clavier->toucheBas = 0;
     clavier->toucheDroite = 0;
@@ -32,7 +32,7 @@ void initClavier(StructTouchesClavier *clavier)
     clavier->toucheQuitter = 0;
 }
 
-void recupererEtatTouchesClavier(StructTouchesClavier *clavier)
+void recupererEtatTouchesClavier(StructClavier *clavier)
 {
     SDL_Event event;
 
@@ -173,9 +173,9 @@ void recupererEtatTouchesClavier(StructTouchesClavier *clavier)
         clavier->toucheQuitter = 1;
 }
 
-int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier)
+int cycleToucheClavierRealise(int *etatToucheClavier, StructClavier *clavier)
 {
-    if(*etatToucheClavier == 1 )
+    if(*etatToucheClavier == 1)
     {
         while(*etatToucheClavier == 1)
             recupererEtatTouchesClavier(clavier);
@@ -185,7 +185,7 @@ int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clav
         return 0;
 }
 
-void debugAfficherEtatTouchesClavier(StructTouchesClavier clavier)
+void debugAfficherEtatTouchesClavier(StructClavier clavier)
 {
     printf("Valeur toucheHautJ1 :  %d\n", clavier.toucheHautJ1);
     printf("Valeur toucheBasJ1 :  %d\n", clavier.toucheBasJ1);
@@ -206,6 +206,4 @@ void debugAfficherEtatTouchesClavier(StructTouchesClavier clavier)
     printf("Valeur toucheGauche :  %d\n", clavier.toucheGauche);
     printf("Valeur toucheAction :  %d\n", clavier.toucheAction);
     printf("Valeur toucheQuitter:  %d\n", clavier.toucheQuitter);
-
-    system("clear");
 }

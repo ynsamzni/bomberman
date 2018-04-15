@@ -4,7 +4,7 @@
 #include "../include/joueurHumain.h"
 
 
-void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur)
+void deplacerJoueurJ1(StructClavier *clavier, StructJeu *jeu, int indiceJoueur)
 {
     int x, y;
 
@@ -51,7 +51,7 @@ void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJ
         jeu->listeDesJoueurs[indiceJoueur].deplacement = 0;
 }
 
-void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur)
+void deplacerJoueurJ2(StructClavier *clavier, StructJeu *jeu, int indiceJoueur)
 {
     int x;
     int y;

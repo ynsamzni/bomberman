@@ -9,8 +9,8 @@ void initAudio(StructAudio *audio)
     // Initialiser les bibliothèques audio
     SDL_Init(SDL_INIT_AUDIO);
 
-    if(Mix_OpenAudio( 48000, MIX_DEFAULT_FORMAT, 2,  2048 ) < 0 ) //Ou 2048 // ou 44100
-        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+    if(Mix_OpenAudio(48000, MIX_DEFAULT_FORMAT, 2,  2048) < 0)
+        printf("SDL_mixer n'a pas pu être initialisé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Charger les fichiers audio
     chargerAudio(audio);
@@ -22,51 +22,51 @@ void initAudio(StructAudio *audio)
 void chargerAudio(StructAudio *audio)
 {
     // Musique du jeu
-    audio->musiqueDuJeu = Mix_LoadMUS("assets/audio/spaceTimeTravelMachine-Mandragora.mp3"); //Pour une musique
-    if(audio->musiqueDuJeu == NULL )
-        printf( "Failed to load musique! SDL_mixer Error: %s\n", Mix_GetError() );
+    audio->musiqueDuJeu = Mix_LoadMUS("assets/audio/spaceTimeTravelMachine-Mandragora.mp3");
+    if(audio->musiqueDuJeu == NULL)
+        printf("L'audio 'musiqueDuJeu' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Son des touches directionnelles
-    audio->sonMenuToucheDirectionnelle = Mix_LoadWAV("assets/audio/bruit_touches_directionelles.wav"); //Pour un son
-    if(audio->sonMenuToucheDirectionnelle == NULL )
-        printf( "Failed to load son menu touche directionnelle SDL_mixer Error: %s\n", Mix_GetError() );
+    audio->sonMenuToucheDirectionnelle = Mix_LoadWAV("assets/audio/bruit_touches_directionelles.wav");
+    if(audio->sonMenuToucheDirectionnelle == NULL)
+        printf("L'audio 'sonMenuToucheDirectionnelle' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Son de la touche valider
-    audio->sonMenuToucheValider = Mix_LoadWAV("assets/audio/bruit_touche_valider.wav"); //Pour un son
-    if(audio->sonMenuToucheValider == NULL )
-        printf( "Failed to load son menu touche directionnelle SDL_mixer Error: %s\n", Mix_GetError() );
+    audio->sonMenuToucheValider = Mix_LoadWAV("assets/audio/bruit_touche_valider.wav");
+    if(audio->sonMenuToucheValider == NULL)
+        printf("L'audio 'sonMenuToucheValider' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Son d'une pose de bombe
     audio->sonPoseBombe = Mix_LoadWAV("assets/audio/bruit_mort.wav");
-    if(audio->sonPoseBombe == NULL )
-        printf( "Failed to load son pose bombe SDL_mixer Error: %s\n", Mix_GetError() );
+    if(audio->sonPoseBombe == NULL)
+        printf("L'audio 'sonPoseBombe' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Son d'une explosion de bombe
     audio->sonExplosionBombe = Mix_LoadWAV("assets/audio/bruit_explosion_bombe.wav");
-    if(audio->sonExplosionBombe == NULL )
-        printf( "Failed to load son menu son explosion bombe SDL_mixer Error: %s\n", Mix_GetError() );
+    if(audio->sonExplosionBombe == NULL)
+        printf("L'audio 'sonExplosionBombe' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Son de la mort d'un personnage
     audio->sonMortPersonnage = Mix_LoadWAV("assets/audio/bruit_pose_bombe.wav");
-    if(audio->sonMortPersonnage == NULL )
-        printf( "Failed to load son menu son mort personnage SDL_mixer Error: %s\n", Mix_GetError() );
+    if(audio->sonMortPersonnage == NULL)
+        printf("L'audio 'sonMortPersonnage' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Son d'une victoire
     audio->sonVictoire = Mix_LoadWAV("assets/audio/son_victoire.wav");
-    if(audio->sonVictoire == NULL )
-        printf( "Failed to load son menu son Victoire SDL_mixer Error: %s\n", Mix_GetError() );
+    if(audio->sonVictoire == NULL)
+        printf("L'audio 'sonVictoire' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Son d'une défaite
     audio->sonDefaite = Mix_LoadWAV("assets/audio/son_defaite.wav");
-    if(audio->sonDefaite == NULL )
-        printf( "Failed to load son menu son Defaite SDL_mixer Error: %s\n", Mix_GetError() );
+    if(audio->sonDefaite == NULL)
+        printf("L'audio 'sonDefaite' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 }
 
 void lireAudio(StructAudio *audio, SonSelectionne sonSelectionne)
 {
     // Musique du jeu
     if(sonSelectionne == MUSIQUE)
-        Mix_PlayMusic(audio->musiqueDuJeu, -1 );
+        Mix_PlayMusic(audio->musiqueDuJeu, -1);
 
     // Son des touches directionnelles
     if(sonSelectionne == SON_MENU_TOUCHE_DIRECTIONNELLE)

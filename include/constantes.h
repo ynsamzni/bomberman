@@ -1,5 +1,5 @@
-#ifndef CONSTANTES_H_INCLUDED
-#define CONSTANTES_H_INCLUDED
+#ifndef CONSTANTES_H
+#define CONSTANTES_H
 
 
 #define WIDTH 600
@@ -19,7 +19,6 @@
 #define CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS "saves/comptes_joueurs.dat"
 #define CHEMIN_POLICE_ECRITURE_MONTSERRAT "assets/fonts/montserrat_regular.ttf"
 #define CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD "assets/fonts/montserrat_bold.ttf"
-#define CHEMIN_POLICE_ECRITURE_VERDANA "assets/fonts/verdana.ttf"
 
 
-#endif // CONSTANTES_H_INCLUDED
+#endif // CONSTANTES_H

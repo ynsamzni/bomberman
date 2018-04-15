@@ -1,13 +1,12 @@
-#ifndef JOUEURHUMAIN_H_INCLUDED
-#define JOUEURHUMAIN_H_INCLUDED
+#ifndef JOUEURHUMAIN_H
+#define JOUEURHUMAIN_H
 
 #include "jeu.h"
 #include "clavier.h"
 
 
-void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur);
-void deplacerJoueurJ2(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur);
-void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
+void deplacerJoueurJ1(StructClavier *clavier, StructJeu *jeu, int indiceJoueur);
+void deplacerJoueurJ2(StructClavier *clavier, StructJeu *jeu, int indiceJoueur);
 
 
-#endif // JOUEURHUMAIN_H_INCLUDED
+#endif // JOUEURHUMAIN_H

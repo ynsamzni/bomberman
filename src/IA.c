@@ -63,7 +63,9 @@ void deplacerIA(int indiceJoueur, StructJeu *jeu)
 }
 
 
-/********** Traitement des itinéraires **********/
+/**************************************************************************************/
+/***************************** TRAITEMENT DES ITINERAIRES *****************************/
+/**************************************************************************************/
 
 int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbItineraire, int nbDeplacement, StructJeu *jeu)
 {
@@ -420,7 +422,9 @@ void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itiner
 }
 
 
-/********** Traitement des dangers **********/
+/**********************************************************************************/
+/***************************** TRAITEMENT DES DANGERS *****************************/
+/**********************************************************************************/
 
 void calculerCasesDangereuses(Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], StructJeu *jeu)
 {
@@ -689,7 +693,9 @@ int ennemiProche(int indiceJoueur, int distanceMax, StructJeu *jeu)
 }
 
 
-/********** Traitement des coordonnées **********/
+/**************************************************************************************/
+/***************************** TRAITEMENT DES COORDONNEES *****************************/
+/**************************************************************************************/
 
 void modifierCoordonnees(Coordonnes *coordonneesAModifier, int x, int y)
 {

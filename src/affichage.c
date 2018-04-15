@@ -47,29 +47,17 @@ void chargerTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     surfaceTmp = IMG_Load("assets/img/explosion.png");
     (*structTextures).explosion = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    surfaceTmp = IMG_Load("assets/img/victoire.png");
-    (*structTextures).victoire = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+    surfaceTmp = IMG_Load("assets/img/fleche_basse_noire.png");
+    (*structTextures).flecheBasseNoire = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    surfaceTmp = IMG_Load("assets/img/defaite.png");
-    (*structTextures).defaite = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+    surfaceTmp = IMG_Load("assets/img/fleche_haute_noire.png");
+    (*structTextures).flecheHauteNoire = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    surfaceTmp = IMG_Load("assets/img/fleche_bas.png");
-    (*structTextures).flecheBasse = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+    surfaceTmp = IMG_Load("assets/img/fleche_gauche_noire.png");
+    (*structTextures).flecheGaucheNoire = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
-    surfaceTmp = IMG_Load("assets/img/fleche_haut.png");
-    (*structTextures).flecheHaute = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
-
-    surfaceTmp = IMG_Load("assets/img/fleche_gauche.png");
-    (*structTextures).flecheGauche = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
-
-    surfaceTmp = IMG_Load("assets/img/fleche_droite.png");
-    (*structTextures).flecheDroite = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
-
-    surfaceTmp = IMG_Load("assets/img/fleche_gauche_blanche.png");
-    (*structTextures).flecheGaucheBlanche = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
-
-    surfaceTmp = IMG_Load("assets/img/fleche_droite_blanche.png");
-    (*structTextures).flecheDroiteBlanche = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+    surfaceTmp = IMG_Load("assets/img/fleche_droite_noire.png");
+    (*structTextures).flecheDroiteNoire = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
     SDL_FreeSurface(surfaceTmp); // Détruire la surface temporaire
 }
@@ -87,44 +75,10 @@ void chargerCouleurs(StructCouleur *structCouleur)
     structCouleur->noir.b = 0;
 }
 
-void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer)
-{
-    int textureW, textureH;
 
-    // Charger le fichier comportant la police d'écriture
-    TTF_Font *policeEcriture = TTF_OpenFont(cheminPoliceEcriture, tailleTexte);
-
-    // Ecrire le texte dans une surface
-    SDL_Surface *surface = TTF_RenderText_Blended(policeEcriture, texte, couleurTexte);
-
-    // Créer une texture à partir de la surface
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-    // Déterminer les dimensions de la texture
-    SDL_QueryTexture(texture, NULL, NULL, &textureW, &textureH);
-
-    // Déterminer les coordonnées de la texture si aucune n'ont été indiquées
-    if(positionX == -1)
-        positionX = (WIDTH / 2) - (textureW / 2);
-    if(positionY == -1)
-        positionY = (HEIGHT / 2) - (textureH / 2);
-
-    // Créer le rectangle qui contiendra les coordonnées et dimensions de la texture
-    SDL_Rect rectTexture = {positionX, positionY, textureW, textureH};
-
-    // Copier le texte dans le renderer
-    SDL_RenderCopy(renderer, texture, NULL, &rectTexture);
-
-    // Libérer de la RAM
-    SDL_FreeSurface(surface);
-    TTF_CloseFont(policeEcriture);
-    SDL_DestroyTexture(texture);
-}
-
-
-/******************************************************************************/
-/*****************************AFFICHAGE DU JEU*********************************/
-/******************************************************************************/
+/************************************************************************************/
+/***************************** AFFICHAGE D'ELEMENTS *********************************/
+/************************************************************************************/
 
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
 {
@@ -209,12 +163,12 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
     }
 
     // Afficher le message de victoire / défaite en fin de partie
-    if(jeu->animations.victoire)
+    if(jeu->animation.victoire)
     {
         afficherTexte("VICTOIRE !", 80, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
         afficherTexte("Appuyez sur ENTREE", 20, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 280, affichage->renderer);
     }
-    else if(jeu->animations.defaite)
+    else if(jeu->animation.defaite)
     {
         afficherTexte("DEFAITE !", 80, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 180, affichage->renderer);
         afficherTexte("Appuyez sur ENTREE", 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT_BOLD, -1, 280, affichage->renderer);
@@ -222,4 +176,38 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
 
     // Afficher le renderer
     SDL_RenderPresent(affichage->renderer);
+}
+
+void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer)
+{
+    int textureW, textureH;
+
+    // Charger le fichier comportant la police d'écriture
+    TTF_Font *policeEcriture = TTF_OpenFont(cheminPoliceEcriture, tailleTexte);
+
+    // Ecrire le texte dans une surface
+    SDL_Surface *surface = TTF_RenderText_Blended(policeEcriture, texte, couleurTexte);
+
+    // Créer une texture à partir de la surface
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    // Déterminer les dimensions de la texture
+    SDL_QueryTexture(texture, NULL, NULL, &textureW, &textureH);
+
+    // Déterminer les coordonnées de la texture si aucune n'ont été indiquées
+    if(positionX == -1)
+        positionX = (WIDTH / 2) - (textureW / 2);
+    if(positionY == -1)
+        positionY = (HEIGHT / 2) - (textureH / 2);
+
+    // Créer le rectangle qui contiendra les coordonnées et dimensions de la texture
+    SDL_Rect rectTexture = {positionX, positionY, textureW, textureH};
+
+    // Copier le texte dans le renderer
+    SDL_RenderCopy(renderer, texture, NULL, &rectTexture);
+
+    // Libérer de la RAM
+    SDL_FreeSurface(surface);
+    TTF_CloseFont(policeEcriture);
+    SDL_DestroyTexture(texture);
 }

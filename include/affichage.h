@@ -1,5 +1,5 @@
-#ifndef AFFICHAGE_INCLUDED
-#define AFFICHAGE_INCLUDED
+#ifndef AFFICHAGE_H
+#define AFFICHAGE_H
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -22,14 +22,10 @@ typedef struct {
     SDL_Texture *bombe;
     SDL_Texture *etincelle;
     SDL_Texture *explosion;
-    SDL_Texture *victoire;
-    SDL_Texture *defaite;
-    SDL_Texture *flecheBasse;
-    SDL_Texture *flecheHaute;
-    SDL_Texture *flecheGauche;
-    SDL_Texture *flecheDroite;
-    SDL_Texture *flecheGaucheBlanche;
-    SDL_Texture *flecheDroiteBlanche;
+    SDL_Texture *flecheBasseNoire;
+    SDL_Texture *flecheHauteNoire;
+    SDL_Texture *flecheGaucheNoire;
+    SDL_Texture *flecheDroiteNoire;
 } StructTextures;
 
 typedef struct {
@@ -43,6 +39,7 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[]);
 void chargerTextures(StructTextures *structTextures, SDL_Renderer *renderer);
 void chargerCouleurs(StructCouleur *structCouleur);
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu);
+void afficherTexte(char texte[], int tailleTexte, SDL_Color couleurTexte, char cheminPoliceEcriture[], int positionX, int positionY, SDL_Renderer *renderer);
 
 
-#endif // AFFICHAGE_INCLUDED
+#endif // AFFICHAGE_H

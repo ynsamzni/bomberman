@@ -10,7 +10,6 @@ void initMap(StructJeu *jeu)
 {
     FILE *fic;
 
-    printf("Chargement de map.dat\n");
     fic = fopen (CHEMIN_D_ACCES_FICHIER_NIVEAU, "r");
 
     if(fic == NULL)
@@ -85,11 +84,11 @@ void initJeu(StructJeu *jeu)
     initJoueurs(jeu);
 
     // Initialiser l'animation de victoire / défaite qui apparaît en fin de partie
-    jeu->animations.victoire = 0;
-    jeu->animations.defaite = 0;
+    jeu->animation.victoire = 0;
+    jeu->animation.defaite = 0;
 }
 
-void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio)
+void calculerJeu(StructJeu *jeu, StructClavier *clavier, StructAudio *audio)
 {
     // Déterminer si des joueurs ont des actions en attente d'exécution
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
@@ -135,9 +134,9 @@ void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *aud
 }
 
 
-/***************************************************************************************/
-/*******************GESTION DE L'EXPLOSION DES BOMBES***********************************/
-/***************************************************************************************/
+/*********************************************************************************************/
+/***************************** GESTION DE L'EXPLOSION DES BOMBES *****************************/
+/*********************************************************************************************/
 
 void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 {
@@ -216,7 +215,7 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
         // Tuer les joueurs qui se trouvent dans l'explosion de la bombe
         for(int indiceJoueur = 0; indiceJoueur < jeu->nbrDeJoueurs; indiceJoueur++)
         {
-            if(contenuCoordonnees(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4 && jeu->listeDesJoueurs[indiceJoueur].enVie != 0 )
+            if(contenuCoordonnees(jeu, jeu->listeDesJoueurs[indiceJoueur].coordonnes.x, jeu->listeDesJoueurs[indiceJoueur].coordonnes.y)  == 4 && jeu->listeDesJoueurs[indiceJoueur].enVie != 0)
             {
                 jeu->listeDesJoueurs[indiceJoueur].enVie = 0;
                 lireAudio(audio, SON_MORT_PERSONNAGE);
@@ -262,60 +261,9 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 }
 
 
-/*********************************************************************************/
-/**********************AFFICHER LA STRUCTURE**************************************/
-/*********************************************************************************/
-
-void debugAfficherInformationsPartie(StructJeu jeu)
-{
-    printf("Nombre de joueurs = %d \n", jeu.nbrDeJoueurs);
-    for(int i = 0; i < jeu.nbrDeJoueurs; i++)
-    {
-
-
-        printf("   Joueur %d \n", i+1);
-        printf("   Type : %d \n", jeu.listeDesJoueurs[i].humainOuIA);
-        printf("   En vie : %d \n", jeu.listeDesJoueurs[i].enVie);
-
-        if(jeu.listeDesJoueurs[i].humainOuIA == 0)
-        {
-            printf("      Nom : %s ", jeu.listeDesJoueurs[i].compte.nom);
-            printf("      Victoires : %d \n", jeu.listeDesJoueurs[i].compte.nbrVictoires);
-            printf("      Défaites : %d \n", jeu.listeDesJoueurs[i].compte.nbrDefaites);
-
-        }
-        printf("   Coordonnée X : %d \n", jeu.listeDesJoueurs[i].coordonnes.x);
-        printf("   Coordonnée Y : %d \n", jeu.listeDesJoueurs[i].coordonnes.y);
-        if(jeu.listeDesJoueurs[i].direction == HAUT)
-        {
-            printf("   Direction : HAUT \n");
-        }
-        if(jeu.listeDesJoueurs[i].direction == BAS)
-        {
-            printf("   Direction : BAS \n");
-        }
-        if(jeu.listeDesJoueurs[i].direction == DROITE)
-        {
-
-            printf("   Direction : DROITE \n");
-        }
-        if(jeu.listeDesJoueurs[i].direction == GAUCHE)
-        {
-            printf("   Direction : GAUCHE \n");
-        }
-        printf("   Déplacement : %d \n",jeu.listeDesJoueurs[i].deplacement);
-        printf("      Bombe \n");
-        printf("      Coordonnée Bombe X : %d \n", jeu.listeDesJoueurs[i].bombe.coordonnesBombe.x);
-        printf("      Coordonnée Bombe Y : %d \n", jeu.listeDesJoueurs[i].bombe.coordonnesBombe.y);
-        printf("      Nbr Ticks : %d \n", jeu.listeDesJoueurs[i].bombe.tickDePose);
-        printf("\n****************************************\n");
-    }
-}
-
-
-/*********************************************************************************/
-/*****************FONCTIONS POUR SIMPLIFIER LE CODE*******************************/
-/*********************************************************************************/
+/*********************************************************************************************/
+/***************************** FONCTIONS POUR SIMPLIFIER LE CODE *****************************/
+/*********************************************************************************************/
 
 int deplacementPossible(int x, int y, Direction direction, StructJeu *jeu)
 {
@@ -330,7 +278,7 @@ int deplacementPossible(int x, int y, Direction direction, StructJeu *jeu)
 
 int contenuCoordonnees(StructJeu *jeu, int x, int y)
 {
-    if( x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
+    if(x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
         return 1;
     else
         return jeu->mapJeu[coordonneeMatricielle(x)][coordonneeMatricielle(y)];
@@ -341,26 +289,7 @@ int coordonneeMatricielle(int coordonne)
     return (coordonne/30);
 }
 
-int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3, int probaVal3, int val4, int probaVal4)
-{
-    // Générer un nombre aléatoire compris entre 0 et 100
-    int val = rand() % 101;
-
-    // Si la probabilité de val1 est atteinte
-    if (val <= probaVal1)
-        return val1;
-    // Si la probabilité de val2 est atteinte
-    else if (val <= probaVal1 + probaVal2)
-        return val2;
-    // Si la probabilité de val3 est atteinte
-    else if (val <= probaVal1 + probaVal2 + probaVal3)
-        return val3;
-    // Si la probabilité de val4 est atteinte
-    else
-        return val4;
-}
-
-void actualiserEtatJeu(StructJeu *jeu, StructAudio *audio, StructTouchesClavier *clavier)
+void actualiserEtatJeu(StructJeu *jeu, StructAudio *audio, StructClavier *clavier)
 {
     int nbrIA = 0;
     int nbrHumains = 0;
@@ -375,7 +304,7 @@ void actualiserEtatJeu(StructJeu *jeu, StructAudio *audio, StructTouchesClavier 
     }
     if(nbrHumains == 0)
     {
-        jeu->animations.defaite = 1;
+        jeu->animation.defaite = 1;
         lireAudio(audio, SON_DEFAITE);
         for(int i = 0; i < jeu->nbrDeJoueurs; i++)
         {
@@ -386,7 +315,7 @@ void actualiserEtatJeu(StructJeu *jeu, StructAudio *audio, StructTouchesClavier 
     }
     else if(nbrHumains == 1 && nbrIA == 0)
     {
-        jeu->animations.victoire = 1;
+        jeu->animation.victoire = 1;
         lireAudio(audio, SON_VICTOIRE);
         for(int i = 0; i < jeu->nbrDeJoueurs; i++)
         {
@@ -435,5 +364,75 @@ void actualiserStatistiquesJoueur(StructJeu *jeu, int indiceJoueur, int victoire
             }
         }
         fclose(fic);
+    }
+}
+
+int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3, int probaVal3, int val4, int probaVal4)
+{
+    // Générer un nombre aléatoire compris entre 0 et 100
+    int val = rand() % 101;
+
+    // Si la probabilité de val1 est atteinte
+    if (val <= probaVal1)
+        return val1;
+    // Si la probabilité de val2 est atteinte
+    else if (val <= probaVal1 + probaVal2)
+        return val2;
+    // Si la probabilité de val3 est atteinte
+    else if (val <= probaVal1 + probaVal2 + probaVal3)
+        return val3;
+    // Si la probabilité de val4 est atteinte
+    else
+        return val4;
+}
+
+
+/*****************************************************************/
+/***************************** DEBUG *****************************/
+/*****************************************************************/
+
+void debugAfficherInformationsPartie(StructJeu *jeu)
+{
+    printf("Nombre de joueurs = %d \n", jeu->nbrDeJoueurs);
+    for(int i = 0; i < jeu->nbrDeJoueurs; i++)
+    {
+
+
+        printf("   Joueur %d \n", i+1);
+        printf("   Type : %d \n", jeu->listeDesJoueurs[i].humainOuIA);
+        printf("   En vie : %d \n", jeu->listeDesJoueurs[i].enVie);
+
+        if(jeu->listeDesJoueurs[i].humainOuIA == 0)
+        {
+            printf("      Nom : %s ", jeu->listeDesJoueurs[i].compte.nom);
+            printf("      Victoires : %d \n", jeu->listeDesJoueurs[i].compte.nbrVictoires);
+            printf("      Défaites : %d \n", jeu->listeDesJoueurs[i].compte.nbrDefaites);
+
+        }
+        printf("   Coordonnée X : %d \n", jeu->listeDesJoueurs[i].coordonnes.x);
+        printf("   Coordonnée Y : %d \n", jeu->listeDesJoueurs[i].coordonnes.y);
+        if(jeu->listeDesJoueurs[i].direction == HAUT)
+        {
+            printf("   Direction : HAUT \n");
+        }
+        if(jeu->listeDesJoueurs[i].direction == BAS)
+        {
+            printf("   Direction : BAS \n");
+        }
+        if(jeu->listeDesJoueurs[i].direction == DROITE)
+        {
+
+            printf("   Direction : DROITE \n");
+        }
+        if(jeu->listeDesJoueurs[i].direction == GAUCHE)
+        {
+            printf("   Direction : GAUCHE \n");
+        }
+        printf("   Déplacement : %d \n",jeu->listeDesJoueurs[i].deplacement);
+        printf("      Bombe \n");
+        printf("      Coordonnée Bombe X : %d \n", jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x);
+        printf("      Coordonnée Bombe Y : %d \n", jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y);
+        printf("      Nbr Ticks : %d \n", jeu->listeDesJoueurs[i].bombe.tickDePose);
+        printf("\n****************************************\n");
     }
 }

@@ -14,7 +14,7 @@ void initMenu(StructMenu *menu)
     menu->dernierNumeroFenetre = menu->numeroFenetre;
 }
 
-void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage, StructAudio *audio)
+void afficherMenu(StructMenu *menu, StructJeu *jeu, StructClavier *clavier, StructAffichage *affichage, StructAudio *audio)
 {
     // S'il y'a changement de fenêtre
     if(menu->numeroFenetre != menu->dernierNumeroFenetre)
@@ -29,7 +29,7 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
             menu->positionCurseurY = 1;
         else if(menu->numeroFenetre == 2)
         {
-            // Afficher un champ de texte vide
+            // Afficher un champ texte vide
             menu->tabNomDuJoueur[0] = 'A';
             menu->tabNomDuJoueur[1] = '\0';
         }
@@ -50,8 +50,8 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
     switch(menu->numeroFenetre)
     {
     case 0:
-        // Première page du menu, page d'acceuil
-        afficherMenuAccueil(affichage, clavier, jeu, menu);
+        // Menu d'accueil
+        afficherMenuAccueil(affichage, clavier, jeu, menu, audio);
         break;
     case 1:
         // Menu demandant de sélectionner un profil et/ou d'en créer un
@@ -62,7 +62,7 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
         afficherMenuCreationProfil(affichage, clavier, jeu, menu, audio);
         break;
     case 3:
-        // Menu "principal" (jouer + statistiques)
+        // Menu principal (Choix entre 'Jouer', 'Statistiques' et 'Quitter')
         afficherMenuPrincipal(affichage, clavier, menu, audio);
         break;
     case 4:
@@ -70,14 +70,14 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
         afficherMenuStatistiques(affichage, clavier, menu);
         break;
     case 5:
-        // Menu permettant de paramétrer sa partie
+        // Menu permettant de paramétrer sa partie avant de la lancer
         afficherMenuParametragePartie(affichage, clavier, jeu, menu, audio);
         break;
     case 6:
         jeu->etat = LANCEMENT;
         break;
     case 7:
-        //Menu pause, un peu particulier car afficher par dessus le jeu
+        //Menu pause affiché par dessus le jeu
         afficherMenuPause(affichage, clavier, jeu, menu, audio);
         break;
     case -1:
@@ -87,9 +87,11 @@ void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavi
 }
 
 
-/******************** MENU 0 : MENU ACCUEIL **********************/
+/****************************************************************************/
+/***************************** MENU 0 : ACCUEIL *****************************/
+/****************************************************************************/
 
-void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu)
+void afficherMenuAccueil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     int couleurTexteClignotant = (SDL_GetTicks() / 6) % 255; // Passe de 0 à 255 en incrémentant toutes les 6 ms
     SDL_Color color = {couleurTexteClignotant, couleurTexteClignotant, couleurTexteClignotant, 0};
@@ -121,13 +123,18 @@ void afficherMenuAccueil(StructAffichage *affichage, StructTouchesClavier *clavi
 
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
+    {
+        lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
         menu->numeroFenetre = 1;
+    }
 }
 
 
-/******************** MENU 1 : SELECTION PROFIL **********************/
+/****************************************************************************************/
+/***************************** MENU 1 : SELECTION DE PROFIL *****************************/
+/****************************************************************************************/
 
-void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
+void afficherMenuSelectionProfil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     CompteJoueur tabComptes[NBR_MAX_COMPTES];
     int nbTotalProfils = chargerComptes(tabComptes);
@@ -161,7 +168,7 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
                 afficherTexte(tabComptes[i].nom, 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 170 + 50 * i, affichage->renderer);
         }
 
-        if(menu->positionCurseurY == nbTotalProfils )
+        if(menu->positionCurseurY == nbTotalProfils)
             afficherTexte("Nouveau profil", 30, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 170 + 50 * nbTotalProfils, affichage->renderer);
         else
             afficherTexte("Nouveau profil", 30, affichage->structCouleur.blanc, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 170 + 50 * nbTotalProfils, affichage->renderer);
@@ -194,9 +201,11 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
 }
 
 
-/******************** MENU 2 : CREATION PROFIL **********************/
+/***************************************************************************************/
+/***************************** MENU 2 : CREATION DE PROFIL *****************************/
+/***************************************************************************************/
 
-void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
+void afficherMenuCreationProfil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     char caractereActuel;
     int nbMaxLettres = 8;
@@ -208,8 +217,8 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     caseLettre.y = 170;
 
     SDL_Rect lettre = {caseLettre.x + 5, caseLettre.y - 5, 0, 0};
-    SDL_Rect flecheHaute = {caseLettre.x + 5, caseLettre.y - 30, 40, 30};
-    SDL_Rect flecheBasse = {caseLettre.x + 5, caseLettre.y + caseLettre.h, 40, 30};
+    SDL_Rect flecheHauteNoire = {caseLettre.x + 5, caseLettre.y - 30, 40, 30};
+    SDL_Rect flecheBasseNoire = {caseLettre.x + 5, caseLettre.y + caseLettre.h, 40, 30};
 
     // Si l'utilisateur appuie sur une touche : Effectuer l'action associée
     if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) && menu->positionCurseurX != nbMaxLettres - 1)
@@ -277,16 +286,16 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
         if(i == menu->positionCurseurX)
         {
             if(menu->tabNomDuJoueur[menu->positionCurseurX] != 'A')
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheHaute, NULL, &flecheHaute);
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheHauteNoire, NULL, &flecheHauteNoire);
             if(menu->tabNomDuJoueur[menu->positionCurseurX] != 'Z')
-                SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheBasse, NULL, &flecheBasse);
+                SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheBasseNoire, NULL, &flecheBasseNoire);
         }
 
         // Passer aux coordonnées de la prochaine case
         caseLettre.x += caseLettre.w;
         lettre.x += caseLettre.w;
-        flecheHaute.x += caseLettre.w;
-        flecheBasse.x += caseLettre.w;
+        flecheHauteNoire.x += caseLettre.w;
+        flecheBasseNoire.x += caseLettre.w;
     }
 
     afficherTexte("ENTREE pour continuer", 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 310, affichage->renderer);
@@ -321,9 +330,11 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
 }
 
 
-/***** MENU 3 : MENU PRINCIPAL ************************************/
+/******************************************************************************/
+/***************************** MENU 3 : PRINCIPAL *****************************/
+/******************************************************************************/
 
-void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu, StructAudio *audio)
+void afficherMenuPrincipal(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio)
 {
     char chaineBienvenue[40] = "BIEVENUE ";
     strcat(chaineBienvenue, menu->profilSelectionne.nom);
@@ -387,9 +398,11 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
 }
 
 
-/******************** MENU 4 : MENU STATISTIQUES **********************/
+/*********************************************************************************/
+/***************************** MENU 4 : STATISTIQUES *****************************/
+/*********************************************************************************/
 
-void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *clavier, StructMenu *menu)
+void afficherMenuStatistiques(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu)
 {
     CompteJoueur tabComptes[NBR_MAX_COMPTES];
     int nbrDeComptes = chargerComptes(tabComptes);
@@ -458,9 +471,11 @@ void afficherMenuStatistiques(StructAffichage *affichage, StructTouchesClavier *
 }
 
 
-/******************** MENU 5 : MENU DE PARAMETRAGE DE LA PARTIE **********************/
+/*********************************************************************************************/
+/***************************** MENU 5 : PARAMETRAGE DE LA PARTIE *****************************/
+/*********************************************************************************************/
 
-void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
+void afficherMenuParametragePartie(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     SDL_Rect contourSelection;
     contourSelection.w = 300;
@@ -468,17 +483,17 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     contourSelection.x = WIDTH / 2 - contourSelection.w / 2;
     contourSelection.y = 170;
 
-    SDL_Rect flecheGauche;
-    flecheGauche.w = 40;
-    flecheGauche.h = 40;
-    flecheGauche.x = contourSelection.x - flecheGauche.w - 10;
-    flecheGauche.y = contourSelection.y + 5;
+    SDL_Rect flecheGaucheNoire;
+    flecheGaucheNoire.w = 40;
+    flecheGaucheNoire.h = 40;
+    flecheGaucheNoire.x = contourSelection.x - flecheGaucheNoire.w - 10;
+    flecheGaucheNoire.y = contourSelection.y + 5;
 
-    SDL_Rect flecheDroite;
-    flecheDroite.w = 40;
-    flecheDroite.h = 40;
-    flecheDroite.x = contourSelection.x + contourSelection.w + 10;
-    flecheDroite.y = contourSelection.y + 5;
+    SDL_Rect flecheDroiteNoire;
+    flecheDroiteNoire.w = 40;
+    flecheDroiteNoire.h = 40;
+    flecheDroiteNoire.x = contourSelection.x + contourSelection.w + 10;
+    flecheDroiteNoire.y = contourSelection.y + 5;
 
     int nbJoueursHumainsSelectionnes = 0;
 
@@ -508,7 +523,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
 
         lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
-    else if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) )
+    else if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier))
     {
         // Sauter le choix 'Humain' si 2 sont déja selectionnés
         if(menu->paramPartie[menu->positionCurseurY] == 1 && nbJoueursHumainsSelectionnes == 2)
@@ -558,12 +573,12 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     }
 
     // Flèche gauche
-    flecheGauche.y = flecheGauche.y + 80 * menu->positionCurseurY;
-    SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheGauche, NULL, &flecheGauche);
+    flecheGaucheNoire.y = flecheGaucheNoire.y + 80 * menu->positionCurseurY;
+    SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheGaucheNoire, NULL, &flecheGaucheNoire);
 
     // Flèche droite
-    flecheDroite.y = flecheDroite.y + 80 * menu->positionCurseurY;
-    SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheDroite, NULL, &flecheDroite);
+    flecheDroiteNoire.y = flecheDroiteNoire.y + 80 * menu->positionCurseurY;
+    SDL_RenderCopy(affichage->renderer, affichage->structTextures.flecheDroiteNoire, NULL, &flecheDroiteNoire);
 
     afficherTexte("ENTREE pour lancer la partie", 20, affichage->structCouleur.noir, CHEMIN_POLICE_ECRITURE_MONTSERRAT, -1, 510, affichage->renderer);
 
@@ -584,9 +599,11 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
 }
 
 
-/******************** MENU 7 : MENU PAUSE **********************/
+/**************************************************************************/
+/***************************** MENU 7 : PAUSE *****************************/
+/**************************************************************************/
 
-void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
+void afficherMenuPause(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
 {
     SDL_Rect rectFond;
     rectFond.w = 400;
@@ -650,9 +667,9 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
 }
 
 
-/*************************************************************/
-/*************FONCTIONS POUR SIMPLIFIER LE CODE **************/
-/*************************************************************/
+/*********************************************************************************************/
+/***************************** FONCTIONS POUR SIMPLIFIER LE CODE *****************************/
+/*********************************************************************************************/
 
 void enregistrerNouveauCompte(char nomCompte[])
 {

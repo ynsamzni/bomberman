@@ -1,5 +1,5 @@
-#ifndef IA_H_INCLUDED
-#define IA_H_INCLUDED
+#ifndef IA_H
+#define IA_H
 
 #include "jeu.h"
 #include "constantes.h"
@@ -12,16 +12,16 @@ void comparerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int 
 int comparerItineraireEloignementDangerosite(Coordonnes itineraire[300], Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], int *longueurMeilleurItineraire);
 int comparerItineraireRapprochementTarget(int x, int y, Coordonnes itineraire[300], Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], int *longueurMeilleurItineraire);
 int longueurItineraire(Coordonnes itineraire[300]);
-int rechercherDeplacementItineraire(int x, int y, Coordonnes itineraire[300]);
 void copierItineraire(Coordonnes itineraireSrc[300], Coordonnes itineraireDest[300]);
+int rechercherDeplacementItineraire(int x, int y, Coordonnes itineraire[300]);
 void supprimerDeplacementItineraire(int deplacementASupprimer, Coordonnes itineraire[300]);
 void calculerCasesDangereuses(Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES], StructJeu *jeu);
+int poseBombeDangereuse(int indiceJoueur, StructJeu *jeu);
 int coordonneesDangereuses(int x, int y, Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES]);
 int itineraireDangereux(Coordonnes itineraire[300], Coordonnes casesDangereuses[NB_CASES_AFFECTEES_EXPLOSIONS_BOMBES]);
 int ennemiProche(int indiceJoueur, int distanceMax, StructJeu *jeu);
 void modifierCoordonnees(Coordonnes *coordonneesAModifier, int x, int y);
 void copierCoordonnees(Coordonnes *coordonneesSrc, Coordonnes *coordonneesDest);
-int poseBombeDangereuse(int indiceJoueur, StructJeu *jeu);
 
 
-#endif // IA_H_INCLUDED
+#endif // IA_H

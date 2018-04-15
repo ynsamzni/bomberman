@@ -1,5 +1,5 @@
-#ifndef JEU_H_INCLUDED
-#define JEU_H_INCLUDED
+#ifndef JEU_H
+#define JEU_H
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -49,30 +49,29 @@ typedef struct {
 typedef struct {
     int victoire;
     int defaite;
-
-} Animations;
+} Animation;
 
 typedef struct {
     EtatJeu etat;
     int mapJeu[NBR_DE_CASES_HORIZONTALES][NBR_DE_CASES_VERTICALES];
     int nbrDeJoueurs;
     Joueur listeDesJoueurs[4];
-    Animations animations;
+    Animation animation;
 } StructJeu;
 
 void initMap(StructJeu *jeu);
 void initJoueurs(StructJeu *jeu);
 void initJeu(StructJeu *jeu);
-void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio);
-void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
+void calculerJeu(StructJeu *jeu, StructClavier *clavier, StructAudio *audio);
 void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
-void debugAfficherInformationsPartie(StructJeu jeu);
+void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);
 int deplacementPossible(int x, int y, Direction direction, StructJeu *jeu);
 int contenuCoordonnees(StructJeu *jeu, int y, int x);
 int coordonneeMatricielle(int coordonne);
-int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3, int probaVal3, int val4, int probaVal4);
-void actualiserEtatJeu(StructJeu *jeu, StructAudio *audio, StructTouchesClavier *clavier);
+void actualiserEtatJeu(StructJeu *jeu, StructAudio *audio, StructClavier *clavier);
 void actualiserStatistiquesJoueur(StructJeu *jeu, int indiceJoueur, int victoireOuDefaite);
+int randProbaParmi4Nb(int val1, int probaVal1, int val2, int probaVal2, int val3, int probaVal3, int val4, int probaVal4);
+void debugAfficherInformationsPartie(StructJeu *jeu);
 
 
-#endif // JEU_H_INCLUDED
+#endif // JEU_H

@@ -1,5 +1,5 @@
-#ifndef CLAVIER_H_INCLUDED
-#define CLAVIER_H_INCLUDED
+#ifndef CLAVIER_H
+#define CLAVIER_H
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -31,12 +31,12 @@ typedef struct {
     int toucheSupprimer;
     int toucheArriere;
     int toucheQuitter;
-} StructTouchesClavier;
+} StructClavier;
 
-void initClavier(StructTouchesClavier *clavier);
-void recupererEtatTouchesClavier(StructTouchesClavier *clavier);
-void debugAfficherEtatTouchesClavier(StructTouchesClavier clavier);
-int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier);
+void initClavier(StructClavier *clavier);
+void recupererEtatTouchesClavier(StructClavier *clavier);
+int cycleToucheClavierRealise(int *etatToucheClavier, StructClavier *clavier);
+void debugAfficherEtatTouchesClavier(StructClavier clavier);
 
 
-#endif // CLAVIER_H_INCLUDED
+#endif // CLAVIER_H
