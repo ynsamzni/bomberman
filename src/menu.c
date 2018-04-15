@@ -656,20 +656,24 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
 
 void enregistrerNouveauCompte(char nomCompte[])
 {
+    CompteJoueur nouveauCompte;
     FILE *fic;
-    CompteJoueur c;
 
-    strcpy(c.nom, nomCompte);
-    c.nbrVictoires = 0;
-    c.nbrDefaites = 0;
+    // Créer le nouveau compte
+    strcpy(nouveauCompte.nom, nomCompte);
+    nouveauCompte.nbrVictoires = 0;
+    nouveauCompte.nbrDefaites = 0;
 
+    // Enregistrer le nouveau compte
     fic = fopen (CHEMIN_D_ACCES_FICHIER_COMPTES_JOUEURS, "a");
+
     if(fic == NULL)
         printf("[ECRITURE] Impossible d'accéder à la liste des joueurs\n");
     else
-        fwrite(&c, sizeof(c), 1, fic);
-
-    fclose(fic);
+    {
+        fwrite(&nouveauCompte, sizeof(nouveauCompte), 1, fic);
+        fclose(fic);
+    }
 }
 
 int chargerComptes(CompteJoueur *tabComptes)
