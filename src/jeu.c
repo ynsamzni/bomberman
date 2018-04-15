@@ -235,13 +235,13 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
         for(int cmpt=0; cmpt<=LONGUEUR_EXPLOSION_BOMBE; cmpt++)
         {
             // Déterminer les directions dans lesquelles il n'y a pas d'explosion
-            if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] != 4)
+            if(Y-cmpt < 0 || jeu->mapJeu[X][Y-cmpt] == 1)
                 hautExplosion=0;
-            if(X+cmpt >= 20 || jeu->mapJeu[X+cmpt][Y] != 4)
+            if(X+cmpt >= 20 || jeu->mapJeu[X+cmpt][Y] == 1)
                 droiteExplosion=0;
-            if(Y+cmpt >= 20 || jeu->mapJeu[X][Y+cmpt] != 4)
+            if(Y+cmpt >= 20 || jeu->mapJeu[X][Y+cmpt] == 1)
                 basExplosion=0;
-            if(X-cmpt < 0 || jeu->mapJeu[X-cmpt][Y] != 4)
+            if(X-cmpt < 0 || jeu->mapJeu[X-cmpt][Y] == 1)
                 gaucheExplosion=0;
 
             // Mettre fin aux explosions
