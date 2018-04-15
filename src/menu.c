@@ -7,46 +7,46 @@
 #include "../include/clavier.h"
 
 
-/** Lors du paramétrage de la partie -> fenetre 6
-                                     -> declenche le case 6 dans gestion menu -> déclenche jeu->etat = LANCEMENT
-                                     -> dans le main on ne va plus dans le menu alors
-**/
-
-
 void initMenu(StructMenu *menu)
 {
+    // Initialiser le système de numérotation de fenêtres
     menu->numeroFenetre = 0;
-    menu->lastNumeroFenetre = menu->numeroFenetre;
-
-    menu->positionCurseurY = 0;
-    menu->positionCurseurX = 0;
-
-    menu->paramPartie[0] = 2; // 0 = Ordinateur / 1 = Vide / 2 = Humain
-    menu->paramPartie[1] = 0;
-
-    for(int i = 2; i < 4; i++)
-        menu->paramPartie[i] = 1;
-
-    menu->tabNomDuJoueur[0] = 'A';
-    menu->tabNomDuJoueur[1] = '\0';
+    menu->dernierNumeroFenetre = menu->numeroFenetre;
 }
 
 void gestionDuMenu(StructMenu *menu, StructJeu *jeu, StructTouchesClavier *clavier, StructAffichage *affichage, StructAudio *audio)
 {
-    if(menu->numeroFenetre != menu->lastNumeroFenetre){ //réinitialise les curseurs lors du cght de fenetre
+    // S'il y'a changement de fenêtre
+    if(menu->numeroFenetre != menu->dernierNumeroFenetre)
+    {
+        // Réinitialiser les curseurs
         menu->positionCurseurY = 0;
         menu->positionCurseurX = 0;
 
-        if(menu->numeroFenetre == 3) //Cas spécifique du menu principal
+        // Cas spécifiques
+        if(menu->numeroFenetre == 3)
+            // Placer le curseur sur le bouton jouer
             menu->positionCurseurY = 1;
-        if(menu->numeroFenetre == 2){
+        else if(menu->numeroFenetre == 2)
+        {
+            // Afficher un champ de texte vide
             menu->tabNomDuJoueur[0] = 'A';
             menu->tabNomDuJoueur[1] = '\0';
-        } //Cas spécifique du menu de création de profil
+        }
+        else if(menu->numeroFenetre == 5)
+        {
+            // Afficher les paramètres par défaut d'une partie (0 = Ordinateur / 1 = Vide / 2 = Humain)
+            menu->paramPartie[0] = 2;
+            menu->paramPartie[1] = 0;
+            menu->paramPartie[2] = 1;
+            menu->paramPartie[3] = 1;
+        }
 
-        menu->lastNumeroFenetre = menu->numeroFenetre;
+        // Actualiser la numérotation de la dernière fenêtre visitée
+        menu->dernierNumeroFenetre = menu->numeroFenetre;
     }
 
+    // Afficher le menu
     switch(menu->numeroFenetre)
     {
     case 0:
@@ -641,7 +641,6 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
             break;
         case 1:
             jeu->etat = OFF;
-            initMenu(menu);
             menu->numeroFenetre = 3;
             break;
         }

@@ -72,7 +72,6 @@ int main(int argc, char *argv[])
             }
 
             jeu.etat = OFF;
-            initMenu(&menu);
             menu.numeroFenetre = 4;
 
             /** Méthode barbare pour faire en sorte que le profil sélectionné soit actualiser avec le nouveau nbr de victoires/défaites */
