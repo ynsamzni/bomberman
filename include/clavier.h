@@ -34,8 +34,8 @@ typedef struct {
 } StructTouchesClavier;
 
 void initClavier(StructTouchesClavier *clavier);
-void recupererTouchesClavier(StructTouchesClavier *clavier);
-void afficherLaStructureDeTouches(StructTouchesClavier clavier);
+void recupererEtatTouchesClavier(StructTouchesClavier *clavier);
+void debugAfficherEtatTouchesClavier(StructTouchesClavier clavier);
 int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clavier);
 
 

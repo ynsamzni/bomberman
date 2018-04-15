@@ -30,12 +30,12 @@ int main(int argc, char *argv[])
     initAudio(&audio);
     jeu.etat = OFF;
 
-    lireUnSon(&audio, MUSIQUE);
+    lireAudio(&audio, MUSIQUE);
 
     do
     {
 
-        recupererTouchesClavier(&clavier);
+        recupererEtatTouchesClavier(&clavier);
 
         if(jeu.etat == OFF || jeu.etat == PAUSE)
             gestionDuMenu(&menu, &jeu, &clavier, &affichage, &audio);
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
             afficherJeu(&affichage, &jeu);
             // Afficher les informations de debug
             system("clear");
-            afficherStructureJeu(jeu);
+            debugAfficherInformationsPartie(jeu);
             //***********************************
         }
 
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
         if(jeu.etat == EXTINCTION){
 
             while(cycleToucheClavierRealise(&clavier.toucheAction, &clavier) != 1){ //Permet de figer le jeu sur la derniere action (celle ayant tuée un joueur)
-                recupererTouchesClavier(&clavier);
+                recupererEtatTouchesClavier(&clavier);
             }
 
             jeu.etat = OFF;

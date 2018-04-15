@@ -40,8 +40,8 @@ typedef struct {
 } StructAffichage;
 
 void initAffichage(StructAffichage *affichage, char nomFenetre[]);
-void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer);
-void chargementCouleurs(StructCouleur *structCouleur);
+void chargerTextures(StructTextures *structTextures, SDL_Renderer *renderer);
+void chargerCouleurs(StructCouleur *structCouleur);
 void afficherJeu(StructAffichage *affichage, StructJeu *jeu);
 
 

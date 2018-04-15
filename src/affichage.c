@@ -21,11 +21,11 @@ void initAffichage(StructAffichage *affichage, char nomFenetre[])
     affichage->renderer = SDL_CreateRenderer(affichage->window, -1, SDL_RENDERER_ACCELERATED);
 
     // Charger les textures et couleurs
-    chargementTextures(&affichage->structTextures, affichage->renderer);
-    chargementCouleurs(&affichage->structCouleur);
+    chargerTextures(&affichage->structTextures, affichage->renderer);
+    chargerCouleurs(&affichage->structCouleur);
 }
 
-void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
+void chargerTextures(StructTextures *structTextures, SDL_Renderer *renderer)
 {
     SDL_Surface *surfaceTmp = NULL; // Créer une surface temporaire
 
@@ -74,7 +74,7 @@ void chargementTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     SDL_FreeSurface(surfaceTmp); // Détruire la surface temporaire
 }
 
-void chargementCouleurs(StructCouleur *structCouleur)
+void chargerCouleurs(StructCouleur *structCouleur)
 {
     // Blanc
     structCouleur->blanc.r = 255;

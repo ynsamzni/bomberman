@@ -21,8 +21,8 @@ typedef struct {
 } StructAudio;
 
 void initAudio(StructAudio *audio);
-void chargerFichiersAudio(StructAudio *audio);
-void lireUnSon(StructAudio *audio, SonSelectionne sonSelectionne);
+void chargerAudio(StructAudio *audio);
+void lireAudio(StructAudio *audio, SonSelectionne sonSelectionne);
 
 
 #endif // AUDIO_H_INCLUDED

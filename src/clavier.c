@@ -32,7 +32,7 @@ void initClavier(StructTouchesClavier *clavier)
     clavier->toucheQuitter = 0;
 }
 
-void recupererTouchesClavier(StructTouchesClavier *clavier)
+void recupererEtatTouchesClavier(StructTouchesClavier *clavier)
 {
     SDL_Event event;
 
@@ -178,14 +178,14 @@ int cycleToucheClavierRealise(int *etatToucheClavier, StructTouchesClavier *clav
     if(*etatToucheClavier == 1 )
     {
         while(*etatToucheClavier == 1)
-            recupererTouchesClavier(clavier);
+            recupererEtatTouchesClavier(clavier);
         return 1;
     }
     else
         return 0;
 }
 
-void afficherLaStructureDeTouches(StructTouchesClavier clavier)
+void debugAfficherEtatTouchesClavier(StructTouchesClavier clavier)
 {
     printf("Valeur toucheHautJ1 :  %d\n", clavier.toucheHautJ1);
     printf("Valeur toucheBasJ1 :  %d\n", clavier.toucheBasJ1);

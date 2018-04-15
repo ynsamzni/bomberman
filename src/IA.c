@@ -574,7 +574,7 @@ int coordonneesDangereuses(int x, int y, Coordonnes casesDangereuses[NB_CASES_AF
 
     while(casesDangereuses[i].x != -1 || casesDangereuses[i].y != -1)
     {
-        if(renvoitCaseMatrice(x) == casesDangereuses[i].x && renvoitCaseMatrice(y) == casesDangereuses[i].y)
+        if(coordonneeMatricielle(x) == casesDangereuses[i].x && coordonneeMatricielle(y) == casesDangereuses[i].y)
             resultat = 1;
         i++;
     }
@@ -628,12 +628,12 @@ int ennemiProche(int indiceJoueur, int distanceMax, StructJeu *jeu)
                 {
                     if(yEnnemi > yJoueur)
                     {
-                        distance = renvoitCaseMatrice(yEnnemi) - renvoitCaseMatrice(yJoueur);
+                        distance = coordonneeMatricielle(yEnnemi) - coordonneeMatricielle(yJoueur);
                         direction = BAS;
                     }
                     else
                     {
-                        distance = renvoitCaseMatrice(yJoueur) - renvoitCaseMatrice(yEnnemi);
+                        distance = coordonneeMatricielle(yJoueur) - coordonneeMatricielle(yEnnemi);
                         direction = HAUT;
                     }
                 }
@@ -641,12 +641,12 @@ int ennemiProche(int indiceJoueur, int distanceMax, StructJeu *jeu)
                 {
                     if(xEnnemi > xJoueur)
                     {
-                        distance = renvoitCaseMatrice(xEnnemi) - renvoitCaseMatrice(xJoueur);
+                        distance = coordonneeMatricielle(xEnnemi) - coordonneeMatricielle(xJoueur);
                         direction = DROITE;
                     }
                     else
                     {
-                        distance = renvoitCaseMatrice(xJoueur) - renvoitCaseMatrice(xEnnemi);
+                        distance = coordonneeMatricielle(xJoueur) - coordonneeMatricielle(xEnnemi);
                         direction = GAUCHE;
                     }
                 }

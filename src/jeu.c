@@ -155,8 +155,8 @@ void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
     if(jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe == 0)
     {
         // Déterminer la case sur laquelle va être posée la bombe
-        caseBombeX = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
-        caseBombeY = renvoitCaseMatrice(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
+        caseBombeX = coordonneeMatricielle(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x);
+        caseBombeY = coordonneeMatricielle(jeu->listeDesJoueurs[indiceJoueur].coordonnes.y);
 
         if(jeu->listeDesJoueurs[indiceJoueur].coordonnes.x%30 != 0 || jeu->listeDesJoueurs[indiceJoueur].coordonnes.y%30 != 0)
         {
@@ -168,7 +168,7 @@ void poserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 
         // Poser la bombe
         jeu->mapJeu[caseBombeX][caseBombeY] = 3;
-        lireUnSon(audio, SON_POSE_BOMBE);
+        lireAudio(audio, SON_POSE_BOMBE);
 
         // Démarrer le timer d'explosion de la bombe
         jeu->listeDesJoueurs[indiceJoueur].bombe.tickDePose = SDL_GetTicks();
@@ -219,7 +219,7 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
                 jeu->mapJeu[X-cmpt][Y] = 4;
         }
         jeu->listeDesJoueurs[indiceJoueur].bombe.etatBombe = 2;
-        lireUnSon(audio, SON_EXPLOSION_BOMBE);
+        lireAudio(audio, SON_EXPLOSION_BOMBE);
     }
 
     // Si l'explosion d'une bombe doit prendre fin
@@ -264,7 +264,7 @@ void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio)
 /**********************AFFICHER LA STRUCTURE**************************************/
 /*********************************************************************************/
 
-void afficherStructureJeu(StructJeu jeu)
+void debugAfficherInformationsPartie(StructJeu jeu)
 {
     printf("Nombre de joueurs = %d \n", jeu.nbrDeJoueurs);
     for(int i = 0; i < jeu.nbrDeJoueurs; i++)
@@ -331,10 +331,10 @@ int contenuCoordonnees(StructJeu *jeu, int x, int y)
     if( x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
         return 1;
     else
-        return jeu->mapJeu[renvoitCaseMatrice(x)][renvoitCaseMatrice(y)];
+        return jeu->mapJeu[coordonneeMatricielle(x)][coordonneeMatricielle(y)];
 }
 
-int renvoitCaseMatrice(int coordonne)
+int coordonneeMatricielle(int coordonne)
 {
     return (coordonne/30);
 }
@@ -368,7 +368,7 @@ void tuerJoueur(StructJeu *jeu, StructAudio *audio)
         {
             // Tuer le joueur
             jeu->listeDesJoueurs[indiceJoueur].enVie = 0;
-            lireUnSon(audio, SON_MORT_PERSONNAGE);
+            lireAudio(audio, SON_MORT_PERSONNAGE);
         }
     }
 }
@@ -389,7 +389,7 @@ void checkVictoire(StructJeu *jeu, StructAudio *audio)
     if(nbrHumains == 0)
     {
         jeu->animations.defaite = 1;
-        lireUnSon(audio, SON_DEFAITE);
+        lireAudio(audio, SON_DEFAITE);
         for(int i = 0; i < jeu->nbrDeJoueurs; i++)
         {
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0) //2eme condition pour empecher de créer un joueur dans le fichier des comptes. Améliorations à venir
@@ -400,7 +400,7 @@ void checkVictoire(StructJeu *jeu, StructAudio *audio)
     else if(nbrHumains == 1 && nbrIA == 0)
     {
         jeu->animations.victoire = 1;
-        lireUnSon(audio, SON_VICTOIRE);
+        lireAudio(audio, SON_VICTOIRE);
         for(int i = 0; i < jeu->nbrDeJoueurs; i++)
         {
             if(jeu->listeDesJoueurs[i].humainOuIA == 0 && jeu->listeDesJoueurs[i].enVie == 1 && strcmp(jeu->listeDesJoueurs[i].compte.nom, "Test") != 0)

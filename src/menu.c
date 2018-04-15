@@ -135,11 +135,11 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     // Si l'utilisateur se déplace dans le menu
     if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != nbTotalProfils){
         menu->positionCurseurY++;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
 
     // Afficher le fond
@@ -176,7 +176,7 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructTouchesClavie
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
-        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
+        lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
         if(menu->positionCurseurY != nbTotalProfils && nbTotalProfils != -1)
         {
 
@@ -222,22 +222,22 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
 
         // Effectuer le déplacement
         menu->positionCurseurX++;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     else if(cycleToucheClavierRealise(&clavier->toucheGauche, clavier) && menu->positionCurseurX != 0)
     {
         menu->positionCurseurX--;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     else if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'A')
     {
         menu->tabNomDuJoueur[menu->positionCurseurX]--; // Décrémente le caractère ASCII de 1
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     else if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->tabNomDuJoueur[menu->positionCurseurX] != 'Z')
     {
         menu->tabNomDuJoueur[menu->positionCurseurX]++; // Incrémente le caractère ASCII de 1
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     else if(cycleToucheClavierRealise(&clavier->toucheSupprimer, clavier) &&  menu->positionCurseurX != 0)
     {
@@ -246,7 +246,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
         {
             menu->tabNomDuJoueur[menu->positionCurseurX] = '\0';
             menu->positionCurseurX--;
-            lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+            lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
         }
     }
 
@@ -309,7 +309,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructTouchesClavier
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
-        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
+        lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
         enregistrerNouveauCompte(menu->tabNomDuJoueur);
         menu->numeroFenetre = 1;
     }
@@ -329,11 +329,11 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
     // Si l'utilisateur se déplace dans le menu
     if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 2){
         menu->positionCurseurY++;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
 
     // Afficher le fond
@@ -367,7 +367,7 @@ void afficherMenuPrincipal(StructAffichage *affichage, StructTouchesClavier *cla
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
-        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
+        lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
         switch(menu->positionCurseurY)
         {
         case 0:
@@ -491,12 +491,12 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     //Permet de gérer le déplacement vertical dans le menu
     if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
 
     if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 3){
         menu->positionCurseurY++;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     //Permet de regarder si un joueur humain est déjà séléctionné ou non
     if(menu->paramPartie[1] == 2 || menu->paramPartie[2] == 2 || menu->paramPartie[3] == 2)
@@ -509,7 +509,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
         else
             menu->paramPartie[menu->positionCurseurY]--;
 
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
     if(cycleToucheClavierRealise(&clavier->toucheDroite, clavier) ){
         if( (menu->paramPartie[menu->positionCurseurY] == 1 ) && dejaUnJoueurHumainSelectionne == 1) //Si on arrive en bout de séléction ( 1 ) et que un joueur humain est déja selectionné alors on va directement en 0 (ordinateur)
@@ -517,7 +517,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
         else
             menu->paramPartie[menu->positionCurseurY]++;
 
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
 
     //Remet le joueur au début des choix une fois arrivée au bout
@@ -573,7 +573,7 @@ void afficherMenuParametragePartie(StructAffichage *affichage, StructTouchesClav
     // Déterminer la prochaine fenêtre à afficher
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
-        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
+        lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
         initLeJeuUneDeuxiemeFois(jeu, menu);
         menu->numeroFenetre = 6;
     }
@@ -604,11 +604,11 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
 
     if(cycleToucheClavierRealise(&clavier->toucheHaut, clavier) && menu->positionCurseurY != 0){
         menu->positionCurseurY--;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
      if(cycleToucheClavierRealise(&clavier->toucheBas, clavier) && menu->positionCurseurY != 1){
         menu->positionCurseurY++;
-        lireUnSon(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
+        lireAudio(audio, SON_MENU_TOUCHE_DIRECTIONNELLE);
     }
 
 
@@ -633,7 +633,7 @@ void afficherMenuPause(StructAffichage *affichage, StructTouchesClavier *clavier
 
     if(cycleToucheClavierRealise(&clavier->toucheAction, clavier))
     {
-        lireUnSon(audio, SON_MENU_TOUCHE_VALIDER);
+        lireAudio(audio, SON_MENU_TOUCHE_VALIDER);
         switch(menu->positionCurseurY)
         {
         case 0:

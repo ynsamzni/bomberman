@@ -13,13 +13,13 @@ void initAudio(StructAudio *audio)
         printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 
     // Charger les fichiers audio
-    chargerFichiersAudio(audio);
+    chargerAudio(audio);
 
     // Définir le volume des musiques
     Mix_VolumeMusic(60);
 }
 
-void chargerFichiersAudio(StructAudio *audio)
+void chargerAudio(StructAudio *audio)
 {
     // Musique du jeu
     audio->musiqueDuJeu = Mix_LoadMUS("assets/audio/spaceTimeTravelMachine-Mandragora.mp3"); //Pour une musique
@@ -62,7 +62,7 @@ void chargerFichiersAudio(StructAudio *audio)
         printf( "Failed to load son menu son Defaite SDL_mixer Error: %s\n", Mix_GetError() );
 }
 
-void lireUnSon(StructAudio *audio, SonSelectionne sonSelectionne)
+void lireAudio(StructAudio *audio, SonSelectionne sonSelectionne)
 {
     // Musique du jeu
     if(sonSelectionne == MUSIQUE)
