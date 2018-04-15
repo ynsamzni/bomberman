@@ -4,20 +4,6 @@
 #include "../include/joueurHumain.h"
 
 
-void initJoueursHumains(StructJeu *jeu)
-{
-    int a = 0;
-    for(int i = 0; i < jeu->nbrDeJoueurs; i++){
-        if(jeu->listeDesJoueurs[i].humainOuIA == 0 && a == 0)
-            a = 1;
-        else if(jeu->listeDesJoueurs[i].humainOuIA == 0){
-            jeu->listeDesJoueurs[i].direction = DROITE;
-            jeu->listeDesJoueurs[i].coordonnes.x = WIDTH - 30;
-            jeu->listeDesJoueurs[i].coordonnes.y = HEIGHT - 30;
-        }
-    }
-}
-
 void deplacerJoueurJ1(StructTouchesClavier *clavier, StructJeu *jeu, int indiceJoueur) //Gère le déplacement du J1
 {
     int x = jeu->listeDesJoueurs[indiceJoueur].coordonnes.x;

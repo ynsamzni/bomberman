@@ -61,7 +61,7 @@ typedef struct {
 } StructJeu;
 
 void initMap(StructJeu *jeu);
-void initTousLesJoueurs(StructJeu *jeu);
+void initJoueurs(StructJeu *jeu);
 void initJeu(StructJeu *jeu);
 void calculerJeu(StructJeu *jeu, StructTouchesClavier *clavier, StructAudio *audio);
 void exploserBombe(StructJeu *jeu, int indiceJoueur, StructAudio *audio);

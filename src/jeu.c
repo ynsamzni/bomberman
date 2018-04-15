@@ -33,16 +33,42 @@ void initMap(StructJeu *jeu)
     }
 }
 
-void initTousLesJoueurs(StructJeu *jeu)
+void initJoueurs(StructJeu *jeu)
 {
+    // Parcourir tous les joueurs
     for(int i = 0; i < jeu->nbrDeJoueurs; i++)
     {
+        // Initialiser les données de santé
         jeu->listeDesJoueurs[i].enVie = 1;
-        jeu->listeDesJoueurs[i].coordonnes.x = 0;
-        jeu->listeDesJoueurs[i].coordonnes.y = 0;
+
+        // Initialiser les données de position
+        switch(i)
+        {
+        case 0:
+            jeu->listeDesJoueurs[i].coordonnes.x = 0;
+            jeu->listeDesJoueurs[i].coordonnes.y = 0;
+            break;
+        case 1:
+            jeu->listeDesJoueurs[i].coordonnes.x = WIDTH - 30;
+            jeu->listeDesJoueurs[i].coordonnes.y = HEIGHT - 30;
+            break;
+        case 2:
+            jeu->listeDesJoueurs[i].coordonnes.x = WIDTH - 30;
+            jeu->listeDesJoueurs[i].coordonnes.y = 0;
+            break;
+        case 3:
+            jeu->listeDesJoueurs[i].coordonnes.x = 0;
+            jeu->listeDesJoueurs[i].coordonnes.y = HEIGHT - 30;
+            break;
+        }
+
+        // Initialiser les données de déplacement
         jeu->listeDesJoueurs[i].direction = BAS;
         jeu->listeDesJoueurs[i].deplacement = 0;
+        jeu->listeDesJoueurs[i].itineraireSuivi[0].x = -1;
+        jeu->listeDesJoueurs[i].itineraireSuivi[0].y = -1;
 
+        // Initialiser les données de la bombe associée
         jeu->listeDesJoueurs[i].bombe.coordonnesBombe.x = 0;
         jeu->listeDesJoueurs[i].bombe.coordonnesBombe.y = 0;
         jeu->listeDesJoueurs[i].bombe.tickDePose = 0;
@@ -55,14 +81,8 @@ void initJeu(StructJeu *jeu)
     // Initialiser la map
     initMap(jeu);
 
-    // Initialiser les données des joueurs
-    initTousLesJoueurs(jeu);
-
-    // Initialiser les coordonnées des joueurs humains
-    initJoueursHumains(jeu);
-
-    // Initialiser les coordonnées des IA
-    initIA(jeu);
+    // Initialiser les joueurs
+    initJoueurs(jeu);
 
     // Initialiser l'animation de victoire / défaite qui apparaît en fin de partie
     jeu->animations.victoire = 0;

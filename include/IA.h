@@ -5,7 +5,6 @@
 #include "constantes.h"
 
 
-void initIA(StructJeu *jeu);
 void deplacerIA(int indiceJoueur, StructJeu *jeu);
 int calculerItineraires(int indiceJoueur, Coordonnes itineraire[300][300], int nbItineraire, int nbDeplacement, StructJeu *jeu);
 void suivreItineraire(int indiceJoueur, StructJeu *jeu);

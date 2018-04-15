@@ -4,38 +4,6 @@
 #include "../include/IA.h"
 
 
-void initIA(StructJeu *jeu)
-{
-    if(jeu->nbrDeJoueurs >= 2 && jeu->listeDesJoueurs[1].humainOuIA == 1)
-    {
-        // Initialiser le joueur en bas à droite de la map
-        jeu->listeDesJoueurs[1].coordonnes.x = WIDTH - 30;
-        jeu->listeDesJoueurs[1].coordonnes.y = HEIGHT - 30;
-        jeu->listeDesJoueurs[1].direction = HAUT;
-        jeu->listeDesJoueurs[1].itineraireSuivi[0].x = -1;
-        jeu->listeDesJoueurs[1].itineraireSuivi[0].y = -1;
-    }
-
-    if(jeu->nbrDeJoueurs >= 3 && jeu->listeDesJoueurs[2].humainOuIA == 1)
-    {
-        // Initialiser le joueur en haut à droite de la map
-        jeu->listeDesJoueurs[2].coordonnes.x = WIDTH - 30;
-        jeu->listeDesJoueurs[2].coordonnes.y = 0;
-        jeu->listeDesJoueurs[2].direction = GAUCHE;
-        jeu->listeDesJoueurs[2].itineraireSuivi[0].x = -1;
-        jeu->listeDesJoueurs[2].itineraireSuivi[0].y = -1;
-    }
-    if(jeu->nbrDeJoueurs >= 4 && jeu->listeDesJoueurs[3].humainOuIA == 1)
-    {
-        // Initialiser le joueur en bas à gauche de la map
-        jeu->listeDesJoueurs[3].coordonnes.x = 0;
-        jeu->listeDesJoueurs[3].coordonnes.y = HEIGHT - 30;
-        jeu->listeDesJoueurs[3].direction = HAUT;
-        jeu->listeDesJoueurs[3].itineraireSuivi[0].x = -1;
-        jeu->listeDesJoueurs[3].itineraireSuivi[0].y = -1;
-    }
-}
-
 void deplacerIA(int indiceJoueur, StructJeu *jeu)
 {
     Coordonnes itineraire[300][300];
