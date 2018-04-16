@@ -51,15 +51,15 @@ void afficherMenu(StructMenu *menu, StructJeu *jeu, StructClavier *clavier, Stru
     {
     case 0:
         // Menu d'accueil
-        afficherMenuAccueil(affichage, clavier, jeu, menu, audio);
+        afficherMenuAccueil(affichage, clavier, menu, audio);
         break;
     case 1:
         // Menu demandant de sélectionner un profil et/ou d'en créer un
-        afficherMenuSelectionProfil(affichage, clavier, jeu, menu, audio);
+        afficherMenuSelectionProfil(affichage, clavier, menu, audio);
         break;
     case 2:
         // Menu de création de profil
-        afficherMenuCreationProfil(affichage, clavier, jeu, menu, audio);
+        afficherMenuCreationProfil(affichage, clavier, menu, audio);
         break;
     case 3:
         // Menu principal (Choix entre 'Jouer', 'Statistiques' et 'Quitter')
@@ -91,7 +91,7 @@ void afficherMenu(StructMenu *menu, StructJeu *jeu, StructClavier *clavier, Stru
 /***************************** MENU 0 : ACCUEIL *****************************/
 /****************************************************************************/
 
-void afficherMenuAccueil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
+void afficherMenuAccueil(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio)
 {
     int couleurTexteClignotant = (SDL_GetTicks() / 6) % 255; // Passe de 0 à 255 en incrémentant toutes les 6 ms
     SDL_Color color = {couleurTexteClignotant, couleurTexteClignotant, couleurTexteClignotant, 0};
@@ -134,7 +134,7 @@ void afficherMenuAccueil(StructAffichage *affichage, StructClavier *clavier, Str
 /***************************** MENU 1 : SELECTION DE PROFIL *****************************/
 /****************************************************************************************/
 
-void afficherMenuSelectionProfil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
+void afficherMenuSelectionProfil(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio)
 {
     CompteJoueur tabComptes[NBR_MAX_COMPTES];
     int nbTotalProfils = chargerComptes(tabComptes);
@@ -205,7 +205,7 @@ void afficherMenuSelectionProfil(StructAffichage *affichage, StructClavier *clav
 /***************************** MENU 2 : CREATION DE PROFIL *****************************/
 /***************************************************************************************/
 
-void afficherMenuCreationProfil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio)
+void afficherMenuCreationProfil(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio)
 {
     char caractereActuel;
     int nbMaxLettres = 8;

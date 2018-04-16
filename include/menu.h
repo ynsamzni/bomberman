@@ -18,9 +18,9 @@ typedef struct {
 
 void initMenu(StructMenu *menu);
 void afficherMenu(StructMenu *menu, StructJeu *jeu, StructClavier *clavier, StructAffichage *affichage, StructAudio *audio);
-void afficherMenuAccueil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
-void afficherMenuSelectionProfil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
-void afficherMenuCreationProfil(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
+void afficherMenuAccueil(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio);
+void afficherMenuSelectionProfil(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio);
+void afficherMenuCreationProfil(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio);
 void afficherMenuPrincipal(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio);
 void afficherMenuStatistiques(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu);
 void afficherMenuParametragePartie(StructAffichage *affichage, StructClavier *clavier, StructJeu *jeu, StructMenu *menu, StructAudio *audio);
