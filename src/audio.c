@@ -9,20 +9,20 @@ void initAudio(StructAudio *audio)
     // Initialiser les bibliothèques audio
     SDL_Init(SDL_INIT_AUDIO);
 
-    if(Mix_OpenAudio(48000, MIX_DEFAULT_FORMAT, 2,  2048) < 0)
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2,  2048) < 0)
         printf("SDL_mixer n'a pas pu être initialisé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
     // Charger les fichiers audio
     chargerAudio(audio);
 
-    // Définir le volume des musiques
-    Mix_VolumeMusic(60);
+    // Définir le volume de la musique
+    Mix_VolumeMusic(100);
 }
 
 void chargerAudio(StructAudio *audio)
 {
     // Musique du jeu
-    audio->musiqueDuJeu = Mix_LoadMUS("assets/audio/spaceTimeTravelMachine-Mandragora.mp3");
+    audio->musiqueDuJeu = Mix_LoadMUS("assets/audio/musique_jeu.mp3");
     if(audio->musiqueDuJeu == NULL)
         printf("L'audio 'musiqueDuJeu' n'a pas pu être chargé ! Erreur SDL_mixer : %s\n", Mix_GetError());
 
