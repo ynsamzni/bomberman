@@ -336,7 +336,7 @@ void afficherMenuCreationProfil(StructAffichage *affichage, StructClavier *clavi
 
 void afficherMenuPrincipal(StructAffichage *affichage, StructClavier *clavier, StructMenu *menu, StructAudio *audio)
 {
-    char chaineBienvenue[40] = "BIEVENUE ";
+    char chaineBienvenue[40] = "BIENVENUE ";
     strcat(chaineBienvenue, menu->profilSelectionne.nom);
 
     // Si l'utilisateur se déplace dans le menu
