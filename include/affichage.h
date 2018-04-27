@@ -17,6 +17,7 @@ typedef struct {
 
 typedef struct {
     SDL_Texture *feuilleSprites;
+    SDL_Texture *solJeu;
     SDL_Texture *murIndestructible;
     SDL_Texture *murDestructible;
     SDL_Texture *bombe;

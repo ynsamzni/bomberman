@@ -32,7 +32,10 @@ void chargerTextures(StructTextures *structTextures, SDL_Renderer *renderer)
     surfaceTmp = IMG_Load("assets/img/feuille_sprite.png"); // Charger une image dans la surface temporaire
     (*structTextures).feuilleSprites = SDL_CreateTextureFromSurface(renderer, surfaceTmp); // Créer une texture à partir de la surface temporaire
 
-    surfaceTmp = IMG_Load("assets/img/mur_indestructible.bmp");
+    surfaceTmp = IMG_Load("assets/img/sol_jeu.jpg");
+    (*structTextures).solJeu = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
+
+    surfaceTmp = IMG_Load("assets/img/mur_indestructible.png");
     (*structTextures).murIndestructible = SDL_CreateTextureFromSurface(renderer, surfaceTmp);
 
     surfaceTmp = IMG_Load("assets/img/mur_destructible.png");
@@ -101,13 +104,16 @@ void afficherJeu(StructAffichage *affichage, StructJeu *jeu)
             caseMap.x = i*30;
             caseMap.y = j*30;
 
+
+            SDL_RenderCopy(affichage->renderer, affichage->structTextures.solJeu, NULL, &caseMap); //En dessous de toutes les cases on dessine le sol
+
             if(jeu->mapJeu[i][j] == 1)
                 SDL_RenderCopy(affichage->renderer, affichage->structTextures.murIndestructible, NULL, &caseMap);
-            else if(jeu->mapJeu[i][j] == 2)
+            if(jeu->mapJeu[i][j] == 2)
                 SDL_RenderCopy(affichage->renderer, affichage->structTextures.murDestructible, NULL, &caseMap);
-            else if(jeu->mapJeu[i][j] == 3)
+            if(jeu->mapJeu[i][j] == 3)
                 SDL_RenderCopy(affichage->renderer, affichage->structTextures.bombe, NULL, &caseMap);
-            else if(jeu->mapJeu[i][j] == 4)
+            if(jeu->mapJeu[i][j] == 4)
                 SDL_RenderCopy(affichage->renderer, affichage->structTextures.explosion, NULL, &caseMap);
         }
     }
